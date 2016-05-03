@@ -1,0 +1,19 @@
+{
+  "name": "Video Commander",
+  "version": "1.0",
+  "manifest_version": 2,
+
+  "description": "Add some handy shortcuts on all HTML5 video sites",
+
+  "permissions": [
+    "activeTab", "storage"
+  ],
+
+  "content_scripts": [
+    {
+      "all_frames": true,
+      "matches": ["<all_urls>"],
+      "js": ["jquery-2.2.0.min.js", "script.js"]
+    }
+  ]
+}
