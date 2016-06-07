@@ -9,11 +9,13 @@
     "activeTab", "storage"
   ],
 
+  "options_page": "options.html",
+
   "content_scripts": [
     {
       "all_frames": true,
       "matches": ["<all_urls>"],
-      "js": ["jquery-2.2.0.min.js", "script.js"]
+      "js": ["script.js"]
     }
   ]
 }

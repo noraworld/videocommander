@@ -150,6 +150,3 @@ function scrollToPlayer() {
 //     autoBlur();
 //   }, 0);
 // };
-
-// check jQuery
-// $('span').css('color', 'red');
