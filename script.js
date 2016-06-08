@@ -30,9 +30,6 @@ chrome.extension.sendMessage({}, function(response) {
   // キーが押されたかどうかを判定
   document.addEventListener('keydown', function(event) {
 
-    // 動画プレイヤーから常にフォーカスを外す
-    // autoBlur();
-
     // 入力フォームにフォーカスがあるときはショートカットを無効化
     if ((document.activeElement.nodeName === 'INPUT'
     || document.activeElement.nodeName === 'TEXTAREA'
@@ -165,19 +162,5 @@ chrome.extension.sendMessage({}, function(response) {
     var y = positionY + scrollY - 100;
     window.scrollTo(0, y);
   };
-
-  // 常に動画プレイヤーからフォーカスを外す
-  // function autoBlur() {
-  //   // 入力フォーム以外にフォーカスが当たっているときのみフォーカスを外す
-  //   if (document.activeElement.nodeName !== 'INPUT'
-  //   && document.activeElement.nodeName !== 'TEXTAREA'
-  //   && document.activeElement.getAttribute('type') !== 'text'
-  //   && document.activeElement.isContentEditable === false) {
-  //     document.activeElement.blur();
-  //   }
-  //   blurTimeoutID = setTimeout(function() {
-  //     autoBlur();
-  //   }, 0);
-  // };
 
 });
