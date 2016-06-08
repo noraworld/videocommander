@@ -43,3 +43,41 @@ header, #main {
 #main h3 {
   margin-left: -18px;
 }
+
+button {
+  -webkit-appearance: none;
+  position: relative;
+  margin: 0 1px 0 0;
+  padding: 0 10px;
+  min-width: 4em;
+  min-height: 2em;
+  background-image: linear-gradient(#ededed, #ededed 38%, #dedede);
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 2px;
+  outline: none;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.75);
+  color: #444;
+  text-shadow: 0 1px 0 rgb(240, 240, 240);
+  font: inherit;
+  user-select: none;
+}
+
+input[type="text"] {
+  width: 75px;
+  text-align: center;
+}
+
+.settings {
+  margin: 6px 0;
+}
+
+label {
+  display: inline-block;
+  width: 170px;
+}
+
+#status {
+  color: #9d9d9d;
+  display: inline-block;
+  margin-left: 50px;
+}
