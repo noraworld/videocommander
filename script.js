@@ -4,8 +4,8 @@ chrome.extension.sendMessage({}, function(response) {
     togglePlayAndPauseKeyCode: 80,  // default: P
     jumpToBeginningKeyCode:    72,  // defualt: H
     jumpToEndKeyCode:          69,  // default: E
-    rewindTimeKeyCode:         37,  // default: left-arrow
-    advanceTimeKeyCode:        39,  // default: right-arrow
+    rewindTimeKeyCode:         65,  // default: A
+    advanceTimeKeyCode:        83,  // default: S
     partialLoopKeyCode:        82,  // default: R
     skipTimeAmount:             5,  // default: 5
   };
@@ -44,19 +44,19 @@ chrome.extension.sendMessage({}, function(response) {
 
     // ショートカットキーから関数を呼び出す
     switch (event.keyCode) {
-
       // オプションで変更可能なキーコード
       case settings.togglePlayAndPauseKeyCode: togglePlayAndPause(); break; // default: P
       case settings.jumpToBeginningKeyCode:    jumpToBeginning();    break; // default: H
       case settings.jumpToEndKeyCode:          jumpToEnd();          break; // default: E
       case settings.partialLoopKeyCode:        partialLoop();        break; // default: R
-
-      // 固定のキーコード
       case settings.rewindTimeKeyCode:         rewindTime();         break; // left-arrow
       case settings.advanceTimeKeyCode:        advanceTime();        break; // right-arrow
-      case 27:                                 activeBlur();         break; // esc
-      case 32:         event.preventDefault(); togglePlayAndPause(); break; // space
 
+      // 固定のキーコード
+      case 32: event.preventDefault(); togglePlayAndPause(); break; // space
+      case 37:                         rewindTime();         break; // left-arrow
+      case 39:                         advanceTime();        break; // right-arrow
+      case 27:                         activeBlur();         break; // esc
     }
 
     // 数字のキーを押すとその数字に対応する割合まで動画を移動する

@@ -2,8 +2,8 @@ var defaultKey = {
   togglePlayAndPauseKeyCode: 80,  // default: P
   jumpToBeginningKeyCode:    72,  // defualt: H
   jumpToEndKeyCode:          69,  // default: E
-  rewindTimeKeyCode:         37,  // defualt: left-arrow
-  advanceTimeKeyCode:        39,  // default: right-arrow
+  rewindTimeKeyCode:         65,  // defualt: A
+  advanceTimeKeyCode:        83,  // default: S
   partialLoopKeyCode:        82,  // default: R
   skipTimeAmount:             5,  // default: 5 seconds
 };
