@@ -20,6 +20,7 @@ chrome.extension.sendMessage({}, function(response) {
     settings.skipTimeAmount            = Number(storage.skipTimeAmount);
   });
 
+  // Global variable
   var loopStatus = 0;
   var loopStart;
   var loopEnd;
@@ -48,9 +49,8 @@ chrome.extension.sendMessage({}, function(response) {
       case settings.togglePlayAndPauseKeyCode: togglePlayAndPause(); break; // default: P
       case settings.jumpToBeginningKeyCode:    jumpToBeginning();    break; // default: H
       case settings.jumpToEndKeyCode:          jumpToEnd();          break; // default: E
-      case settings.partialLoopKeyCode:        partialLoop();        break; // default: R
-      case settings.rewindTimeKeyCode:         rewindTime();         break; // left-arrow
-      case settings.advanceTimeKeyCode:        advanceTime();        break; // right-arrow
+      case settings.rewindTimeKeyCode:         rewindTime();         break; // default: A
+      case settings.advanceTimeKeyCode:        advanceTime();        break; // default: S
 
       // 固定のキーコード
       case 32: event.preventDefault(); togglePlayAndPause(); break; // space
@@ -66,13 +66,17 @@ chrome.extension.sendMessage({}, function(response) {
       jumpToTimerRatio(event.keyCode);
     }
 
-    if (event.keyCode == 186) {
+    // 部分ループ再生のステータスを記録
+    // オプションで変更可能なキーコード
+    // default: R
+    if (event.keyCode == settings.partialLoopKeyCode) {
       if (loopStatus === undefined) {
         loopStatus = 0;
       }
       loopStatus++;
       partialLoop();
     }
+
   });
 
   // 再生/停止
