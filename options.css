@@ -65,10 +65,11 @@ button {
 input[type="text"] {
   width: 75px;
   text-align: center;
+  border: 1px solid #cccccc;
 }
 
 .settings {
-  margin: 6px 0;
+  margin: 10px 0;
 }
 
 label {
@@ -76,8 +77,20 @@ label {
   width: 170px;
 }
 
-#status {
-  color: #9d9d9d;
+.invalid-value {
   display: inline-block;
-  margin-left: 50px;
+  padding-left: 15px;
+  color: red;
+}
+
+#status {
+  display: inline-block;
+  font-weight: bold;
+  width: 79px;
+  text-align: center;
+}
+
+#button-wrap {
+  width: 170px;
+  display: inline-block;
 }

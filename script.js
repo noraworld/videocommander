@@ -7,6 +7,7 @@ chrome.extension.sendMessage({}, function(response) {
     rewindTimeKeyCode:         37,  // default: left-arrow
     advanceTimeKeyCode:        39,  // default: right-arrow
     partialLoopKeyCode:        82,  // default: R
+    skipTimeAmount:             5,  // default: 5
   };
 
   chrome.storage.sync.get(settings, function(storage) {
@@ -16,6 +17,7 @@ chrome.extension.sendMessage({}, function(response) {
     settings.rewindTimeKeyCode         = Number(storage.rewindTimeKeyCode);
     settings.advanceTimeKeyCode        = Number(storage.advanceTimeKeyCode);
     settings.partialLoopKeyCode        = Number(storage.partialLoopKeyCode);
+    settings.skipTimeAmount            = Number(storage.skipTimeAmount);
   });
 
   var loopStatus = 0;
@@ -85,13 +87,13 @@ chrome.extension.sendMessage({}, function(response) {
 
   // 数秒巻き戻し
   function rewindTime(event) {
-    document.getElementsByTagName('video')[0].currentTime -= 5;
+    document.getElementsByTagName('video')[0].currentTime -= settings.skipTimeAmount;
     scrollToPlayer();
   };
 
   // 数秒早送り
   function advanceTime() {
-    document.getElementsByTagName('video')[0].currentTime += 5;
+    document.getElementsByTagName('video')[0].currentTime += settings.skipTimeAmount;
     scrollToPlayer();
   };
 
