@@ -40,6 +40,11 @@ chrome.extension.sendMessage({}, function(response) {
       activeBlur();
     }
 
+    // cmd, shift, ctrl, alt をエスケープ
+    if (event.metaKey || event.shiftKey || event.ctrlKey || event.altKey) {
+      return false;
+    }
+
     // ショートカットキーから関数を呼び出す
     switch (event.keyCode) {
       // オプションで変更可能なキーコード
