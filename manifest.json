@@ -15,7 +15,8 @@
     {
       "all_frames": true,
       "matches": ["<all_urls>"],
-      "js": ["script.js"]
+      "css": ["script.css"],
+      "js": ["jquery.js", "script.js"]
     }
   ]
 }

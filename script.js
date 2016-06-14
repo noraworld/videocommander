@@ -130,11 +130,13 @@ chrome.extension.sendMessage({}, function(response) {
     var player = document.getElementsByTagName('video')[0];
     if (loopStatus === 1) {
       loopStart = player.currentTime;
+      statusBox('Set');
     }
     else if (loopStatus === 2) {
       if (flag !== 1) {
         loopEnd = player.currentTime;
         flag = 1;
+        statusBox('Loop!');
       }
       loopTimeoutID = setTimeout(function() {
         if (player.currentTime >= loopEnd || player.currentTime < loopStart) {
@@ -144,6 +146,7 @@ chrome.extension.sendMessage({}, function(response) {
           clearTimeout(loopTimeoutID);
           loopStatus = 0;
           flag = 0;
+          statusBox('Restore');
           return false;
         }
         partialLoop();
@@ -167,5 +170,22 @@ chrome.extension.sendMessage({}, function(response) {
     var y = positionY + scrollY - 100;
     window.scrollTo(0, y);
   };
+
+  // 部分ループ再生のステータスを表示する
+  function statusBox(status) {
+    var videoStatus = '<span class="video-status">' + status + '</span>';
+
+    if (status === 'Loop!') {
+      $('.video-status').remove();
+    }
+
+    $(videoStatus).insertBefore('video');
+
+    if (status !== 'Set') {
+      $('.video-status').fadeOut(1000, function() {
+        $(this).remove();
+      });
+    }
+  }
 
 });
