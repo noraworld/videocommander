@@ -6,7 +6,7 @@ chrome.extension.sendMessage({}, function(response) {
     jumpToEndKeyCode:          69,  // default: E
     rewindTimeKeyCode:         65,  // default: A
     advanceTimeKeyCode:        83,  // default: S
-    partialLoopKeyCode:        82,  // default: R
+    partialLoopKeyCode:        76,  // default: L
     skipTimeAmount:             5,  // default: 5
   };
 
