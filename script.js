@@ -6,6 +6,9 @@ chrome.extension.sendMessage({}, function(response) {
     jumpToEndKeyCode:          69,  // default: E
     rewindTimeKeyCode:         65,  // default: A
     advanceTimeKeyCode:        83,  // default: S
+    speedDownKeyCode:          68,  // default: D
+    speedUpKeyCode:            85,  // default: U
+    resetSpeedKeyCode:         82,  // default: R
     partialLoopKeyCode:        76,  // default: L
     skipTimeAmount:             5,  // default: 5
   };
@@ -16,6 +19,9 @@ chrome.extension.sendMessage({}, function(response) {
     settings.jumpToEndKeyCode          = Number(storage.jumpToEndKeyCode);
     settings.rewindTimeKeyCode         = Number(storage.rewindTimeKeyCode);
     settings.advanceTimeKeyCode        = Number(storage.advanceTimeKeyCode);
+    settings.speedDownKeyCode          = Number(storage.speedDownKeyCode);
+    settings.speedUpKeyCode            = Number(storage.speedUpKeyCode);
+    settings.resetSpeedKeyCode         = Number(storage.resetSpeedKeyCode);
     settings.partialLoopKeyCode        = Number(storage.partialLoopKeyCode);
     settings.skipTimeAmount            = Number(storage.skipTimeAmount);
   });
@@ -53,6 +59,9 @@ chrome.extension.sendMessage({}, function(response) {
       case settings.jumpToEndKeyCode:          jumpToEnd();          break; // default: E
       case settings.rewindTimeKeyCode:         rewindTime();         break; // default: A
       case settings.advanceTimeKeyCode:        advanceTime();        break; // default: S
+      case settings.speedDownKeyCode:          speedDown();          break; // default: D
+      case settings.speedUpKeyCode:            speedUp();            break; // default: U
+      case settings.resetSpeedKeyCode:         resetSpeed();         break; // default: R
 
       // 固定のキーコード
       case 32: event.preventDefault(); togglePlayAndPause(); break; // space
@@ -92,7 +101,7 @@ chrome.extension.sendMessage({}, function(response) {
   };
 
   // 数秒巻き戻し
-  function rewindTime(event) {
+  function rewindTime() {
     document.getElementsByTagName('video')[0].currentTime -= settings.skipTimeAmount;
     scrollToPlayer();
   };
@@ -102,6 +111,30 @@ chrome.extension.sendMessage({}, function(response) {
     document.getElementsByTagName('video')[0].currentTime += settings.skipTimeAmount;
     scrollToPlayer();
   };
+
+  // 再生スピードダウン
+  function speedDown() {
+    var player = document.getElementsByTagName('video')[0];
+    player.playbackRate = floorFormat((player.playbackRate - 0.09), 1);
+    statusBox(player.playbackRate.toFixed(1));
+    scrollToPlayer();
+  }
+
+  // 再生スピードアップ
+  function speedUp() {
+    var player = document.getElementsByTagName('video')[0];
+    player.playbackRate = floorFormat((player.playbackRate + 0.11), 1);
+    statusBox(player.playbackRate.toFixed(1));
+    scrollToPlayer();
+  }
+
+  // 再生スピードリセット
+  function resetSpeed() {
+    var player = document.getElementsByTagName('video')[0];
+    player.playbackRate = 1.0;
+    statusBox(player.playbackRate.toFixed(1));
+    scrollToPlayer();
+  }
 
   // 動画の最初の位置に移動する
   function jumpToBeginning() {
@@ -159,6 +192,12 @@ chrome.extension.sendMessage({}, function(response) {
     document.activeElement.blur();
   };
 
+  // 小数点第(n+1)位を切り捨てて小数点第n位まで求める
+  function floorFormat(number, n) {
+    var _pow = Math.pow(10, n);
+    return Math.floor(number * _pow) / _pow;
+  };
+
   // 動画プレイヤーのある位置までスクロールする
   function scrollToPlayer() {
     var player = document.getElementsByTagName('video')[0];
@@ -175,9 +214,7 @@ chrome.extension.sendMessage({}, function(response) {
   function statusBox(status) {
     var videoStatus = '<span class="video-status">' + status + '</span>';
 
-    if (status === 'Loop!') {
-      $('.video-status').remove();
-    }
+    $('.video-status').remove();
 
     $(videoStatus).insertBefore('video');
 

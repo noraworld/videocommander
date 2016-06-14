@@ -4,6 +4,9 @@ var defaultKey = {
   jumpToEndKeyCode:          69,  // default: E
   rewindTimeKeyCode:         65,  // defualt: A
   advanceTimeKeyCode:        83,  // default: S
+  speedDownKeyCode:          68,  // default: D
+  speedUpKeyCode:            85,  // default: U
+  resetSpeedKeyCode:         82,  // default: R
   partialLoopKeyCode:        76,  // default: L
   skipTimeAmount:             5,  // default: 5 seconds
 };
@@ -19,6 +22,9 @@ $(function() {
   initShortcutInput('jump-to-end');
   initShortcutInput('rewind-time');
   initShortcutInput('advance-time');
+  initShortcutInput('speed-down');
+  initShortcutInput('speed-up');
+  initShortcutInput('reset-speed');
   initShortcutInput('partial-loop');
 
   initNumericInput('skip-time-amount');
@@ -31,6 +37,9 @@ function loadOptions() {
     updateInputText('jump-to-end',           storage.jumpToEndKeyCode);
     updateInputText('rewind-time',           storage.rewindTimeKeyCode);
     updateInputText('advance-time',          storage.advanceTimeKeyCode);
+    updateInputText('speed-down',            storage.speedDownKeyCode);
+    updateInputText('speed-up',              storage.speedUpKeyCode);
+    updateInputText('reset-speed',           storage.resetSpeedKeyCode);
     updateInputText('partial-loop',          storage.partialLoopKeyCode);
     document.getElementById('skip-time-amount').value = storage.skipTimeAmount;
   });
@@ -47,6 +56,9 @@ function saveOptions() {
   var jumpToEndKeyCode          = document.getElementById('jump-to-end').keyCode;
   var rewindTimeKeyCode         = document.getElementById('rewind-time').keyCode;
   var advanceTimeKeyCode        = document.getElementById('advance-time').keyCode;
+  var speedDownKeyCode          = document.getElementById('speed-down').keyCode;
+  var speedUpKeyCode            = document.getElementById('speed-up').keyCode;
+  var resetSpeedKeyCode         = document.getElementById('reset-speed').keyCode;
   var partialLoopKeyCode        = document.getElementById('partial-loop').keyCode;
   var skipTimeAmount            = document.getElementById('skip-time-amount').value;
 
@@ -55,6 +67,9 @@ function saveOptions() {
   jumpToEndKeyCode          = isNaN(jumpToEndKeyCode)          ? defaultKey.jumpToEndKeyCode          : jumpToEndKeyCode;
   rewindTimeKeyCode         = isNaN(rewindTimeKeyCode)         ? defaultKey.rewindTimeKeyCode         : rewindTimeKeyCode;
   advanceTimeKeyCode        = isNaN(advanceTimeKeyCode)        ? defaultKey.advanceTimeKeyCode        : advanceTimeKeyCode;
+  speedDownKeyCode          = isNaN(speedDownKeyCode)          ? defaultKey.speedDownKeyCode          : speedDownKeyCode;
+  speedUpKeyCode            = isNaN(speedUpKeyCode)            ? defaultKey.speedUpKeyCode            : speedUpKeyCode;
+  resetSpeedKeyCode         = isNaN(resetSpeedKeyCode)         ? defaultKey.resetSpeedKeyCode         : resetSpeedKeyCode;
   partialLoopKeyCode        = isNaN(partialLoopKeyCode)        ? defaultKey.partialLoopKeyCode        : partialLoopKeyCode;
   skipTimeAmount            = isNaN(skipTimeAmount)            ? defaultKey.skipTimeAmount            : Number(skipTimeAmount);
 
@@ -64,8 +79,11 @@ function saveOptions() {
   validateFlag[2] = checkValidate('jump-to-end');
   validateFlag[3] = checkValidate('rewind-time');
   validateFlag[4] = checkValidate('advance-time');
-  validateFlag[5] = checkValidate('partial-loop');
-  validateFlag[6] = checkValidateNumeric('skip-time-amount');
+  validateFlag[5] = checkValidate('speed-down');
+  validateFlag[6] = checkValidate('speed-up');
+  validateFlag[7] = checkValidate('reset-speed');
+  validateFlag[8] = checkValidate('partial-loop');
+  validateFlag[9] = checkValidateNumeric('skip-time-amount');
 
   // when some input is wrong.
   for (var i = 0; i < validateFlag.length; i++) {
@@ -80,6 +98,9 @@ function saveOptions() {
     jumpToEndKeyCode:          jumpToEndKeyCode,
     rewindTimeKeyCode:         rewindTimeKeyCode,
     advanceTimeKeyCode:        advanceTimeKeyCode,
+    speedDownKeyCode:          speedDownKeyCode,
+    speedUpKeyCode:            speedUpKeyCode,
+    resetSpeedKeyCode:         resetSpeedKeyCode,
     partialLoopKeyCode:        partialLoopKeyCode,
     skipTimeAmount:            skipTimeAmount
   }, function() {
