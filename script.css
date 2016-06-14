@@ -1,4 +1,4 @@
-.video-status {
+.video-status, .video-status-keep-showing {
   position: absolute;
   left: 15px;
   top: 15px;
@@ -11,4 +11,5 @@
   font-size: 18px;
   text-align: center;
   width: 80px;
+  display: inline-block;
 }

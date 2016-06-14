@@ -32,6 +32,7 @@ chrome.extension.sendMessage({}, function(response) {
   var loopEnd;
   var loopTimeoutID;
   var flag = 0;
+  var removeStatusBoxTimeoutID;
 
   // キーが押されたかどうかを判定
   document.addEventListener('keydown', function(event) {
@@ -79,7 +80,7 @@ chrome.extension.sendMessage({}, function(response) {
 
     // 部分ループ再生のステータスを記録
     // オプションで変更可能なキーコード
-    // default: R
+    // default: L
     if (event.keyCode == settings.partialLoopKeyCode) {
       if (loopStatus === undefined) {
         loopStatus = 0;
@@ -116,7 +117,7 @@ chrome.extension.sendMessage({}, function(response) {
   function speedDown() {
     var player = document.getElementsByTagName('video')[0];
     player.playbackRate = floorFormat((player.playbackRate - 0.09), 1);
-    statusBox(player.playbackRate.toFixed(1));
+    statusBox('playbackRate', player.playbackRate.toFixed(1));
     scrollToPlayer();
   }
 
@@ -124,7 +125,7 @@ chrome.extension.sendMessage({}, function(response) {
   function speedUp() {
     var player = document.getElementsByTagName('video')[0];
     player.playbackRate = floorFormat((player.playbackRate + 0.11), 1);
-    statusBox(player.playbackRate.toFixed(1));
+    statusBox('playbackRate', player.playbackRate.toFixed(1));
     scrollToPlayer();
   }
 
@@ -132,7 +133,7 @@ chrome.extension.sendMessage({}, function(response) {
   function resetSpeed() {
     var player = document.getElementsByTagName('video')[0];
     player.playbackRate = 1.0;
-    statusBox(player.playbackRate.toFixed(1));
+    statusBox('playbackRate', player.playbackRate.toFixed(1));
     scrollToPlayer();
   }
 
@@ -163,13 +164,13 @@ chrome.extension.sendMessage({}, function(response) {
     var player = document.getElementsByTagName('video')[0];
     if (loopStatus === 1) {
       loopStart = player.currentTime;
-      statusBox('Set');
+      statusBox('set', 'Set');
     }
     else if (loopStatus === 2) {
       if (flag !== 1) {
         loopEnd = player.currentTime;
         flag = 1;
-        statusBox('Loop!');
+        statusBox('loop', 'Loop!');
       }
       loopTimeoutID = setTimeout(function() {
         if (player.currentTime >= loopEnd || player.currentTime < loopStart) {
@@ -179,7 +180,7 @@ chrome.extension.sendMessage({}, function(response) {
           clearTimeout(loopTimeoutID);
           loopStatus = 0;
           flag = 0;
-          statusBox('Restore');
+          statusBox('restore', 'Restore');
           return false;
         }
         partialLoop();
@@ -211,18 +212,35 @@ chrome.extension.sendMessage({}, function(response) {
   };
 
   // 部分ループ再生のステータスを表示する
-  function statusBox(status) {
-    var videoStatus = '<span class="video-status">' + status + '</span>';
+  function statusBox(status, statusStr) {
+    if (status === 'set') {
+      var videoStatus = '<span class="video-status-keep-showing">' + statusStr + '</span>';
+    }
+    else {
+      var videoStatus = '<span class="video-status">' + statusStr + '</span>';
+    }
 
     $('.video-status').remove();
+    if (status === 'loop') {
+      $('.video-status-keep-showing').remove();
+    }
 
     $(videoStatus).insertBefore('video');
 
-    if (status !== 'Set') {
+    if ($('span').hasClass('video-status') && $('span').hasClass('video-status-keep-showing')) {
+      $('.video-status-keep-showing').css('display', 'none');
+      clearTimeout(removeStatusBoxTimeoutID);
+      removeStatusBoxTimeoutID = setTimeout(function() {
+        $('.video-status').remove();
+        $('.video-status-keep-showing').css('display', 'inline-block');
+      }, 1000);
+    }
+    else {
       $('.video-status').fadeOut(1000, function() {
         $(this).remove();
       });
     }
-  }
+
+  };
 
 });
