@@ -30,6 +30,7 @@ header {
   right: 0;
   border-bottom: 1px solid #eee;
   background: linear-gradient(white, white 40%, rgba(255, 255, 255, 0.92));
+  z-index: 100000;
 }
 header, #main {
   min-width: 600px;
@@ -68,13 +69,19 @@ input[type="text"] {
   border: 1px solid #cccccc;
 }
 
+span {
+  width: 79px;
+  text-align: center;
+  display: inline-block;
+}
+
 .settings {
   margin: 10px 0;
 }
 
-label {
+label, #button-wrap {
   display: inline-block;
-  width: 170px;
+  width: 180px;
 }
 
 .invalid-value {
@@ -88,9 +95,4 @@ label {
   font-weight: bold;
   width: 79px;
   text-align: center;
-}
-
-#button-wrap {
-  width: 170px;
-  display: inline-block;
 }
