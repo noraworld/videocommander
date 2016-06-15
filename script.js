@@ -197,8 +197,7 @@ chrome.extension.sendMessage({}, function(response) {
       clearTimeout(loopTimeoutID);
       loopStatus = 0;
       flag = 0;
-      $('.video-status-keep-showing').remove();
-      statusBox('restore', 'Restore');
+      statusBox('reset', 'Restore');
     }
   };
 
@@ -231,6 +230,10 @@ chrome.extension.sendMessage({}, function(response) {
     $('.video-status').remove();
     if (status === 'loop') {
       $('.video-status-keep-showing').remove();
+    }
+    if (status === 'reset') {
+      $('.video-status-keep-showing').remove();
+      clearTimeout(removeStatusBoxTimeoutID);
     }
 
     $(videoStatus).insertBefore('video');
