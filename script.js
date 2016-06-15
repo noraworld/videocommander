@@ -26,12 +26,13 @@ chrome.extension.sendMessage({}, function(response) {
     settings.skipTimeAmount            = Number(storage.skipTimeAmount);
   });
 
-  // Global variable
+  // グローバル変数
+  var player = document.getElementsByTagName('video')[0];
   var loopStatus = 0;
   var loopStart;
   var loopEnd;
-  var loopTimeoutID;
   var flag = 0;
+  var loopTimeoutID;
   var removeStatusBoxTimeoutID;
 
   // キーが押されたかどうかを判定
@@ -91,9 +92,13 @@ chrome.extension.sendMessage({}, function(response) {
 
   });
 
+  // 再生スピードの変更を監視する
+  player.onratechange = function() {
+    observeSpeed(player.playbackRate);
+  };
+
   // 再生/停止
   function togglePlayAndPause() {
-    var player = document.getElementsByTagName('video')[0];
     if (player.paused === true)
       player.play();
     else
@@ -103,57 +108,51 @@ chrome.extension.sendMessage({}, function(response) {
 
   // 数秒巻き戻し
   function rewindTime() {
-    document.getElementsByTagName('video')[0].currentTime -= settings.skipTimeAmount;
+    player.currentTime -= settings.skipTimeAmount;
     scrollToPlayer();
   };
 
   // 数秒早送り
   function advanceTime() {
-    document.getElementsByTagName('video')[0].currentTime += settings.skipTimeAmount;
+    player.currentTime += settings.skipTimeAmount;
     scrollToPlayer();
   };
 
   // 再生スピードダウン
   function speedDown() {
-    var player = document.getElementsByTagName('video')[0];
     player.playbackRate = floorFormat((player.playbackRate - 0.09), 1);
-    statusBox('playbackRate', player.playbackRate.toFixed(1));
+    statusBox('playbackRate', adjustSpeedStatus(player.playbackRate));
     scrollToPlayer();
   }
 
   // 再生スピードアップ
   function speedUp() {
-    var player = document.getElementsByTagName('video')[0];
     player.playbackRate = floorFormat((player.playbackRate + 0.11), 1);
-    statusBox('playbackRate', player.playbackRate.toFixed(1));
+    statusBox('playbackRate', adjustSpeedStatus(player.playbackRate));
     scrollToPlayer();
   }
 
   // 再生スピードリセット
   function resetSpeed() {
-    var player = document.getElementsByTagName('video')[0];
     player.playbackRate = 1.0;
-    statusBox('playbackRate', player.playbackRate.toFixed(1));
+    statusBox('playbackRate', adjustSpeedStatus(player.playbackRate));
     scrollToPlayer();
   }
 
   // 動画の最初の位置に移動する
   function jumpToBeginning() {
-    var player = document.getElementsByTagName('video')[0];
     player.currentTime = player.seekable.start(0);
     scrollToPlayer();
   };
 
   // 動画の最後の位置に移動する
   function jumpToEnd() {
-    var player = document.getElementsByTagName('video')[0];
     player.currentTime = player.seekable.end(0);
     scrollToPlayer();
   };
 
   // 数字に対応する割合まで動画を移動する
   function jumpToTimerRatio(timerRatio) {
-    var player = document.getElementsByTagName('video')[0];
     timerRatio = (timerRatio - 48) / 10;
     player.currentTime = player.seekable.end(0) * timerRatio;
     scrollToPlayer();
@@ -161,7 +160,6 @@ chrome.extension.sendMessage({}, function(response) {
 
   // 部分ループ再生
   function partialLoop() {
-    var player = document.getElementsByTagName('video')[0];
     if (loopStatus === 1) {
       loopStart = player.currentTime;
       statusBox('set', 'Set');
@@ -201,7 +199,6 @@ chrome.extension.sendMessage({}, function(response) {
 
   // 動画プレイヤーのある位置までスクロールする
   function scrollToPlayer() {
-    var player = document.getElementsByTagName('video')[0];
     var rect = player.getBoundingClientRect();
     var positionY = rect.top;
     var dElm = document.documentElement;
@@ -240,7 +237,27 @@ chrome.extension.sendMessage({}, function(response) {
         $(this).remove();
       });
     }
+  };
 
+  // 再生スピードの上限と下限を設定する
+  function observeSpeed(speedChecker) {
+    if (speedChecker < 0.5) {
+      player.playbackRate = 0.5;
+    }
+    else if (speedChecker > 4.0) {
+      player.playbackRate = 4.0;
+    }
+  };
+
+  // 表示される再生スピードを調整する
+  function adjustSpeedStatus(speedStatus) {
+    if (speedStatus < 0.5) {
+      speedStatus = 0.5;
+    }
+    else if (speedStatus > 4.0) {
+      speedStatus = 4.0;
+    }
+    return speedStatus.toFixed(1);
   };
 
 });
