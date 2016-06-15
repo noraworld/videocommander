@@ -69,7 +69,7 @@ chrome.extension.sendMessage({}, function(response) {
       case 32: event.preventDefault(); togglePlayAndPause(); break; // space
       case 37:                         rewindTime();         break; // left-arrow
       case 39:                         advanceTime();        break; // right-arrow
-      case 27:                         activeBlur();         break; // esc
+      case 27: activeBlur();           resetLoopStatus();    break; // esc
     }
 
     // 数字のキーを押すとその数字に対応する割合まで動画を移動する
@@ -189,6 +189,17 @@ chrome.extension.sendMessage({}, function(response) {
   // アクティブフォーカスを外す
   function activeBlur() {
     document.activeElement.blur();
+  };
+
+  // ループステータスをリセットする
+  function resetLoopStatus() {
+    if (loopStatus !== 0) {
+      clearTimeout(loopTimeoutID);
+      loopStatus = 0;
+      flag = 0;
+      $('.video-status-keep-showing').remove();
+      statusBox('restore', 'Restore');
+    }
   };
 
   // 小数点第(n+1)位を切り捨てて小数点第n位まで求める
