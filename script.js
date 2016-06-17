@@ -1,5 +1,4 @@
 chrome.extension.sendMessage({}, function(response) {
-
   var settings = {
     togglePlayAndPauseKeyCode: 80,  // default: P
     jumpToBeginningKeyCode:    72,  // defualt: H
@@ -27,16 +26,37 @@ chrome.extension.sendMessage({}, function(response) {
   });
 
   // グローバル変数
-  var player = document.getElementsByTagName('video')[0];
+  var player;
   var loopStatus = 0;
   var loopStart;
   var loopEnd;
   var flag = 0;
   var loopTimeoutID;
   var removeStatusBoxTimeoutID;
+  var getVideoTimeoutID;
+
+  // video要素を取得する
+  function getVideoElement() {
+    if (document.getElementsByTagName('video')[0] !== undefined) {
+      player = document.getElementsByTagName('video')[0];
+      clearTimeout(getVideoTimeoutID);
+      observeSpeed();
+      return false;
+    }
+    getVideoTimeoutID = setTimeout(function() {
+      getVideoElement();
+    }, 10);
+  };
+  getVideoElement();
 
   // キーが押されたかどうかを判定
-  document.addEventListener('keydown', function(event) {
+  window.addEventListener('keydown', function(event) {
+
+    Object.keys(settings).forEach(function(key) {
+      if (event.keyCode == settings[key]) {
+        event.stopPropagation();
+      }
+    });
 
     // 入力フォームにフォーカスがあるときはショートカットを無効化
     if ((document.activeElement.nodeName === 'INPUT'
@@ -48,8 +68,8 @@ chrome.extension.sendMessage({}, function(response) {
       activeBlur();
     }
 
-    // cmd, shift, ctrl, alt をエスケープ
-    if (event.metaKey || event.shiftKey || event.ctrlKey || event.altKey) {
+    // cmd, ctrl, alt をエスケープ
+    if (event.metaKey || event.ctrlKey || event.altKey) {
       return false;
     }
 
@@ -90,11 +110,13 @@ chrome.extension.sendMessage({}, function(response) {
       partialLoop();
     }
 
-  });
+  }, true);
 
   // 再生スピードの変更を監視する
-  player.onratechange = function() {
-    observeSpeed(player.playbackRate);
+  function observeSpeed() {
+    player.onratechange = function() {
+      setSpeedRange(player.playbackRate);
+    };
   };
 
   // 再生/停止
@@ -254,7 +276,7 @@ chrome.extension.sendMessage({}, function(response) {
   };
 
   // 再生スピードの上限と下限を設定する
-  function observeSpeed(speedChecker) {
+  function setSpeedRange(speedChecker) {
     if (speedChecker < 0.5) {
       player.playbackRate = 0.5;
     }
@@ -273,5 +295,4 @@ chrome.extension.sendMessage({}, function(response) {
     }
     return speedStatus.toFixed(1);
   };
-
 });
