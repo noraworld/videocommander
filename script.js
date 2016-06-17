@@ -32,11 +32,16 @@ chrome.extension.sendMessage({}, function(response) {
   });
 
   // グローバル変数
+  // loopStatus
+  //   0 -> Not set
+  //   1 -> Set
+  //   2 -> Loop
+  //   3 -> Restore
   var player;
   var loopStatus = 0;
   var loopStart;
   var loopEnd;
-  var flag = 0;
+  var loopFlag = false;
   var loopTimeoutID;
   var removeStatusBoxTimeoutID;
   var getVideoTimeoutID;
@@ -58,7 +63,9 @@ chrome.extension.sendMessage({}, function(response) {
   // キーが押されたかどうかを判定
   window.addEventListener('keydown', function(event) {
 
-    // 設定されたキーは
+    // オプションのキーと固定のキーに関しては
+    // 元々サイトで実装されているイベントリスナーを
+    // 無効化してこちらの処理のみを実行する
     Object.keys(settings).forEach(function(key) {
       if (event.keyCode == settings[key]) {
         event.stopPropagation();
@@ -193,9 +200,9 @@ chrome.extension.sendMessage({}, function(response) {
       statusBox('set', 'Set');
     }
     else if (loopStatus === 2) {
-      if (flag !== 1) {
+      if (loopFlag === false) {
         loopEnd = player.currentTime;
-        flag = 1;
+        loopFlag = true;
         statusBox('loop', 'Loop!');
       }
       loopTimeoutID = setTimeout(function() {
@@ -205,7 +212,7 @@ chrome.extension.sendMessage({}, function(response) {
         if (loopStatus === 3) {
           clearTimeout(loopTimeoutID);
           loopStatus = 0;
-          flag = 0;
+          loopFlag = false;
           statusBox('restore', 'Restore');
           return false;
         }
@@ -224,7 +231,7 @@ chrome.extension.sendMessage({}, function(response) {
     if (loopStatus !== 0) {
       clearTimeout(loopTimeoutID);
       loopStatus = 0;
-      flag = 0;
+      loopFlag = false;
       statusBox('reset', 'Restore');
     }
   };
