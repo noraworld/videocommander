@@ -63,6 +63,10 @@ chrome.extension.sendMessage({}, function(response) {
   // キーが押されたかどうかを判定
   window.addEventListener('keydown', function(event) {
 
+    if (player === undefined) {
+      return false;
+    }
+
     // オプションのキーと固定のキーに関しては
     // 元々サイトで実装されているイベントリスナーを
     // 無効化してこちらの処理のみを実行する
@@ -100,9 +104,9 @@ chrome.extension.sendMessage({}, function(response) {
       case settings.resetSpeedKeyCode:         resetSpeed();         break;  // default: R
       // 固定のキーコード
       case settings.fixedTogglePlayAndPauseKeyCode: event.preventDefault(); togglePlayAndPause(); break;  // space
-      case settings.fixedRewindTimeKeyCode:    rewindTime();         break;  // left-arrow
-      case settings.fixedAdvanceTimeKeyCode:   advanceTime();        break;  // right-arrow
-      case settings.isEscape: activeBlur();    resetLoopStatus();    break;  // esc
+      case settings.fixedRewindTimeKeyCode:         event.preventDefault(); rewindTime();         break;  // left-arrow
+      case settings.fixedAdvanceTimeKeyCode:        event.preventDefault(); advanceTime();        break;  // right-arrow
+      case settings.isEscape:                       activeBlur();           resetLoopStatus();    break;  // esc
     }
 
     // 数字のキーを押すとその数字に対応する割合まで動画を移動する
