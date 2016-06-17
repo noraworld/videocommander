@@ -1,15 +1,21 @@
 chrome.extension.sendMessage({}, function(response) {
   var settings = {
-    togglePlayAndPauseKeyCode: 80,  // default: P
-    jumpToBeginningKeyCode:    72,  // defualt: H
-    jumpToEndKeyCode:          69,  // default: E
-    rewindTimeKeyCode:         65,  // default: A
-    advanceTimeKeyCode:        83,  // default: S
-    speedDownKeyCode:          68,  // default: D
-    speedUpKeyCode:            85,  // default: U
-    resetSpeedKeyCode:         82,  // default: R
-    partialLoopKeyCode:        76,  // default: L
-    skipTimeAmount:             5,  // default: 5
+    // オプションで変更可能なキーコード
+    togglePlayAndPauseKeyCode:      80,  // default: P
+    jumpToBeginningKeyCode:         72,  // defualt: H
+    jumpToEndKeyCode:               69,  // default: E
+    rewindTimeKeyCode:              65,  // default: A
+    advanceTimeKeyCode:             83,  // default: S
+    speedDownKeyCode:               68,  // default: D
+    speedUpKeyCode:                 85,  // default: U
+    resetSpeedKeyCode:              82,  // default: R
+    partialLoopKeyCode:             76,  // default: L
+    skipTimeAmount:                  5,  // default: 5
+    // 固定のキーコード
+    fixedTogglePlayAndPauseKeyCode: 32,  // space
+    fixedRewindTimeKeyCode:         37,  // left-arrow
+    fixedAdvanceTimeKeyCode:        39,  // right-arrow
+    isEscape:                       27,  // esc
   };
 
   chrome.storage.sync.get(settings, function(storage) {
@@ -52,6 +58,7 @@ chrome.extension.sendMessage({}, function(response) {
   // キーが押されたかどうかを判定
   window.addEventListener('keydown', function(event) {
 
+    // 設定されたキーは
     Object.keys(settings).forEach(function(key) {
       if (event.keyCode == settings[key]) {
         event.stopPropagation();
@@ -76,20 +83,19 @@ chrome.extension.sendMessage({}, function(response) {
     // ショートカットキーから関数を呼び出す
     switch (event.keyCode) {
       // オプションで変更可能なキーコード
-      case settings.togglePlayAndPauseKeyCode: togglePlayAndPause(); break; // default: P
-      case settings.jumpToBeginningKeyCode:    jumpToBeginning();    break; // default: H
-      case settings.jumpToEndKeyCode:          jumpToEnd();          break; // default: E
-      case settings.rewindTimeKeyCode:         rewindTime();         break; // default: A
-      case settings.advanceTimeKeyCode:        advanceTime();        break; // default: S
-      case settings.speedDownKeyCode:          speedDown();          break; // default: D
-      case settings.speedUpKeyCode:            speedUp();            break; // default: U
-      case settings.resetSpeedKeyCode:         resetSpeed();         break; // default: R
-
+      case settings.togglePlayAndPauseKeyCode: togglePlayAndPause(); break;  // default: P
+      case settings.jumpToBeginningKeyCode:    jumpToBeginning();    break;  // default: H
+      case settings.jumpToEndKeyCode:          jumpToEnd();          break;  // default: E
+      case settings.rewindTimeKeyCode:         rewindTime();         break;  // default: A
+      case settings.advanceTimeKeyCode:        advanceTime();        break;  // default: S
+      case settings.speedDownKeyCode:          speedDown();          break;  // default: D
+      case settings.speedUpKeyCode:            speedUp();            break;  // default: U
+      case settings.resetSpeedKeyCode:         resetSpeed();         break;  // default: R
       // 固定のキーコード
-      case 32: event.preventDefault(); togglePlayAndPause(); break; // space
-      case 37:                         rewindTime();         break; // left-arrow
-      case 39:                         advanceTime();        break; // right-arrow
-      case 27: activeBlur();           resetLoopStatus();    break; // esc
+      case settings.fixedTogglePlayAndPauseKeyCode: event.preventDefault(); togglePlayAndPause(); break;  // space
+      case settings.fixedRewindTimeKeyCode:    rewindTime();         break;  // left-arrow
+      case settings.fixedAdvanceTimeKeyCode:   advanceTime();        break;  // right-arrow
+      case settings.isEscape: activeBlur();    resetLoopStatus();    break;  // esc
     }
 
     // 数字のキーを押すとその数字に対応する割合まで動画を移動する
