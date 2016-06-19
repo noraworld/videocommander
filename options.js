@@ -1,14 +1,14 @@
 var defaultKey = {
-  togglePlayAndPauseKeyCode: 80,  // default: P
-  jumpToBeginningKeyCode:    72,  // defualt: H
-  jumpToEndKeyCode:          69,  // default: E
-  rewindTimeKeyCode:         65,  // defualt: A
-  advanceTimeKeyCode:        83,  // default: S
-  speedDownKeyCode:          68,  // default: D
-  speedUpKeyCode:            85,  // default: U
-  resetSpeedKeyCode:         82,  // default: R
-  partialLoopKeyCode:        76,  // default: L
-  skipTimeAmount:             5,  // default: 5 seconds
+  togglePlayAndPauseKeyCode: 112,  // default: p
+  jumpToBeginningKeyCode:    104,  // defualt: h
+  jumpToEndKeyCode:          101,  // default: e
+  rewindTimeKeyCode:          97,  // defualt: a
+  advanceTimeKeyCode:        115,  // default: s
+  speedDownKeyCode:          100,  // default: d
+  speedUpKeyCode:            117,  // default: u
+  resetSpeedKeyCode:         114,  // default: r
+  partialLoopKeyCode:        108,  // default: l
+  skipTimeAmount:              5,  // default: 5 sec
 };
 
 $(function() {
@@ -46,7 +46,7 @@ function loadOptions() {
 }
 
 function updateInputText(inputID, keyCode) {
-  document.getElementById(inputID).value = String.fromCharCode(keyCode).toUpperCase();
+  document.getElementById(inputID).value = String.fromCharCode(keyCode);
   document.getElementById(inputID).keyCode = keyCode;
 }
 
@@ -148,11 +148,11 @@ function inputFocus(event) {
 };
 
 function inputBlur(event) {
-  event.target.value = String.fromCharCode(event.target.keyCode).toUpperCase();
+  event.target.value = String.fromCharCode(event.target.keyCode);
 }
 
 function recordKeypress(event) {
-  var nomalizedChar = String.fromCharCode(event.keyCode).toUpperCase();
+  var nomalizedChar = String.fromCharCode(event.keyCode);
   event.target.value = nomalizedChar;
   event.target.keyCode = nomalizedChar.charCodeAt();
   event.preventDefault();
@@ -162,7 +162,7 @@ function recordKeypress(event) {
 function checkValidate(inputID) {
   var inputID = '#' + inputID;
   $(inputID).parent().children('.invalid-value').remove();
-  if ($(inputID).val().match(/^[0-9A-Z-^\\@\[\];:,./_]{1}$/) === null) {
+  if ($(inputID).val().match(/^[0-9a-zA-Z-^\\@\[\];:,./_=~|`{}+*<>?!"#$%&'()]{1}$/) === null) {
     // some input is wrong.
     $(inputID).css('border', '1px solid red');
     $(inputID).parent().append('<div class="invalid-value">Invalid value</div>');
