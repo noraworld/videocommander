@@ -14,10 +14,10 @@ chrome.extension.sendMessage({}, function(response) {
   };
   var fixed = {
     // 固定のキーコード
-    fixedTogglePlayAndPauseKeyCode: 32,  // space
-    fixedRewindTimeKeyCode:         37,  // left-arrow
-    fixedAdvanceTimeKeyCode:        39,  // right-arrow
-    isEscape:                       27,  // esc
+    togglePlayAndPauseKeyCode: 32,  // space
+    rewindTimeKeyCode:         37,  // left-arrow
+    advanceTimeKeyCode:        39,  // right-arrow
+    isEscape:                  27,  // esc
   };
 
   chrome.storage.sync.get(settings, function(storage) {
@@ -80,7 +80,8 @@ chrome.extension.sendMessage({}, function(response) {
     || document.activeElement.getAttribute('type') === 'text')
     || document.activeElement.isContentEditable === true) {
       return false;
-    } else {
+    }
+    else {
       activeBlur();
     }
 
@@ -90,10 +91,10 @@ chrome.extension.sendMessage({}, function(response) {
 
     switch (event.keyCode) {
       // 固定のキーコード
-      case fixed.fixedTogglePlayAndPauseKeyCode: event.preventDefault(); togglePlayAndPause(); break;  // space
-      case fixed.fixedRewindTimeKeyCode:         event.preventDefault(); rewindTime();         break;  // left-arrow
-      case fixed.fixedAdvanceTimeKeyCode:        event.preventDefault(); advanceTime();        break;  // right-arrow
-      case fixed.isEscape:                       activeBlur();           resetLoopStatus();    break;  // esc
+      case fixed.togglePlayAndPauseKeyCode: event.preventDefault(); togglePlayAndPause(); break;  // space
+      case fixed.rewindTimeKeyCode:         event.preventDefault(); rewindTime();         break;  // left-arrow
+      case fixed.advanceTimeKeyCode:        event.preventDefault(); advanceTime();        break;  // right-arrow
+      case fixed.isEscape:                  activeBlur();           resetLoopStatus();    break;  // esc
     }
 
   }, true);
@@ -120,7 +121,8 @@ chrome.extension.sendMessage({}, function(response) {
     || document.activeElement.getAttribute('type') === 'text')
     || document.activeElement.isContentEditable === true) {
       return false;
-    } else {
+    }
+    else {
       activeBlur();
     }
 
