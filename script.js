@@ -89,7 +89,7 @@ chrome.extension.sendMessage({}, function(response) {
       activeBlur();
     }
 
-    // cmd, ctrl, alt をエスケープ
+    // 修飾キーをエスケープ
     if (event.metaKey || event.ctrlKey || event.altKey) {
       return false;
     }
