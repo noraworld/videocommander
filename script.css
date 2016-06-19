@@ -2,7 +2,7 @@
   position: absolute;
   left: 15px;
   top: 15px;
-  color: rbga(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 1.0);
   background: rgba(0, 0, 0, 0.6);
   padding: 10px 7px;
   border-radius: 10px;
