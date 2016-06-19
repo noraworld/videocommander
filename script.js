@@ -62,46 +62,9 @@ chrome.extension.sendMessage({}, function(response) {
   };
   getVideoElement();
 
-  // escが押されたかどうかを判定
-  window.addEventListener('keydown', function(event) {
-
-    if (player === undefined) {
-      return false;
-    }
-
-    Object.keys(fixed).forEach(function(key) {
-      if (event.keyCode == fixed[key]) {
-        event.stopPropagation();
-      }
-    });
-
-    if ((document.activeElement.nodeName === 'INPUT'
-    || document.activeElement.nodeName === 'TEXTAREA'
-    || document.activeElement.getAttribute('type') === 'text')
-    || document.activeElement.isContentEditable === true) {
-      return false;
-    }
-    else {
-      activeBlur();
-    }
-
-    if (event.metaKey || event.shiftKey || event.ctrlKey || event.altKey) {
-      return false;
-    }
-
-    switch (event.keyCode) {
-      // 固定のキーコード
-      case fixed.togglePlayAndPauseKeyCode: event.preventDefault(); togglePlayAndPause(); break;  // space
-      case fixed.rewindTimeKeyCode:         event.preventDefault(); rewindTime();         break;  // left-arrow
-      case fixed.advanceTimeKeyCode:        event.preventDefault(); advanceTime();        break;  // right-arrow
-      case fixed.isEscape:                  activeBlur();           resetLoopStatus();    break;  // esc
-    }
-
-  }, true);
-
-  // キーが押されたかどうかを判定
+  // オプションのキーが押されたかどうかを判定
   window.addEventListener('keypress', function(event) {
-
+    // 動画がないときはキーイベントを実行しない
     if (player === undefined) {
       return false;
     }
@@ -133,7 +96,7 @@ chrome.extension.sendMessage({}, function(response) {
 
     // ショートカットキーから関数を呼び出す
     switch (event.keyCode) {
-      // オプションで変更可能なキーコード
+      // オプションのキーコード
       case settings.togglePlayAndPauseKeyCode: togglePlayAndPause(); break;  // default: p
       case settings.jumpToBeginningKeyCode:    jumpToBeginning();    break;  // default: h
       case settings.jumpToEndKeyCode:          jumpToEnd();          break;  // default: e
@@ -161,7 +124,41 @@ chrome.extension.sendMessage({}, function(response) {
       loopStatus++;
       partialLoop();
     }
+  }, true);
 
+  // 固定のキーが押されたかどうかを判定
+  window.addEventListener('keydown', function(event) {
+    if (player === undefined) {
+      return false;
+    }
+
+    Object.keys(fixed).forEach(function(key) {
+      if (event.keyCode == fixed[key]) {
+        event.stopPropagation();
+      }
+    });
+
+    if ((document.activeElement.nodeName === 'INPUT'
+    || document.activeElement.nodeName === 'TEXTAREA'
+    || document.activeElement.getAttribute('type') === 'text')
+    || document.activeElement.isContentEditable === true) {
+      return false;
+    }
+    else {
+      activeBlur();
+    }
+
+    if (event.metaKey || event.shiftKey || event.ctrlKey || event.altKey) {
+      return false;
+    }
+
+    switch (event.keyCode) {
+      // 固定のキーコード
+      case fixed.togglePlayAndPauseKeyCode: event.preventDefault(); togglePlayAndPause(); break;  // space
+      case fixed.rewindTimeKeyCode:         event.preventDefault(); rewindTime();         break;  // left-arrow
+      case fixed.advanceTimeKeyCode:        event.preventDefault(); advanceTime();        break;  // right-arrow
+      case fixed.isEscape:                  activeBlur();           resetLoopStatus();    break;  // esc
+    }
   }, true);
 
   // 再生スピードの変更を監視する
