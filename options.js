@@ -1,14 +1,14 @@
 var defaultKey = {
-  togglePlayAndPauseKeyCode: 112,  // default: p
-  jumpToBeginningKeyCode:    104,  // defualt: h
-  jumpToEndKeyCode:          101,  // default: e
-  rewindTimeKeyCode:          97,  // defualt: a
-  advanceTimeKeyCode:        115,  // default: s
-  speedDownKeyCode:          100,  // default: d
-  speedUpKeyCode:            117,  // default: u
-  resetSpeedKeyCode:         114,  // default: r
-  partialLoopKeyCode:        108,  // default: l
-  skipTimeAmount:              5,  // default: 5 sec
+  togglePlayAndPauseKeyCode: 'p',
+  jumpToBeginningKeyCode:    'h',
+  jumpToEndKeyCode:          'e',
+  rewindTimeKeyCode:         'a',
+  advanceTimeKeyCode:        's',
+  speedDownKeyCode:          'd',
+  speedUpKeyCode:            'u',
+  resetSpeedKeyCode:         'r',
+  partialLoopKeyCode:        'l',
+  skipTimeAmount:              5,
 };
 
 $(function() {
@@ -46,32 +46,21 @@ function loadOptions() {
 }
 
 function updateInputText(inputID, keyCode) {
-  document.getElementById(inputID).value = String.fromCharCode(keyCode);
+  document.getElementById(inputID).value = keyCode;
   document.getElementById(inputID).keyCode = keyCode;
 }
 
 function saveOptions() {
-  var togglePlayAndPauseKeyCode = document.getElementById('toggle-play-and-pause').keyCode;
-  var jumpToBeginningKeyCode    = document.getElementById('jump-to-beginning').keyCode;
-  var jumpToEndKeyCode          = document.getElementById('jump-to-end').keyCode;
-  var rewindTimeKeyCode         = document.getElementById('rewind-time').keyCode;
-  var advanceTimeKeyCode        = document.getElementById('advance-time').keyCode;
-  var speedDownKeyCode          = document.getElementById('speed-down').keyCode;
-  var speedUpKeyCode            = document.getElementById('speed-up').keyCode;
-  var resetSpeedKeyCode         = document.getElementById('reset-speed').keyCode;
-  var partialLoopKeyCode        = document.getElementById('partial-loop').keyCode;
+  var togglePlayAndPauseKeyCode = document.getElementById('toggle-play-and-pause').value;
+  var jumpToBeginningKeyCode    = document.getElementById('jump-to-beginning').value;
+  var jumpToEndKeyCode          = document.getElementById('jump-to-end').value;
+  var rewindTimeKeyCode         = document.getElementById('rewind-time').value;
+  var advanceTimeKeyCode        = document.getElementById('advance-time').value;
+  var speedDownKeyCode          = document.getElementById('speed-down').value;
+  var speedUpKeyCode            = document.getElementById('speed-up').value;
+  var resetSpeedKeyCode         = document.getElementById('reset-speed').value;
+  var partialLoopKeyCode        = document.getElementById('partial-loop').value;
   var skipTimeAmount            = document.getElementById('skip-time-amount').value;
-
-  togglePlayAndPauseKeyCode = isNaN(togglePlayAndPauseKeyCode) ? defaultKey.togglePlayAndPauseKeyCode : togglePlayAndPauseKeyCode;
-  jumpToBeginningKeyCode    = isNaN(jumpToBeginningKeyCode)    ? defaultKey.jumpToBeginningKeyCode    : jumpToBeginningKeyCode;
-  jumpToEndKeyCode          = isNaN(jumpToEndKeyCode)          ? defaultKey.jumpToEndKeyCode          : jumpToEndKeyCode;
-  rewindTimeKeyCode         = isNaN(rewindTimeKeyCode)         ? defaultKey.rewindTimeKeyCode         : rewindTimeKeyCode;
-  advanceTimeKeyCode        = isNaN(advanceTimeKeyCode)        ? defaultKey.advanceTimeKeyCode        : advanceTimeKeyCode;
-  speedDownKeyCode          = isNaN(speedDownKeyCode)          ? defaultKey.speedDownKeyCode          : speedDownKeyCode;
-  speedUpKeyCode            = isNaN(speedUpKeyCode)            ? defaultKey.speedUpKeyCode            : speedUpKeyCode;
-  resetSpeedKeyCode         = isNaN(resetSpeedKeyCode)         ? defaultKey.resetSpeedKeyCode         : resetSpeedKeyCode;
-  partialLoopKeyCode        = isNaN(partialLoopKeyCode)        ? defaultKey.partialLoopKeyCode        : partialLoopKeyCode;
-  skipTimeAmount            = isNaN(skipTimeAmount)            ? defaultKey.skipTimeAmount            : Number(skipTimeAmount);
 
   var validateFlag = [];
   validateFlag[0] = checkValidate('toggle-play-and-pause');
@@ -148,13 +137,13 @@ function inputFocus(event) {
 };
 
 function inputBlur(event) {
-  event.target.value = String.fromCharCode(event.target.keyCode);
+  event.target.value = event.target.keyCode;
 }
 
 function recordKeypress(event) {
-  var nomalizedChar = String.fromCharCode(event.keyCode);
+  var nomalizedChar = event.key;
   event.target.value = nomalizedChar;
-  event.target.keyCode = nomalizedChar.charCodeAt();
+  event.target.keyCode = nomalizedChar;
   event.preventDefault();
   event.stopPropagation();
 }

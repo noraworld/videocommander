@@ -1,35 +1,35 @@
 chrome.extension.sendMessage({}, function(response) {
   var settings = {
     // オプションで変更可能なキーコード
-    togglePlayAndPauseKeyCode:      112,  // default: p
-    jumpToBeginningKeyCode:         104,  // defualt: h
-    jumpToEndKeyCode:               101,  // default: e
-    rewindTimeKeyCode:               97,  // default: a
-    advanceTimeKeyCode:             115,  // default: s
-    speedDownKeyCode:               100,  // default: d
-    speedUpKeyCode:                 117,  // default: u
-    resetSpeedKeyCode:              114,  // default: r
-    partialLoopKeyCode:             108,  // default: l
-    skipTimeAmount:                   5,  // default: 5 sec
+    togglePlayAndPauseKeyCode: 'p',
+    jumpToBeginningKeyCode:    'h',
+    jumpToEndKeyCode:          'e',
+    rewindTimeKeyCode:         'a',
+    advanceTimeKeyCode:        's',
+    speedDownKeyCode:          'd',
+    speedUpKeyCode:            'u',
+    resetSpeedKeyCode:         'r',
+    partialLoopKeyCode:        'l',
+    skipTimeAmount:              5,
   };
   var fixed = {
     // 固定のキーコード
-    togglePlayAndPauseKeyCode: 32,  // space
-    rewindTimeKeyCode:         37,  // left-arrow
-    advanceTimeKeyCode:        39,  // right-arrow
-    isEscape:                  27,  // esc
+    togglePlayAndPauseKeyCode: ' ',           // space
+    rewindTimeKeyCode:         'ArrowLeft',   // left-arrow
+    advanceTimeKeyCode:        'ArrowRight',  // right-arrow
+    isEscape:                  'Escape',      // esc
   };
 
   chrome.storage.sync.get(settings, function(storage) {
-    settings.togglePlayAndPauseKeyCode = Number(storage.togglePlayAndPauseKeyCode);
-    settings.jumpToBeginningKeyCode    = Number(storage.jumpToBeginningKeyCode);
-    settings.jumpToEndKeyCode          = Number(storage.jumpToEndKeyCode);
-    settings.rewindTimeKeyCode         = Number(storage.rewindTimeKeyCode);
-    settings.advanceTimeKeyCode        = Number(storage.advanceTimeKeyCode);
-    settings.speedDownKeyCode          = Number(storage.speedDownKeyCode);
-    settings.speedUpKeyCode            = Number(storage.speedUpKeyCode);
-    settings.resetSpeedKeyCode         = Number(storage.resetSpeedKeyCode);
-    settings.partialLoopKeyCode        = Number(storage.partialLoopKeyCode);
+    settings.togglePlayAndPauseKeyCode = storage.togglePlayAndPauseKeyCode;
+    settings.jumpToBeginningKeyCode    = storage.jumpToBeginningKeyCode;
+    settings.jumpToEndKeyCode          = storage.jumpToEndKeyCode;
+    settings.rewindTimeKeyCode         = storage.rewindTimeKeyCode;
+    settings.advanceTimeKeyCode        = storage.advanceTimeKeyCode;
+    settings.speedDownKeyCode          = storage.speedDownKeyCode;
+    settings.speedUpKeyCode            = storage.speedUpKeyCode;
+    settings.resetSpeedKeyCode         = storage.resetSpeedKeyCode;
+    settings.partialLoopKeyCode        = storage.partialLoopKeyCode;
     settings.skipTimeAmount            = Number(storage.skipTimeAmount);
   });
 
@@ -62,8 +62,13 @@ chrome.extension.sendMessage({}, function(response) {
   };
   getVideoElement();
 
-  // オプションのキーが押されたかどうかを判定
-  window.addEventListener('keypress', function(event) {
+  // キーが押されたかどうかを判定
+  window.addEventListener('keydown', function(event) {
+    // escが押されたらアクティブフォーカスを外す
+    if (event.key == fixed.isEscape) {
+      activeBlur();
+    }
+
     // 動画がないときはキーイベントを実行しない
     if (player === undefined) {
       return false;
@@ -73,7 +78,12 @@ chrome.extension.sendMessage({}, function(response) {
     // 元々サイトで実装されているイベントリスナーを
     // 無効化してこちらの処理のみを実行する
     Object.keys(settings).forEach(function(key) {
-      if (event.keyCode == settings[key]) {
+      if (event.key == settings[key]) {
+        event.stopPropagation();
+      }
+    });
+    Object.keys(fixed).forEach(function(key) {
+      if (event.key == fixed[key]) {
         event.stopPropagation();
       }
     });
@@ -95,7 +105,7 @@ chrome.extension.sendMessage({}, function(response) {
     }
 
     // ショートカットキーから関数を呼び出す
-    switch (event.keyCode) {
+    switch (event.key) {
       // オプションのキーコード
       case settings.togglePlayAndPauseKeyCode: togglePlayAndPause(); break;  // default: p
       case settings.jumpToBeginningKeyCode:    jumpToBeginning();    break;  // default: h
@@ -105,59 +115,29 @@ chrome.extension.sendMessage({}, function(response) {
       case settings.speedDownKeyCode:          speedDown();          break;  // default: d
       case settings.speedUpKeyCode:            speedUp();            break;  // default: u
       case settings.resetSpeedKeyCode:         resetSpeed();         break;  // default: r
+      // 固定のキーコード
+      case fixed.togglePlayAndPauseKeyCode: event.preventDefault(); togglePlayAndPause(); break;  // space
+      case fixed.rewindTimeKeyCode:         event.preventDefault(); rewindTime();         break;  // left-arrow
+      case fixed.advanceTimeKeyCode:        event.preventDefault(); advanceTime();        break;  // right-arrow
+      case fixed.isEscape:                                          resetLoopStatus();    break;  // esc
     }
 
     // 数字のキーを押すとその数字に対応する割合まで動画を移動する
     // キーボードの 3 を押すと動画全体の 30% の位置に移動する
     // 固定のキーコード
-    if (event.keyCode >= 48 && event.keyCode <= 57) {
-      jumpToTimerRatio(event.keyCode);
+    if (event.key >= '0' && event.key <= '9') {
+      jumpToTimerRatio(event.key);
     }
 
     // 部分ループ再生のステータスを記録
     // オプションで変更可能なキーコード
     // default: L
-    if (event.keyCode == settings.partialLoopKeyCode) {
+    if (event.key == settings.partialLoopKeyCode) {
       if (loopStatus === undefined) {
         loopStatus = 0;
       }
       loopStatus++;
       partialLoop();
-    }
-  }, true);
-
-  // 固定のキーが押されたかどうかを判定
-  window.addEventListener('keydown', function(event) {
-    if (player === undefined) {
-      return false;
-    }
-
-    Object.keys(fixed).forEach(function(key) {
-      if (event.keyCode == fixed[key]) {
-        event.stopPropagation();
-      }
-    });
-
-    if ((document.activeElement.nodeName === 'INPUT'
-    || document.activeElement.nodeName === 'TEXTAREA'
-    || document.activeElement.getAttribute('type') === 'text')
-    || document.activeElement.isContentEditable === true) {
-      return false;
-    }
-    else {
-      activeBlur();
-    }
-
-    if (event.metaKey || event.shiftKey || event.ctrlKey || event.altKey) {
-      return false;
-    }
-
-    switch (event.keyCode) {
-      // 固定のキーコード
-      case fixed.togglePlayAndPauseKeyCode: event.preventDefault(); togglePlayAndPause(); break;  // space
-      case fixed.rewindTimeKeyCode:         event.preventDefault(); rewindTime();         break;  // left-arrow
-      case fixed.advanceTimeKeyCode:        event.preventDefault(); advanceTime();        break;  // right-arrow
-      case fixed.isEscape:                  activeBlur();           resetLoopStatus();    break;  // esc
     }
   }, true);
 
@@ -224,7 +204,7 @@ chrome.extension.sendMessage({}, function(response) {
 
   // 数字に対応する割合まで動画を移動する
   function jumpToTimerRatio(timerRatio) {
-    timerRatio = (timerRatio - 48) / 10;
+    timerRatio = Number(timerRatio) / 10;
     player.currentTime = player.seekable.end(0) * timerRatio;
     scrollToPlayer();
   };
