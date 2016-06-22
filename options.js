@@ -141,11 +141,19 @@ function inputBlur(event) {
 }
 
 function recordKeypress(event) {
-  var nomalizedChar = event.key;
+  var nomalizedChar = encodeYenSignToBackslash(event.key);
   event.target.value = nomalizedChar;
   event.target.keyCode = nomalizedChar;
   event.preventDefault();
   event.stopPropagation();
+}
+
+function encodeYenSignToBackslash(key) {
+  // 165 -> Yen Sign
+  if (key.charCodeAt() == 165) {
+    key = '\\';
+  }
+  return key;
 }
 
 function checkValidate(inputID) {

@@ -34,7 +34,7 @@ chrome.extension.sendMessage({}, function(response) {
   });
 
   // グローバル変数
-  // loopStatus
+  // loopStatus:
   //   0 -> Not set
   //   1 -> Set
   //   2 -> Loop
@@ -64,8 +64,11 @@ chrome.extension.sendMessage({}, function(response) {
 
   // キーが押されたかどうかを判定
   window.addEventListener('keydown', function(event) {
+    // 円マークをバックスラッシュに変換
+    var eventKey = encodeYenSignToBackslash(event.key);
+
     // escが押されたらアクティブフォーカスを外す
-    if (event.key == fixed.isEscape) {
+    if (eventKey == fixed.isEscape) {
       activeBlur();
     }
 
@@ -74,19 +77,10 @@ chrome.extension.sendMessage({}, function(response) {
       return false;
     }
 
-    // オプションのキーと固定のキーに関しては
-    // 元々サイトで実装されているイベントリスナーを
-    // 無効化してこちらの処理のみを実行する
-    Object.keys(settings).forEach(function(key) {
-      if (event.key == settings[key]) {
-        event.stopPropagation();
-      }
-    });
-    Object.keys(fixed).forEach(function(key) {
-      if (event.key == fixed[key]) {
-        event.stopPropagation();
-      }
-    });
+    // 修飾キーをエスケープ
+    if (event.metaKey || event.ctrlKey || event.altKey) {
+      return false;
+    }
 
     // 入力フォームにフォーカスがあるときはショートカットを無効化
     if ((document.activeElement.nodeName === 'INPUT'
@@ -99,13 +93,22 @@ chrome.extension.sendMessage({}, function(response) {
       activeBlur();
     }
 
-    // 修飾キーをエスケープ
-    if (event.metaKey || event.ctrlKey || event.altKey) {
-      return false;
-    }
+    // オプションのキーと固定のキーに関しては
+    // 元々サイトで実装されているイベントリスナーを
+    // 無効化してこちらの処理のみを実行する
+    Object.keys(settings).forEach(function(key) {
+      if (eventKey == settings[key]) {
+        event.stopPropagation();
+      }
+    });
+    Object.keys(fixed).forEach(function(key) {
+      if (eventKey == fixed[key]) {
+        event.stopPropagation();
+      }
+    });
 
     // ショートカットキーから関数を呼び出す
-    switch (event.key) {
+    switch (eventKey) {
       // オプションのキーコード
       case settings.togglePlayAndPauseKeyCode: togglePlayAndPause(); break;  // default: p
       case settings.jumpToBeginningKeyCode:    jumpToBeginning();    break;  // default: h
@@ -125,14 +128,14 @@ chrome.extension.sendMessage({}, function(response) {
     // 数字のキーを押すとその数字に対応する割合まで動画を移動する
     // キーボードの 3 を押すと動画全体の 30% の位置に移動する
     // 固定のキーコード
-    if (event.key >= '0' && event.key <= '9') {
-      jumpToTimerRatio(event.key);
+    if (eventKey >= '0' && eventKey <= '9') {
+      jumpToTimerRatio(eventKey);
     }
 
     // 部分ループ再生のステータスを記録
     // オプションで変更可能なキーコード
-    // default: L
-    if (event.key == settings.partialLoopKeyCode) {
+    // default: l
+    if (eventKey == settings.partialLoopKeyCode) {
       if (loopStatus === undefined) {
         loopStatus = 0;
       }
@@ -256,6 +259,15 @@ chrome.extension.sendMessage({}, function(response) {
   function floorFormat(number, n) {
     var _pow = Math.pow(10, n);
     return Math.floor(number * _pow) / _pow;
+  };
+
+  // 円マークをバックスラッシュに変換する
+  function encodeYenSignToBackslash(key) {
+    // 165 -> Yen Sign
+    if (key.charCodeAt() == 165) {
+      key = '\\';
+    }
+    return key;
   };
 
   // 動画プレイヤーのある位置までスクロールする
