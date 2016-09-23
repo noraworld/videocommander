@@ -1,5 +1,5 @@
 # Video Commander
-Video Commander a Chrome Extension (Add detailed description about this extension)
+Video Commander a Chrome Extension that provides keyboard shortcuts to loop, speed up, speed down, rewind time, advance time and other handy actions. Would you like to know other actions? - see [Usage](#usage)
 
 # Download
 Video Commander - Chrome Web Store (Add link download page after releasing Chrome Web Store)
@@ -17,14 +17,14 @@ These shortcuts are available on video site.
 * **R** - reset speed
 * **L** - partial loop
 * **1** - jump to 10% playback position
-* **1** - jump to 20% playback position
-* **1** - jump to 30% playback position
-* **1** - jump to 40% playback position
-* **1** - jump to 50% playback position
-* **1** - jump to 60% playback position
-* **1** - jump to 70% playback position
-* **1** - jump to 80% playback position
-* **1** - jump to 90% playback position
+* **2** - jump to 20% playback position
+* **3** - jump to 30% playback position
+* **4** - jump to 40% playback position
+* **5** - jump to 50% playback position
+* **6** - jump to 60% playback position
+* **7** - jump to 70% playback position
+* **8** - jump to 80% playback position
+* **9** - jump to 90% playback position
 * **esc** - reset loop status
 * **esc** - unfocus any elements
 
