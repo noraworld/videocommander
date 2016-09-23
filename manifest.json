@@ -1,5 +1,6 @@
 {
   "name": "Video Commander",
+  "short_name": "videocommander",
   "version": "0.1",
   "manifest_version": 2,
   "description": "Video Commander provides keyboard shortcuts to loop, speed up, speed down, rewind time, advance time and other handy actions",
