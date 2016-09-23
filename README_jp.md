@@ -2,7 +2,7 @@
 Video Commander はループ再生、倍速再生、巻き戻し、早送り、その他便利なショートカットを追加する拡張機能です。詳しい使い方は以下の[使い方](#使い方)の欄を見てください。
 
 ## ダウンロード
-Video Commander - Chrome ウェブストア (リンクはリリース後に追加します)
+[Video Commander - Chrome ウェブストア](https://chrome.google.com/webstore/detail/video-commander/eadjicgcnpgfmklebobjkhlippgepdii)
 
 ## 使い方
 以下のショートカットが利用できます。
@@ -31,7 +31,7 @@ Video Commander - Chrome ウェブストア (リンクはリリース後に追�
 これらのショートカットは設定ページより変更が可能です。また巻き戻し/早送りの秒数や自動的に動画プレイヤーのある位置までスクロールするかどうかを設定することができます。
 
 ## 更新履歴
-CHANGELOG.md を参照してください。 (リンクはリリース後に追加します)
+[CHANGELOG.md](https://github.com/noraworld/videocommander/blob/master/CHANGELOG.md) を参照してください。
 
 ## FAQ
 ### Q: 一部の動画サイトでショートカットが使用できない
