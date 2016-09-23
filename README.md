@@ -1,7 +1,7 @@
 # Video Commander
 ![videocommander](src/images/videocommander_screenshot.png)
 
-Video Commander a Chrome Extension that provides keyboard shortcuts to loop, speed up, speed down, rewind time, advance time and other handy actions. Would you like to know other actions? - see [Usage](#usage)
+Video Commander is a Chrome Extension that provides keyboard shortcuts to loop, speed up, speed down, rewind time, advance time and other handy actions. Would you like to know other actions? - see [Usage](#usage)
 
 ## Download
 [Video Commander - Chrome Web Store](https://chrome.google.com/webstore/detail/video-commander/eadjicgcnpgfmklebobjkhlippgepdii)
