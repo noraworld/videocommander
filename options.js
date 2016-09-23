@@ -9,6 +9,7 @@ var defaultKey = {
   resetSpeedKeyCode:         'r',
   partialLoopKeyCode:        'l',
   skipTimeAmount:              5,
+  scrollToPlayerChecked:    true,
 };
 
 $(function() {
@@ -42,6 +43,7 @@ function loadOptions() {
     updateInputText('reset-speed',           storage.resetSpeedKeyCode);
     updateInputText('partial-loop',          storage.partialLoopKeyCode);
     document.getElementById('skip-time-amount').value = storage.skipTimeAmount;
+    document.getElementById('scroll-to-player').checked = storage.scrollToPlayerChecked;
   });
 }
 
@@ -61,18 +63,20 @@ function saveOptions() {
   var resetSpeedKeyCode         = document.getElementById('reset-speed').value;
   var partialLoopKeyCode        = document.getElementById('partial-loop').value;
   var skipTimeAmount            = document.getElementById('skip-time-amount').value;
+  var scrollToPlayerChecked     = document.getElementById('scroll-to-player').checked;
 
   var validateFlag = [];
-  validateFlag[0] = checkValidate('toggle-play-and-pause');
-  validateFlag[1] = checkValidate('jump-to-beginning');
-  validateFlag[2] = checkValidate('jump-to-end');
-  validateFlag[3] = checkValidate('rewind-time');
-  validateFlag[4] = checkValidate('advance-time');
-  validateFlag[5] = checkValidate('speed-down');
-  validateFlag[6] = checkValidate('speed-up');
-  validateFlag[7] = checkValidate('reset-speed');
-  validateFlag[8] = checkValidate('partial-loop');
-  validateFlag[9] = checkValidateNumeric('skip-time-amount');
+  validateFlag[0]  = checkValidate('toggle-play-and-pause');
+  validateFlag[1]  = checkValidate('jump-to-beginning');
+  validateFlag[2]  = checkValidate('jump-to-end');
+  validateFlag[3]  = checkValidate('rewind-time');
+  validateFlag[4]  = checkValidate('advance-time');
+  validateFlag[5]  = checkValidate('speed-down');
+  validateFlag[6]  = checkValidate('speed-up');
+  validateFlag[7]  = checkValidate('reset-speed');
+  validateFlag[8]  = checkValidate('partial-loop');
+  validateFlag[9]  = checkValidateNumeric('skip-time-amount');
+  validateFlag[10] = checkValidateChecked('scroll-to-player');
 
   // when some input is wrong.
   for (var i = 0; i < validateFlag.length; i++) {
@@ -91,7 +95,8 @@ function saveOptions() {
     speedUpKeyCode:            speedUpKeyCode,
     resetSpeedKeyCode:         resetSpeedKeyCode,
     partialLoopKeyCode:        partialLoopKeyCode,
-    skipTimeAmount:            skipTimeAmount
+    skipTimeAmount:            skipTimeAmount,
+    scrollToPlayerChecked:     scrollToPlayerChecked
   }, function() {
     var status = $('#status');
     status.text('Saved');
@@ -193,5 +198,18 @@ function checkValidateNumeric(inputID) {
     return false;
   } else {
     return true;
+  }
+}
+
+function checkValidateChecked(inputID) {
+  var inputID = '#' + inputID;
+  $(inputID).parent().children('.invalid-value').remove();
+  if ($(inputID).prop('checked') !== true && $(inputID).prop('checked') !== false) {
+    // checkbox value is wrong
+    $(inputID).css('border', '1px solid red');
+    $(inputID).parent().append('<div class="invalid-value">Invalid value</div>');
+    var errorFlag = true;
+  } else {
+    $(inputID).css('border', '1px solid #cccccc');
   }
 }

@@ -11,6 +11,7 @@ chrome.extension.sendMessage({}, function(response) {
     resetSpeedKeyCode:         'r',
     partialLoopKeyCode:        'l',
     skipTimeAmount:              5,
+    scrollToPlayerChecked:    true,
   };
   var fixed = {
     // 固定のキーコード
@@ -31,6 +32,7 @@ chrome.extension.sendMessage({}, function(response) {
     settings.resetSpeedKeyCode         = storage.resetSpeedKeyCode;
     settings.partialLoopKeyCode        = storage.partialLoopKeyCode;
     settings.skipTimeAmount            = Number(storage.skipTimeAmount);
+    settings.scrollToPlayerChecked     = Boolean(storage.scrollToPlayerChecked);
   });
 
   // グローバル変数
@@ -99,11 +101,17 @@ chrome.extension.sendMessage({}, function(response) {
     Object.keys(settings).forEach(function(key) {
       if (eventKey == settings[key]) {
         event.stopPropagation();
+        if (settings.scrollToPlayerChecked === true) {
+          scrollToPlayer();
+        }
       }
     });
     Object.keys(fixed).forEach(function(key) {
       if (eventKey == fixed[key]) {
         event.stopPropagation();
+        if (settings.scrollToPlayerChecked === true) {
+          scrollToPlayer();
+        }
       }
     });
 
@@ -157,59 +165,50 @@ chrome.extension.sendMessage({}, function(response) {
       player.play();
     else
       player.pause();
-    scrollToPlayer();
   };
 
   // 数秒巻き戻し
   function rewindTime() {
     player.currentTime -= settings.skipTimeAmount;
-    scrollToPlayer();
   };
 
   // 数秒早送り
   function advanceTime() {
     player.currentTime += settings.skipTimeAmount;
-    scrollToPlayer();
   };
 
   // 再生スピードダウン
   function speedDown() {
     player.playbackRate = floorFormat((player.playbackRate - 0.09), 1);
     statusBox('playbackRate', adjustSpeedStatus(player.playbackRate));
-    scrollToPlayer();
   }
 
   // 再生スピードアップ
   function speedUp() {
     player.playbackRate = floorFormat((player.playbackRate + 0.11), 1);
     statusBox('playbackRate', adjustSpeedStatus(player.playbackRate));
-    scrollToPlayer();
   }
 
   // 再生スピードリセット
   function resetSpeed() {
     player.playbackRate = 1.0;
     statusBox('playbackRate', adjustSpeedStatus(player.playbackRate));
-    scrollToPlayer();
   }
 
   // 動画の最初の位置に移動する
   function jumpToBeginning() {
     player.currentTime = player.seekable.start(0);
-    scrollToPlayer();
   };
 
   // 動画の最後の位置に移動する
   function jumpToEnd() {
     player.currentTime = player.seekable.end(0);
-    scrollToPlayer();
   };
 
   // 数字に対応する割合まで動画を移動する
   function jumpToTimerRatio(timerRatio) {
     timerRatio = Number(timerRatio) / 10;
     player.currentTime = player.seekable.end(0) * timerRatio;
-    scrollToPlayer();
   };
 
   // 部分ループ再生

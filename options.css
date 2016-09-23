@@ -69,6 +69,12 @@ input[type="text"] {
   border: 1px solid #cccccc;
 }
 
+#checkbox-wrapper {
+  width: 75px;
+  text-align: center;
+  display: inline-block;
+}
+
 span {
   width: 79px;
   text-align: center;
