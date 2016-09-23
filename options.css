@@ -64,6 +64,7 @@ button {
 }
 
 input[type="text"] {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
   width: 75px;
   text-align: center;
   border: 1px solid #cccccc;
@@ -76,7 +77,8 @@ input[type="text"] {
 }
 
 span {
-  width: 79px;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  width: 90px;
   text-align: center;
   display: inline-block;
 }
@@ -87,7 +89,7 @@ span {
 
 label, #button-wrap {
   display: inline-block;
-  width: 180px;
+  width: 200px;
 }
 
 .invalid-value {
