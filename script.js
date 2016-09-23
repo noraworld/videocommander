@@ -51,18 +51,20 @@ chrome.extension.sendMessage({}, function(response) {
   var getVideoTimeoutID;
 
   // video要素を取得する
-  function getVideoElement() {
-    if (document.getElementsByTagName('video')[0] !== undefined) {
-      player = document.getElementsByTagName('video')[0];
-      clearTimeout(getVideoTimeoutID);
-      observeSpeed();
-      return false;
-    }
-    getVideoTimeoutID = setTimeout(function() {
-      getVideoElement();
-    }, 10);
-  };
-  getVideoElement();
+  $(function() {
+    function getVideoElement() {
+      if (document.getElementsByTagName('video')[0] !== undefined) {
+        player = document.getElementsByTagName('video')[0];
+        clearTimeout(getVideoTimeoutID);
+        observeSpeed();
+        return false;
+      }
+      getVideoTimeoutID = setTimeout(function() {
+        getVideoElement();
+      }, 10);
+    };
+    getVideoElement();
+  });
 
   // キーが押されたかどうかを判定
   window.addEventListener('keydown', function(event) {
@@ -103,6 +105,7 @@ chrome.extension.sendMessage({}, function(response) {
         event.stopPropagation();
         if (settings.scrollToPlayerChecked === true) {
           scrollToPlayer();
+          getVideoElement();
         }
       }
     });
@@ -111,6 +114,7 @@ chrome.extension.sendMessage({}, function(response) {
         event.stopPropagation();
         if (settings.scrollToPlayerChecked === true) {
           scrollToPlayer();
+          getVideoElement();
         }
       }
     });
