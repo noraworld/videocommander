@@ -1,10 +1,10 @@
 # Video Commander
 Video Commander a Chrome Extension that provides keyboard shortcuts to loop, speed up, speed down, rewind time, advance time and other handy actions. Would you like to know other actions? - see [Usage](#usage)
 
-# Download
+## Download
 Video Commander - Chrome Web Store (Add link download page after releasing Chrome Web Store)
 
-# Usage
+## Usage
 These shortcuts are available on video site.
 
 * **P** or **space** - toggle play and pause
@@ -30,5 +30,8 @@ These shortcuts are available on video site.
 
 These shortcut keys are modifiable on options page. You can also change skip time amount(s) and whether scroll to player automatically or not.
 
-# Change Log
+## Change Log
 See CHANGELOG.md (Add link download page after releasing Chrome Web Store)
+
+## Support
+[日本語で見る](https://github.com/noraworld/videocommander/blob/master/README_jp.md)
