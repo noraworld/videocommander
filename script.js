@@ -1,4 +1,5 @@
-chrome.extension.sendMessage({}, function(response) {
+$(function() {
+
   var settings = {
     // オプションで変更可能なキーコード
     togglePlayAndPauseKeyCode: 'p',
@@ -51,20 +52,18 @@ chrome.extension.sendMessage({}, function(response) {
   var getVideoTimeoutID;
 
   // video要素を取得する
-  $(function() {
-    function getVideoElement() {
-      if (document.getElementsByTagName('video')[0] !== undefined) {
-        player = document.getElementsByTagName('video')[0];
-        clearTimeout(getVideoTimeoutID);
-        observeSpeed();
-        return false;
-      }
-      getVideoTimeoutID = setTimeout(function() {
-        getVideoElement();
-      }, 10);
-    };
-    getVideoElement();
-  });
+  function getVideoElement() {
+    if (document.getElementsByTagName('video')[0] !== undefined) {
+      player = document.getElementsByTagName('video')[0];
+      clearTimeout(getVideoTimeoutID);
+      observeSpeed();
+      return false;
+    }
+    getVideoTimeoutID = setTimeout(function() {
+      getVideoElement();
+    }, 10);
+  };
+  getVideoElement();
 
   // キーが押されたかどうかを判定
   window.addEventListener('keydown', function(event) {
@@ -339,4 +338,5 @@ chrome.extension.sendMessage({}, function(response) {
     }
     return speedStatus.toFixed(1);
   };
+
 });
