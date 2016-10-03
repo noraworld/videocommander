@@ -54,10 +54,12 @@ $(function() {
   // video要素を取得する
   function getVideoElement() {
     if (document.getElementsByTagName('video')[0] !== undefined) {
-      player = document.getElementsByTagName('video')[0];
-      clearTimeout(getVideoTimeoutID);
-      observeSpeed();
-      return false;
+      if (document.getElementsByTagName('video')[0].readyState === 4) {
+        player = document.getElementsByTagName('video')[0];
+        clearTimeout(getVideoTimeoutID);
+        observeSpeed();
+        return false;
+      }
     }
     getVideoTimeoutID = setTimeout(function() {
       getVideoElement();
