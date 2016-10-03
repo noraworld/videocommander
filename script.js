@@ -95,6 +95,7 @@ $(function() {
       return false;
     }
     else {
+      event.stopPropagation();
       activeBlur();
     }
 
