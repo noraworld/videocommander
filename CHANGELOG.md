@@ -1,3 +1,6 @@
+## 0.2
+* Add an option to remember video playback speed.
+
 ## 0.1
 * First release :tada:
 

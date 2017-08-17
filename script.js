@@ -2,17 +2,19 @@ $(function() {
 
   var settings = {
     // オプションで変更可能なキーコード
-    togglePlayAndPauseKeyCode: 'p',
-    jumpToBeginningKeyCode:    'h',
-    jumpToEndKeyCode:          'e',
-    rewindTimeKeyCode:         'a',
-    advanceTimeKeyCode:        's',
-    speedDownKeyCode:          'd',
-    speedUpKeyCode:            'u',
-    resetSpeedKeyCode:         'r',
-    partialLoopKeyCode:        'l',
-    skipTimeAmount:              5,
-    scrollToPlayerChecked:    true,
+    togglePlayAndPauseKeyCode:     'p',
+    jumpToBeginningKeyCode:        'h',
+    jumpToEndKeyCode:              'e',
+    rewindTimeKeyCode:             'a',
+    advanceTimeKeyCode:            's',
+    speedDownKeyCode:              'd',
+    speedUpKeyCode:                'u',
+    resetSpeedKeyCode:             'r',
+    partialLoopKeyCode:            'l',
+    skipTimeAmount:                  5,
+    scrollToPlayerChecked:        true,
+    rememberPlaybackSpeedChecked: true,
+    playbackSpeed:                 1.0,
   };
   var fixed = {
     // 固定のキーコード
@@ -23,17 +25,20 @@ $(function() {
   };
 
   chrome.storage.sync.get(settings, function(storage) {
-    settings.togglePlayAndPauseKeyCode = storage.togglePlayAndPauseKeyCode;
-    settings.jumpToBeginningKeyCode    = storage.jumpToBeginningKeyCode;
-    settings.jumpToEndKeyCode          = storage.jumpToEndKeyCode;
-    settings.rewindTimeKeyCode         = storage.rewindTimeKeyCode;
-    settings.advanceTimeKeyCode        = storage.advanceTimeKeyCode;
-    settings.speedDownKeyCode          = storage.speedDownKeyCode;
-    settings.speedUpKeyCode            = storage.speedUpKeyCode;
-    settings.resetSpeedKeyCode         = storage.resetSpeedKeyCode;
-    settings.partialLoopKeyCode        = storage.partialLoopKeyCode;
-    settings.skipTimeAmount            = Number(storage.skipTimeAmount);
-    settings.scrollToPlayerChecked     = Boolean(storage.scrollToPlayerChecked);
+    settings.togglePlayAndPauseKeyCode    = storage.togglePlayAndPauseKeyCode;
+    settings.jumpToBeginningKeyCode       = storage.jumpToBeginningKeyCode;
+    settings.jumpToEndKeyCode             = storage.jumpToEndKeyCode;
+    settings.rewindTimeKeyCode            = storage.rewindTimeKeyCode;
+    settings.advanceTimeKeyCode           = storage.advanceTimeKeyCode;
+    settings.speedDownKeyCode             = storage.speedDownKeyCode;
+    settings.speedUpKeyCode               = storage.speedUpKeyCode;
+    settings.resetSpeedKeyCode            = storage.resetSpeedKeyCode;
+    settings.partialLoopKeyCode           = storage.partialLoopKeyCode;
+    settings.skipTimeAmount               = Number(storage.skipTimeAmount);
+    settings.scrollToPlayerChecked        = Boolean(storage.scrollToPlayerChecked);
+    settings.rememberPlaybackSpeedChecked = Boolean(storage.rememberPlaybackSpeedChecked);
+    settings.playbackSpeed                = Number(storage.playbackSpeed);
+    getVideoElement();
   });
 
   // グローバル変数
@@ -50,6 +55,7 @@ $(function() {
   var loopTimeoutID;
   var removeStatusBoxTimeoutID;
   var getVideoTimeoutID;
+  var setPlaybackSpeedSuccessfullyOrSkipable = false;
 
   // video要素を取得する
   function getVideoElement() {
@@ -58,6 +64,7 @@ $(function() {
         player = document.getElementsByTagName('video')[0];
         clearTimeout(getVideoTimeoutID);
         observeSpeed();
+        getPlaybackSpeed();
         return false;
       }
     }
@@ -65,7 +72,6 @@ $(function() {
       getVideoElement();
     }, 10);
   };
-  getVideoElement();
 
   // キーが押されたかどうかを判定
   window.addEventListener('keydown', function(event) {
@@ -165,6 +171,25 @@ $(function() {
     };
   };
 
+  function getPlaybackSpeed() {
+    if (settings.rememberPlaybackSpeedChecked === true) {
+      player.playbackRate = floorFormat(settings.playbackSpeed, 1);
+    }
+  }
+
+  function setPlaybackSpeed() {
+    if (settings.rememberPlaybackSpeedChecked === true) {
+      chrome.storage.sync.set({
+        playbackSpeed: Number(floorFormat(player.playbackRate, 1))
+      }, function() {
+        statusBox('playbackRate', adjustSpeedStatus(player.playbackRate));
+      });
+    }
+    else {
+      statusBox('playbackRate', adjustSpeedStatus(player.playbackRate));
+    }
+  }
+
   // 再生/停止
   function togglePlayAndPause() {
     if (player.paused === true)
@@ -186,19 +211,19 @@ $(function() {
   // 再生スピードダウン
   function speedDown() {
     player.playbackRate = floorFormat((player.playbackRate - 0.09), 1);
-    statusBox('playbackRate', adjustSpeedStatus(player.playbackRate));
+    setPlaybackSpeed();
   }
 
   // 再生スピードアップ
   function speedUp() {
     player.playbackRate = floorFormat((player.playbackRate + 0.11), 1);
-    statusBox('playbackRate', adjustSpeedStatus(player.playbackRate));
+    setPlaybackSpeed();
   }
 
   // 再生スピードリセット
   function resetSpeed() {
     player.playbackRate = 1.0;
-    statusBox('playbackRate', adjustSpeedStatus(player.playbackRate));
+    setPlaybackSpeed();
   }
 
   // 動画の最初の位置に移動する

@@ -1,15 +1,16 @@
 var defaultKey = {
-  togglePlayAndPauseKeyCode: 'p',
-  jumpToBeginningKeyCode:    'h',
-  jumpToEndKeyCode:          'e',
-  rewindTimeKeyCode:         'a',
-  advanceTimeKeyCode:        's',
-  speedDownKeyCode:          'd',
-  speedUpKeyCode:            'u',
-  resetSpeedKeyCode:         'r',
-  partialLoopKeyCode:        'l',
-  skipTimeAmount:              5,
-  scrollToPlayerChecked:    true,
+  togglePlayAndPauseKeyCode:     'p',
+  jumpToBeginningKeyCode:        'h',
+  jumpToEndKeyCode:              'e',
+  rewindTimeKeyCode:             'a',
+  advanceTimeKeyCode:            's',
+  speedDownKeyCode:              'd',
+  speedUpKeyCode:                'u',
+  resetSpeedKeyCode:             'r',
+  partialLoopKeyCode:            'l',
+  skipTimeAmount:                  5,
+  scrollToPlayerChecked:        true,
+  rememberPlaybackSpeedChecked: true,
 };
 
 $(function() {
@@ -44,6 +45,7 @@ function loadOptions() {
     updateInputText('partial-loop',          storage.partialLoopKeyCode);
     document.getElementById('skip-time-amount').value = storage.skipTimeAmount;
     document.getElementById('scroll-to-player').checked = storage.scrollToPlayerChecked;
+    document.getElementById('remember-playback-speed').checked = storage.rememberPlaybackSpeedChecked;
   });
 }
 
@@ -53,17 +55,18 @@ function updateInputText(inputID, keyCode) {
 }
 
 function saveOptions() {
-  var togglePlayAndPauseKeyCode = document.getElementById('toggle-play-and-pause').value;
-  var jumpToBeginningKeyCode    = document.getElementById('jump-to-beginning').value;
-  var jumpToEndKeyCode          = document.getElementById('jump-to-end').value;
-  var rewindTimeKeyCode         = document.getElementById('rewind-time').value;
-  var advanceTimeKeyCode        = document.getElementById('advance-time').value;
-  var speedDownKeyCode          = document.getElementById('speed-down').value;
-  var speedUpKeyCode            = document.getElementById('speed-up').value;
-  var resetSpeedKeyCode         = document.getElementById('reset-speed').value;
-  var partialLoopKeyCode        = document.getElementById('partial-loop').value;
-  var skipTimeAmount            = document.getElementById('skip-time-amount').value;
-  var scrollToPlayerChecked     = document.getElementById('scroll-to-player').checked;
+  var togglePlayAndPauseKeyCode    = document.getElementById('toggle-play-and-pause').value;
+  var jumpToBeginningKeyCode       = document.getElementById('jump-to-beginning').value;
+  var jumpToEndKeyCode             = document.getElementById('jump-to-end').value;
+  var rewindTimeKeyCode            = document.getElementById('rewind-time').value;
+  var advanceTimeKeyCode           = document.getElementById('advance-time').value;
+  var speedDownKeyCode             = document.getElementById('speed-down').value;
+  var speedUpKeyCode               = document.getElementById('speed-up').value;
+  var resetSpeedKeyCode            = document.getElementById('reset-speed').value;
+  var partialLoopKeyCode           = document.getElementById('partial-loop').value;
+  var skipTimeAmount               = document.getElementById('skip-time-amount').value;
+  var scrollToPlayerChecked        = document.getElementById('scroll-to-player').checked;
+  var rememberPlaybackSpeedChecked = document.getElementById('remember-playback-speed').checked;
 
   var validateFlag = [];
   validateFlag[0]  = checkValidate('toggle-play-and-pause');
@@ -77,6 +80,7 @@ function saveOptions() {
   validateFlag[8]  = checkValidate('partial-loop');
   validateFlag[9]  = checkValidateNumeric('skip-time-amount');
   validateFlag[10] = checkValidateChecked('scroll-to-player');
+  validateFlag[11] = checkValidateChecked('remember-playback-speed');
 
   // when some input is wrong.
   for (var i = 0; i < validateFlag.length; i++) {
@@ -86,17 +90,18 @@ function saveOptions() {
   }
 
   chrome.storage.sync.set({
-    togglePlayAndPauseKeyCode: togglePlayAndPauseKeyCode,
-    jumpToBeginningKeyCode:    jumpToBeginningKeyCode,
-    jumpToEndKeyCode:          jumpToEndKeyCode,
-    rewindTimeKeyCode:         rewindTimeKeyCode,
-    advanceTimeKeyCode:        advanceTimeKeyCode,
-    speedDownKeyCode:          speedDownKeyCode,
-    speedUpKeyCode:            speedUpKeyCode,
-    resetSpeedKeyCode:         resetSpeedKeyCode,
-    partialLoopKeyCode:        partialLoopKeyCode,
-    skipTimeAmount:            skipTimeAmount,
-    scrollToPlayerChecked:     scrollToPlayerChecked
+    togglePlayAndPauseKeyCode:    togglePlayAndPauseKeyCode,
+    jumpToBeginningKeyCode:       jumpToBeginningKeyCode,
+    jumpToEndKeyCode:             jumpToEndKeyCode,
+    rewindTimeKeyCode:            rewindTimeKeyCode,
+    advanceTimeKeyCode:           advanceTimeKeyCode,
+    speedDownKeyCode:             speedDownKeyCode,
+    speedUpKeyCode:               speedUpKeyCode,
+    resetSpeedKeyCode:            resetSpeedKeyCode,
+    partialLoopKeyCode:           partialLoopKeyCode,
+    skipTimeAmount:               skipTimeAmount,
+    scrollToPlayerChecked:        scrollToPlayerChecked,
+    rememberPlaybackSpeedChecked: rememberPlaybackSpeedChecked
   }, function() {
     var status = $('#status');
     status.text('Saved');
