@@ -8,6 +8,7 @@ var defaultKey = {
   speedUpKeyCode:                'u',
   resetSpeedKeyCode:             'r',
   partialLoopKeyCode:            'l',
+  partialLoopPrecision:          100,
   skipTimeAmount:                  5,
   scrollToPlayerChecked:        true,
   rememberPlaybackSpeedChecked: true,
@@ -29,6 +30,7 @@ $(function() {
   initShortcutInput('reset-speed');
   initShortcutInput('partial-loop');
 
+  initNumericInput('partial-loop-precision');
   initNumericInput('skip-time-amount');
 });
 
@@ -43,6 +45,7 @@ function loadOptions() {
     updateInputText('speed-up',              storage.speedUpKeyCode);
     updateInputText('reset-speed',           storage.resetSpeedKeyCode);
     updateInputText('partial-loop',          storage.partialLoopKeyCode);
+    document.getElementById('partial-loop-precision').value = storage.partialLoopPrecision;
     document.getElementById('skip-time-amount').value = storage.skipTimeAmount;
     document.getElementById('scroll-to-player').checked = storage.scrollToPlayerChecked;
     document.getElementById('remember-playback-speed').checked = storage.rememberPlaybackSpeedChecked;
@@ -64,6 +67,7 @@ function saveOptions() {
   var speedUpKeyCode               = document.getElementById('speed-up').value;
   var resetSpeedKeyCode            = document.getElementById('reset-speed').value;
   var partialLoopKeyCode           = document.getElementById('partial-loop').value;
+  var partialLoopPrecision         = document.getElementById('partial-loop-precision').value;
   var skipTimeAmount               = document.getElementById('skip-time-amount').value;
   var scrollToPlayerChecked        = document.getElementById('scroll-to-player').checked;
   var rememberPlaybackSpeedChecked = document.getElementById('remember-playback-speed').checked;
@@ -78,9 +82,10 @@ function saveOptions() {
   validateFlag[6]  = checkValidate('speed-up');
   validateFlag[7]  = checkValidate('reset-speed');
   validateFlag[8]  = checkValidate('partial-loop');
-  validateFlag[9]  = checkValidateNumeric('skip-time-amount');
-  validateFlag[10] = checkValidateChecked('scroll-to-player');
-  validateFlag[11] = checkValidateChecked('remember-playback-speed');
+  validateFlag[9]  = checkValidateNumeric('partial-loop-precision');
+  validateFlag[10] = checkValidateNumeric('skip-time-amount');
+  validateFlag[11] = checkValidateChecked('scroll-to-player');
+  validateFlag[12] = checkValidateChecked('remember-playback-speed');
 
   // when some input is wrong.
   for (var i = 0; i < validateFlag.length; i++) {
@@ -99,6 +104,7 @@ function saveOptions() {
     speedUpKeyCode:               speedUpKeyCode,
     resetSpeedKeyCode:            resetSpeedKeyCode,
     partialLoopKeyCode:           partialLoopKeyCode,
+    partialLoopPrecision:         partialLoopPrecision,
     skipTimeAmount:               skipTimeAmount,
     scrollToPlayerChecked:        scrollToPlayerChecked,
     rememberPlaybackSpeedChecked: rememberPlaybackSpeedChecked

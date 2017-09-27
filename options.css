@@ -3,13 +3,14 @@ body {
   padding-left: 15px;
   padding-top: 53px;
   font-family: "Open Sans", "sans-serif";
-  font-size: 12px;
+  font-size: 13px;
   color: rgb(48, 57, 66);
 }
 
 h1 {
   font-size: 1.5em;
   margin-bottom: 0.8em;
+  margin-left: 0.3em;
   color: black;
 }
 
@@ -33,11 +34,11 @@ header {
   z-index: 100000;
 }
 header, #main {
-  min-width: 600px;
-  max-width: 738px;
+  min-width: 450px;
+  max-width: 450px;
 }
 #main {
-  padding-left: 18px;
+  padding-left: 35px;
   margin-top: 8px;
   margin-bottom: 24px;
 }

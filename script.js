@@ -11,6 +11,7 @@ $(function() {
     speedUpKeyCode:                'u',
     resetSpeedKeyCode:             'r',
     partialLoopKeyCode:            'l',
+    partialLoopPrecision:          100,
     skipTimeAmount:                  5,
     scrollToPlayerChecked:        true,
     rememberPlaybackSpeedChecked: true,
@@ -34,6 +35,7 @@ $(function() {
     settings.speedUpKeyCode               = storage.speedUpKeyCode;
     settings.resetSpeedKeyCode            = storage.resetSpeedKeyCode;
     settings.partialLoopKeyCode           = storage.partialLoopKeyCode;
+    settings.partialLoopPrecision         = storage.partialLoopPrecision;
     settings.skipTimeAmount               = Number(storage.skipTimeAmount);
     settings.scrollToPlayerChecked        = Boolean(storage.scrollToPlayerChecked);
     settings.rememberPlaybackSpeedChecked = Boolean(storage.rememberPlaybackSpeedChecked);
@@ -266,7 +268,7 @@ $(function() {
           return false;
         }
         partialLoop();
-      }, 100);
+      }, settings.partialLoopPrecision);
     }
   };
 

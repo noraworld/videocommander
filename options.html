@@ -61,12 +61,17 @@
     </div>
 
     <div class="settings">
-      <label for="skip-time-amount">Skip time amount(s)</label>
+      <label for="partial-loop-precision">Partial loop precision</label>
+      <input id="partial-loop-precision" type="text" value="">
+    </div>
+
+    <div class="settings">
+      <label for="skip-time-amount">Amount of time to skip</label>
       <input id="skip-time-amount" type="text" value="">
     </div>
 
     <div class="settings">
-      <label for="scroll-to-player">Scroll to the player automatically</label>
+      <label for="scroll-to-player">Scroll to a player automatically</label>
       <div id="checkbox-wrapper"><input id="scroll-to-player" type="checkbox"></div>
     </div>
 
@@ -157,6 +162,10 @@
       <label for="fixed-active-blur">Unfocus</label>
       <span id="fixed-active-blur">esc</span>
     </div>
+
+    <h3>Note</h3>
+
+    <p>The lower the value of <b>partial loop precision</b> is, the better the precision is when looping partially, and the higher the value is, the worse the precision is. Please remember that <b>when this value is set extremly low, the CPU utilization may go up</b>. the default value (100) is reasonable.</p>
 
   </div>
 
