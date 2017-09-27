@@ -39,5 +39,5 @@ Video Commander はループ再生、倍速再生、巻き戻し、早送り、�
 ### Q: 一部の動画サイトでショートカットが使用できない
 A: この拡張機能はHTML5で提供された動画プレイヤー(YouTube, dotinstall など)に対してのみ機能します。AbemaTVやFlashを使用した動画プレイヤー、その他独自の技術を使用した動画プレイヤーでは動作しませんのであらかじめご了承ください。ニコニコ動画に関しては[ニコニコマンダー](https://chrome.google.com/webstore/detail/%E3%83%8B%E3%82%B3%E3%83%8B%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%80%E3%83%BC/baiinihbicmkmkhblpboabkckgheaahm?utm_source=chrome-ntp-icon)にて似たショートカットを実現する拡張機能を提供しています。ニコニコマンダーについて詳しく知りたい場合は [noraworld/niconicommander - GitHub](https://github.com/noraworld/niconicommander) を参照してください。
 
-## サポート
-* [See in English](https://github.com/noraworld/videocommander/blob/master/README.md)
+## 言語
+* [English](https://github.com/noraworld/videocommander/blob/master/README.md)

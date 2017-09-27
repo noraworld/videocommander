@@ -39,5 +39,5 @@ See [CHANGELOG.md](https://github.com/noraworld/videocommander/blob/master/CHANG
 ### Q: No action works on some video sites
 A: This extension only works [HTML5 video player](http://www.w3schools.com/html/html5_video.asp) (e.g. YouTube.com). It means this extension does not work on the video sites using Adobe Flash Player or other unique video player. Sorry about that.
 
-## Support
-* [日本語で見る](https://github.com/noraworld/videocommander/blob/master/README_jp.md)
+## Language
+* [日本語](https://github.com/noraworld/videocommander/blob/master/README_jp.md)
