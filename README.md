@@ -27,7 +27,7 @@ These shortcuts are available on video site.
 * **7** - jump to 70% playback position
 * **8** - jump to 80% playback position
 * **9** - jump to 90% playback position
-* **esc** - reset loop status
+* **esc**, **Ctrl-c** - reset loop status
 * **esc** - unfocus any elements
 
 These shortcut keys are modifiable on options page. You can also change skip time amount(s) and whether scroll to player automatically or not.
