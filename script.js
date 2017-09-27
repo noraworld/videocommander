@@ -85,9 +85,22 @@ $(function() {
       activeBlur();
     }
 
+    // Ctrl + r が押されたら video 要素を取得し直す (試験的機能)
+    if (event.ctrlKey && eventKey == 'r') {
+      getVideoElement();
+      console.info('Reload video element successfully.\n\nStill have problem? Report that from https://github.com/noraworld/videocommander/issues.\nThank you for cooperating with development!');
+    }
+
     // 動画がないときはキーイベントを実行しない
     if (player === undefined) {
       return false;
+    }
+
+    // Ctrl + c が押されたらループステータスをリセットする
+    // Esc だと、リセットより全画面の解除が優先されてしまうため
+    // Ctrl + c でもリセットできるようにした
+    if (event.ctrlKey && eventKey == 'c') {
+      resetLoopStatus();
     }
 
     // 修飾キーをエスケープ
