@@ -80,21 +80,23 @@ $(function() {
   };
 
   function createProgressBar() {
-    var progressBarContainer = '<div class="videocommander-progress-bar-container"></div>';
-    $(progressBarContainer).insertAfter(player);
-    $('.videocommander-progress-bar-container').css('width', player.parentNode.offsetWidth);
+    if (!($('div').hasClass('videocommander-progress-bar-container'))) {
+      var progressBarContainer = '<div class="videocommander-progress-bar-container"></div>';
+      $(progressBarContainer).insertAfter(player);
+      $('.videocommander-progress-bar-container').css('width', player.parentNode.offsetWidth);
 
-    var progressBar = '<div class="videocommander-progress-bar"></div>';
-    $(progressBar).appendTo('.videocommander-progress-bar-container');
+      var progressBar = '<div class="videocommander-progress-bar"></div>';
+      $(progressBar).appendTo('.videocommander-progress-bar-container');
 
-    var progressBufferedBar = '<div class="videocommander-progress-buffered-bar"></div>';
-    $(progressBufferedBar).appendTo('.videocommander-progress-bar-container');
+      var progressBufferedBar = '<div class="videocommander-progress-buffered-bar"></div>';
+      $(progressBufferedBar).appendTo('.videocommander-progress-bar-container');
 
-    var progressTime = '<div class="videocommander-progress-time"></div>';
-    $(progressTime).appendTo('.videocommander-progress-bar-container');
+      var progressTime = '<div class="videocommander-progress-time"></div>';
+      $(progressTime).appendTo('.videocommander-progress-bar-container');
 
-    var entireBar = '<div class="videocommander-entire-bar"></div>';
-    $(entireBar).appendTo('.videocommander-progress-bar-container');
+      var entireBar = '<div class="videocommander-entire-bar"></div>';
+      $(entireBar).appendTo('.videocommander-progress-bar-container');
+    }
   }
 
   function showAndHideProgressBar() {
@@ -123,6 +125,8 @@ $(function() {
 
     $('.videocommander-progress-bar-container').stop();
     $('.videocommander-progress-bar-container').css('opacity', 1);
+
+    $('.videocommander-progress-bar-container').css('width', player.parentNode.offsetWidth);
 
     var progressRate = (player.currentTime / player.seekable.end(0)) * 100;
     $('.videocommander-progress-bar').css('width', progressRate + '%');
