@@ -69,6 +69,8 @@ $(function() {
         clearTimeout(getVideoTimeoutID);
         observeSpeed();
         getPlaybackSpeed();
+        createProgressBar();
+        showAndHideProgressBar();
         return false;
       }
     }
@@ -76,6 +78,107 @@ $(function() {
       getVideoElement();
     }, 10);
   };
+
+  function createProgressBar() {
+    var progressBarContainer = '<div class="videocommander-progress-bar-container"></div>';
+    $(progressBarContainer).insertAfter(player);
+    $('.videocommander-progress-bar-container').css('width', player.parentNode.offsetWidth);
+
+    var progressBar = '<div class="videocommander-progress-bar"></div>';
+    $(progressBar).appendTo('.videocommander-progress-bar-container');
+
+    var progressBufferedBar = '<div class="videocommander-progress-buffered-bar"></div>';
+    $(progressBufferedBar).appendTo('.videocommander-progress-bar-container');
+
+    var progressTime = '<div class="videocommander-progress-time"></div>';
+    $(progressTime).appendTo('.videocommander-progress-bar-container');
+
+    var entireBar = '<div class="videocommander-entire-bar"></div>';
+    $(entireBar).appendTo('.videocommander-progress-bar-container');
+  }
+
+  function showAndHideProgressBar() {
+    try {
+      clearTimeout(hideProgressBarTimeoutID);
+    }
+    catch (err) {
+      // do nothing.
+    }
+
+    showProgressBar();
+
+    hideProgressBarTimeoutID = setTimeout(function() {
+      hideProgressBar();
+      clearTimeout(hideProgressBarTimeoutID);
+    }, 3000);
+  }
+
+  function showProgressBar() {
+    try {
+      clearTimeout(showProgressBarTimeoutID);
+    }
+    catch (err) {
+      // do nothing.
+    }
+
+    $('.videocommander-progress-bar-container').stop();
+    $('.videocommander-progress-bar-container').css('opacity', 1);
+
+    var progressRate = (player.currentTime / player.seekable.end(0)) * 100;
+    $('.videocommander-progress-bar').css('width', progressRate + '%');
+
+    var progressBufferedRate = (player.buffered.end(0) / player.seekable.end(0)) * 100;
+    $('.videocommander-progress-buffered-bar').css('width', progressBufferedRate + '%');
+
+    $('.videocommander-progress-time').text(adjustProgressTime(player.currentTime) + ' / ' + adjustProgressTime(player.seekable.end(0)));
+
+    if (!player.paused) {
+      showProgressBarTimeoutID = setTimeout(function() {
+        showProgressBar();
+      }, 100);
+    }
+  }
+
+  function adjustProgressTime(time) {
+    time = parseFloat(time);
+    var hours = parseInt(time / 3600);
+    var minutes = parseInt((time % 3600) / 60);
+    var seconds = parseInt(time % 60);
+
+    if (hours === 0) {
+      time = ("0" + minutes).slice(-2) + ':' + ("0" + seconds).slice(-2);
+    }
+    else {
+      time = ("0" + hours).slice(-2) + ':' + ("0" + minutes).slice(-2) + ':' + ("0" + seconds).slice(-2);
+    }
+
+    return time;
+  }
+
+  function hideProgressBar() {
+    try {
+      clearTimeout(showProgressBarTimeoutID);
+    }
+    catch (err) {
+      // do nothing.
+    }
+
+    if (player.paused) {
+      return false;
+    }
+
+    if ($('.videocommander-progress-bar-container').css('opacity') !== '0') {
+      $('.videocommander-progress-bar-container').animate({
+        opacity: 0
+      }, 200);
+    }
+  }
+
+  window.addEventListener('keyup', function(event) {
+    if (event.key == ',' || event.key == '.') {
+      showAndHideProgressBar();
+    }
+  }, true);
 
   // キーが押されたかどうかを判定
   window.addEventListener('keydown', function(event) {
@@ -85,6 +188,11 @@ $(function() {
     // escが押されたらアクティブフォーカスを外す
     if (eventKey == fixed.isEscape) {
       activeBlur();
+    }
+
+    if (eventKey == ',' || eventKey == '.') {
+      event.stopPropagation();
+      showProgressBar();
     }
 
     // Ctrl + Shift が押されたら video 要素を取得し直す (試験的機能)
@@ -145,20 +253,20 @@ $(function() {
     // ショートカットキーから関数を呼び出す
     switch (eventKey) {
       // オプションのキーコード
-      case settings.togglePlayAndPauseKeyCode: togglePlayAndPause(); break;  // default: p
-      case settings.jumpToBeginningKeyCode:    jumpToBeginning();    break;  // default: h
-      case settings.jumpToEndKeyCode:          jumpToEnd();          break;  // default: e
-      case settings.rewindTimeKeyCode:         rewindTime();         break;  // default: a
-      case settings.advanceTimeKeyCode:        advanceTime();        break;  // default: s
-      case settings.speedDownKeyCode:          speedDown();          break;  // default: d
-      case settings.speedUpKeyCode:            speedUp();            break;  // default: u
-      case settings.resetSpeedKeyCode:         resetSpeed();         break;  // default: r
-      case settings.toggleFullscreenKeyCode:   toggleFullscreen();   break;  // default: f
+      case settings.togglePlayAndPauseKeyCode: togglePlayAndPause();                           break;  // default: p
+      case settings.jumpToBeginningKeyCode:    jumpToBeginning();    showAndHideProgressBar(); break;  // default: h
+      case settings.jumpToEndKeyCode:          jumpToEnd();          showAndHideProgressBar(); break;  // default: e
+      case settings.rewindTimeKeyCode:         rewindTime();         showAndHideProgressBar(); break;  // default: a
+      case settings.advanceTimeKeyCode:        advanceTime();        showAndHideProgressBar(); break;  // default: s
+      case settings.speedDownKeyCode:          speedDown();                                    break;  // default: d
+      case settings.speedUpKeyCode:            speedUp();                                      break;  // default: u
+      case settings.resetSpeedKeyCode:         resetSpeed();                                   break;  // default: r
+      case settings.toggleFullscreenKeyCode:   toggleFullscreen();                             break;  // default: f
       // 固定のキーコード
-      case fixed.togglePlayAndPauseKeyCode: event.preventDefault(); togglePlayAndPause(); break;  // space
-      case fixed.rewindTimeKeyCode:         event.preventDefault(); rewindTime();         break;  // left-arrow
-      case fixed.advanceTimeKeyCode:        event.preventDefault(); advanceTime();        break;  // right-arrow
-      case fixed.isEscape:                                          resetLoopStatus();    break;  // esc
+      case fixed.togglePlayAndPauseKeyCode: event.preventDefault(); togglePlayAndPause();                           break;  // space
+      case fixed.rewindTimeKeyCode:         event.preventDefault(); rewindTime();         showAndHideProgressBar(); break;  // left-arrow
+      case fixed.advanceTimeKeyCode:        event.preventDefault(); advanceTime();        showAndHideProgressBar(); break;  // right-arrow
+      case fixed.isEscape:                                          resetLoopStatus();                              break;  // esc
     }
 
     // 数字のキーを押すとその数字に対応する割合まで動画を移動する
@@ -166,6 +274,7 @@ $(function() {
     // 固定のキーコード
     if (eventKey >= '0' && eventKey <= '9') {
       jumpToTimerRatio(eventKey);
+      showAndHideProgressBar();
     }
 
     // 部分ループ再生のステータスを記録
@@ -208,10 +317,14 @@ $(function() {
 
   // 再生 / 停止
   function togglePlayAndPause() {
-    if (player.paused === true)
+    if (player.paused) {
       player.play();
-    else
+      hideProgressBar();
+    }
+    else {
       player.pause();
+      showProgressBar();
+    }
   };
 
   // 数秒巻き戻し

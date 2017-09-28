@@ -29,3 +29,53 @@
   width: 80px;
   display: inline-block;
 }
+
+.videocommander-progress-bar-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.75);
+  height: 40px;
+  font-family: 'Open Sans';
+  z-index: 100000;
+  display: inline-block;
+  opacity: 0;
+}
+
+.videocommander-progress-bar {
+  position: absolute;
+  left: 0;
+  width: 50%;
+  height: 3px;
+  background-color: rgb(251, 28, 50);
+  display: inline-block;
+  z-index: 3;
+}
+
+.videocommander-progress-buffered-bar {
+  position: absolute;
+  left: 0;
+  width: 75%;
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0.5);
+  display: inline-block;
+  z-index: 2;
+}
+
+.videocommander-progress-time {
+  position: absolute;
+  left: 3%;
+  bottom: 7px;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 1.0);
+}
+
+.videocommander-entire-bar {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: rgba(255, 255, 255, 0.2);
+  display: inline-block;
+  z-index: 1;
+}
