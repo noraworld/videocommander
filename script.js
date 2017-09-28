@@ -99,6 +99,17 @@ $(function() {
       return false;
     }
 
+    // 入力フォームにフォーカスがあるときはショートカットを無効化
+    if ((document.activeElement.nodeName === 'INPUT'
+    || document.activeElement.nodeName === 'TEXTAREA'
+    || document.activeElement.getAttribute('type') === 'text')
+    || document.activeElement.isContentEditable === true) {
+      return false;
+    }
+    else {
+      activeBlur();
+    }
+
     // Ctrl + c が押されたらループステータスをリセットする
     // Esc だと、リセットより全画面の解除が優先されてしまうため
     // Ctrl + c でもリセットできるようにした
@@ -109,17 +120,6 @@ $(function() {
     // 修飾キーをエスケープ
     if (event.metaKey || event.ctrlKey || event.altKey) {
       return false;
-    }
-
-    // 入力フォームにフォーカスがあるときはショートカットを無効化
-    if ((document.activeElement.nodeName === 'INPUT'
-    || document.activeElement.nodeName === 'TEXTAREA'
-    || document.activeElement.getAttribute('type') === 'text')
-    || document.activeElement.isContentEditable === true) {
-      return false;
-    }
-    else {
-      activeBlur();
     }
 
     // オプションのキーと固定のキーに関しては
