@@ -17,6 +17,7 @@ These shortcuts are available on video site.
 * **D** - speed down
 * **U** - speed up
 * **R** - reset speed
+* **F** - toggle full screen
 * **L** - partial loop
 * **1** - jump to 10% playback position
 * **2** - jump to 20% playback position
