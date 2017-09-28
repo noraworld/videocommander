@@ -130,7 +130,6 @@ $(function() {
         event.stopPropagation();
         if (settings.scrollToPlayerChecked === true) {
           scrollToPlayer();
-          getVideoElement();
         }
       }
     });
@@ -139,7 +138,6 @@ $(function() {
         event.stopPropagation();
         if (settings.scrollToPlayerChecked === true) {
           scrollToPlayer();
-          getVideoElement();
         }
       }
     });
