@@ -10,6 +10,7 @@ $(function() {
     speedDownKeyCode:              'd',
     speedUpKeyCode:                'u',
     resetSpeedKeyCode:             'r',
+    toggleFullscreenKeyCode:       'f',
     partialLoopKeyCode:            'l',
     partialLoopPrecision:          100,
     skipTimeAmount:                  5,
@@ -34,6 +35,7 @@ $(function() {
     settings.speedDownKeyCode             = storage.speedDownKeyCode;
     settings.speedUpKeyCode               = storage.speedUpKeyCode;
     settings.resetSpeedKeyCode            = storage.resetSpeedKeyCode;
+    settings.toggleFullscreenKeyCode      = storage.toggleFullscreenKeyCode;
     settings.partialLoopKeyCode           = storage.partialLoopKeyCode;
     settings.partialLoopPrecision         = storage.partialLoopPrecision;
     settings.skipTimeAmount               = Number(storage.skipTimeAmount);
@@ -152,6 +154,7 @@ $(function() {
       case settings.speedDownKeyCode:          speedDown();          break;  // default: d
       case settings.speedUpKeyCode:            speedUp();            break;  // default: u
       case settings.resetSpeedKeyCode:         resetSpeed();         break;  // default: r
+      case settings.toggleFullscreenKeyCode:   toggleFullscreen();   break;  // default: f
       // 固定のキーコード
       case fixed.togglePlayAndPauseKeyCode: event.preventDefault(); togglePlayAndPause(); break;  // space
       case fixed.rewindTimeKeyCode:         event.preventDefault(); rewindTime();         break;  // left-arrow
@@ -238,6 +241,26 @@ $(function() {
   function resetSpeed() {
     player.playbackRate = 1.0;
     setPlaybackSpeed();
+  }
+
+  function toggleFullscreen() {
+    // FQDN ではなく、ドメイン名 (FQDN からホスト名を取り除いたもの) を取得する
+    // www.youtube.com ではなく youtube.com に対しては処理をスキップする
+    var domainName = location.href.match(/^(.*?:\/\/)(.*?)([a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})[\:[0-9]*]?([\/].*?)?$/i)[3];
+
+    // YouTube は動画プレイヤーをうまくフルスクリーンにできないので
+    // 元々 YouTube に実装されている機能を使用する
+    if (domainName === 'youtube.com') {
+      document.getElementsByClassName('ytp-fullscreen-button')[0].click();
+    }
+    else {
+      if (!document.webkitFullscreenElement) {
+        player.webkitEnterFullscreen();
+      }
+      else {
+        player.webkitExitFullscreen();
+      }
+    }
   }
 
   // 動画の最初の位置に移動する

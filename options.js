@@ -7,6 +7,7 @@ var defaultKey = {
   speedDownKeyCode:              'd',
   speedUpKeyCode:                'u',
   resetSpeedKeyCode:             'r',
+  toggleFullscreenKeyCode:       'f',
   partialLoopKeyCode:            'l',
   partialLoopPrecision:          100,
   skipTimeAmount:                  5,
@@ -28,6 +29,7 @@ $(function() {
   initShortcutInput('speed-down');
   initShortcutInput('speed-up');
   initShortcutInput('reset-speed');
+  initShortcutInput('toggle-fullscreen');
   initShortcutInput('partial-loop');
 
   initNumericInput('partial-loop-precision');
@@ -44,6 +46,7 @@ function loadOptions() {
     updateInputText('speed-down',            storage.speedDownKeyCode);
     updateInputText('speed-up',              storage.speedUpKeyCode);
     updateInputText('reset-speed',           storage.resetSpeedKeyCode);
+    updateInputText('toggle-fullscreen',     storage.toggleFullscreenKeyCode);
     updateInputText('partial-loop',          storage.partialLoopKeyCode);
     document.getElementById('partial-loop-precision').value = storage.partialLoopPrecision;
     document.getElementById('skip-time-amount').value = storage.skipTimeAmount;
@@ -66,6 +69,7 @@ function saveOptions() {
   var speedDownKeyCode             = document.getElementById('speed-down').value;
   var speedUpKeyCode               = document.getElementById('speed-up').value;
   var resetSpeedKeyCode            = document.getElementById('reset-speed').value;
+  var toggleFullscreenKeyCode      = document.getElementById('toggle-fullscreen').value;
   var partialLoopKeyCode           = document.getElementById('partial-loop').value;
   var partialLoopPrecision         = document.getElementById('partial-loop-precision').value;
   var skipTimeAmount               = document.getElementById('skip-time-amount').value;
@@ -81,11 +85,12 @@ function saveOptions() {
   validateFlag[5]  = checkValidate('speed-down');
   validateFlag[6]  = checkValidate('speed-up');
   validateFlag[7]  = checkValidate('reset-speed');
-  validateFlag[8]  = checkValidate('partial-loop');
-  validateFlag[9]  = checkValidateNumeric('partial-loop-precision');
-  validateFlag[10] = checkValidateNumeric('skip-time-amount');
-  validateFlag[11] = checkValidateChecked('scroll-to-player');
-  validateFlag[12] = checkValidateChecked('remember-playback-speed');
+  validateFlag[8]  = checkValidate('toggle-fullscreen');
+  validateFlag[9]  = checkValidate('partial-loop');
+  validateFlag[10] = checkValidateNumeric('partial-loop-precision');
+  validateFlag[11] = checkValidateNumeric('skip-time-amount');
+  validateFlag[12] = checkValidateChecked('scroll-to-player');
+  validateFlag[13] = checkValidateChecked('remember-playback-speed');
 
   // when some input is wrong.
   for (var i = 0; i < validateFlag.length; i++) {
@@ -103,6 +108,7 @@ function saveOptions() {
     speedDownKeyCode:             speedDownKeyCode,
     speedUpKeyCode:               speedUpKeyCode,
     resetSpeedKeyCode:            resetSpeedKeyCode,
+    toggleFullscreenKeyCode:      toggleFullscreenKeyCode,
     partialLoopKeyCode:           partialLoopKeyCode,
     partialLoopPrecision:         partialLoopPrecision,
     skipTimeAmount:               skipTimeAmount,
