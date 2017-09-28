@@ -13,3 +13,19 @@
   width: 80px;
   display: inline-block;
 }
+
+.video-debugging-status {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  color: rgba(255, 255, 255, 1.0);
+  background: rgba(128, 0, 0, 0.6);
+  padding: 10px 7px;
+  border-radius: 10px;
+  font-family: 'Open Sans';
+  z-index: 100000;
+  font-size: 18px;
+  text-align: center;
+  width: 80px;
+  display: inline-block;
+}

@@ -87,10 +87,11 @@ $(function() {
       activeBlur();
     }
 
-    // Ctrl + r が押されたら video 要素を取得し直す (試験的機能)
-    if (event.ctrlKey && eventKey == 'r') {
+    // Ctrl + Shift が押されたら video 要素を取得し直す (試験的機能)
+    if (event.ctrlKey && event.shiftKey) {
       getVideoElement();
-      console.info('Reload video element successfully.\n\nStill have problem? Report that from https://github.com/noraworld/videocommander/issues.\nThank you for cooperating with development!');
+      showVideoDebuggingStatus('Rehash');
+      console.info('Rehashed video element successfully.\n\nStill have problem? Report that from https://github.com/noraworld/videocommander/issues.\nThank you for cooperating with development!');
     }
 
     // 動画がないときはキーイベントを実行しない
@@ -207,7 +208,7 @@ $(function() {
     }
   }
 
-  // 再生/停止
+  // 再生 / 停止
   function togglePlayAndPause() {
     if (player.paused === true)
       player.play();
@@ -243,6 +244,7 @@ $(function() {
     setPlaybackSpeed();
   }
 
+  // フルスクリーン表示 / 解除
   function toggleFullscreen() {
     // FQDN ではなく、ドメイン名 (FQDN からホスト名を取り除いたもの) を取得する
     // www.youtube.com ではなく youtube.com に対しては処理をスキップする
@@ -382,6 +384,17 @@ $(function() {
       });
     }
   };
+
+  // 動画のステータスを表示する (デバッグ用)
+  // 動画プレイヤーの右上に赤い枠で表示される
+  function showVideoDebuggingStatus(statusStr) {
+    $('.video-debugging-status').remove();
+    var videoDebuggingStatus = '<span class="video-debugging-status">' + statusStr + '</span>';
+    $(videoDebuggingStatus).insertBefore('video');
+    $('.video-debugging-status').fadeOut(1000, function() {
+      $(this).remove();
+    });
+  }
 
   // 再生スピードの上限と下限を設定する
   function setSpeedRange(speedChecker) {
