@@ -1,18 +1,19 @@
 var defaultKey = {
-  togglePlayAndPauseKeyCode:     'p',
-  jumpToBeginningKeyCode:        'h',
-  jumpToEndKeyCode:              'e',
-  rewindTimeKeyCode:             'a',
-  advanceTimeKeyCode:            's',
-  speedDownKeyCode:              'd',
-  speedUpKeyCode:                'u',
-  resetSpeedKeyCode:             'r',
-  toggleFullscreenKeyCode:       'f',
-  partialLoopKeyCode:            'l',
-  partialLoopPrecision:          100,
-  skipTimeAmount:                  5,
-  scrollToPlayerChecked:        true,
-  rememberPlaybackSpeedChecked: true,
+  togglePlayAndPauseKeyCode:      'p',
+  jumpToBeginningKeyCode:         'h',
+  jumpToEndKeyCode:               'e',
+  rewindTimeKeyCode:              'a',
+  advanceTimeKeyCode:             's',
+  speedDownKeyCode:               'd',
+  speedUpKeyCode:                 'u',
+  resetSpeedKeyCode:              'r',
+  toggleFullscreenKeyCode:        'f',
+  partialLoopKeyCode:             'l',
+  partialLoopPrecision:           100,
+  skipTimeAmount:                   5,
+  scrollToPlayerChecked:         true,
+  rememberPlaybackSpeedChecked:  true,
+  alwaysShowProgressBarChecked: false,
 };
 
 $(function() {
@@ -52,6 +53,7 @@ function loadOptions() {
     document.getElementById('skip-time-amount').value = storage.skipTimeAmount;
     document.getElementById('scroll-to-player').checked = storage.scrollToPlayerChecked;
     document.getElementById('remember-playback-speed').checked = storage.rememberPlaybackSpeedChecked;
+    document.getElementById('always-show-progress-bar').checked = storage.alwaysShowProgressBarChecked;
   });
 }
 
@@ -75,6 +77,7 @@ function saveOptions() {
   var skipTimeAmount               = document.getElementById('skip-time-amount').value;
   var scrollToPlayerChecked        = document.getElementById('scroll-to-player').checked;
   var rememberPlaybackSpeedChecked = document.getElementById('remember-playback-speed').checked;
+  var alwaysShowProgressBarChecked = document.getElementById('always-show-progress-bar').checked;
 
   var validateFlag = [];
   validateFlag[0]  = checkValidate('toggle-play-and-pause');
@@ -91,6 +94,7 @@ function saveOptions() {
   validateFlag[11] = checkValidateNumeric('skip-time-amount');
   validateFlag[12] = checkValidateChecked('scroll-to-player');
   validateFlag[13] = checkValidateChecked('remember-playback-speed');
+  validateFlag[14] = checkValidateChecked('always-show-progress-bar');
 
   // when some input is wrong.
   for (var i = 0; i < validateFlag.length; i++) {
@@ -113,7 +117,8 @@ function saveOptions() {
     partialLoopPrecision:         partialLoopPrecision,
     skipTimeAmount:               skipTimeAmount,
     scrollToPlayerChecked:        scrollToPlayerChecked,
-    rememberPlaybackSpeedChecked: rememberPlaybackSpeedChecked
+    rememberPlaybackSpeedChecked: rememberPlaybackSpeedChecked,
+    alwaysShowProgressBarChecked: alwaysShowProgressBarChecked
   }, function() {
     var status = $('#status');
     status.text('Saved');

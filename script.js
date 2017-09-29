@@ -2,21 +2,22 @@ $(function() {
 
   var settings = {
     // オプションで変更可能なキーコード
-    togglePlayAndPauseKeyCode:     'p',
-    jumpToBeginningKeyCode:        'h',
-    jumpToEndKeyCode:              'e',
-    rewindTimeKeyCode:             'a',
-    advanceTimeKeyCode:            's',
-    speedDownKeyCode:              'd',
-    speedUpKeyCode:                'u',
-    resetSpeedKeyCode:             'r',
-    toggleFullscreenKeyCode:       'f',
-    partialLoopKeyCode:            'l',
-    partialLoopPrecision:          100,
-    skipTimeAmount:                  5,
-    scrollToPlayerChecked:        true,
-    rememberPlaybackSpeedChecked: true,
-    playbackSpeed:                 1.0,
+    togglePlayAndPauseKeyCode:      'p',
+    jumpToBeginningKeyCode:         'h',
+    jumpToEndKeyCode:               'e',
+    rewindTimeKeyCode:              'a',
+    advanceTimeKeyCode:             's',
+    speedDownKeyCode:               'd',
+    speedUpKeyCode:                 'u',
+    resetSpeedKeyCode:              'r',
+    toggleFullscreenKeyCode:        'f',
+    partialLoopKeyCode:             'l',
+    partialLoopPrecision:           100,
+    skipTimeAmount:                   5,
+    scrollToPlayerChecked:         true,
+    rememberPlaybackSpeedChecked:  true,
+    alwaysShowProgressBarChecked: false,
+    playbackSpeed:                  1.0,
   };
   var fixed = {
     // 固定のキーコード
@@ -41,6 +42,7 @@ $(function() {
     settings.skipTimeAmount               = Number(storage.skipTimeAmount);
     settings.scrollToPlayerChecked        = Boolean(storage.scrollToPlayerChecked);
     settings.rememberPlaybackSpeedChecked = Boolean(storage.rememberPlaybackSpeedChecked);
+    settings.alwaysShowProgressBarChecked = Boolean(storage.alwaysShowProgressBarChecked);
     settings.playbackSpeed                = Number(storage.playbackSpeed);
     getVideoElement();
   });
@@ -136,7 +138,7 @@ $(function() {
 
     $('.videocommander-progress-time').text(adjustProgressTime(player.currentTime) + ' / ' + adjustProgressTime(player.seekable.end(0)));
 
-    if (!player.paused) {
+    if (!player.paused || settings.alwaysShowProgressBarChecked) {
       showProgressBarTimeoutID = setTimeout(function() {
         showProgressBar();
       }, 100);
@@ -160,6 +162,10 @@ $(function() {
   }
 
   function hideProgressBar() {
+    if (settings.alwaysShowProgressBarChecked) {
+      return false;
+    }
+
     try {
       clearTimeout(showProgressBarTimeoutID);
     }
@@ -179,7 +185,7 @@ $(function() {
   }
 
   window.addEventListener('keyup', function(event) {
-    if (event.key == ',' || event.key == '.') {
+    if (event.key == ',') {
       showAndHideProgressBar();
     }
   }, true);
@@ -194,9 +200,27 @@ $(function() {
       activeBlur();
     }
 
-    if (eventKey == ',' || eventKey == '.') {
+    // 押している間、プログレスバーが表示される
+    if (eventKey == ',') {
       event.stopPropagation();
       showProgressBar();
+    }
+
+    // "Always show progress bar" オプションの設定/解除
+    // ここで設定/解除しても記録はされないので
+    // 記録したい場合はオプションページで変更する
+    // 一時的にプログレスバーの固定/解除したいときに使用する
+    if (eventKey == '.') {
+      event.stopPropagation();
+      settings.alwaysShowProgressBarChecked = !settings.alwaysShowProgressBarChecked;
+      if (settings.alwaysShowProgressBarChecked) {
+        showProgressBar();
+        showVideoDebuggingStatus('Bar Fixed');
+      }
+      else {
+        hideProgressBar();
+        showVideoDebuggingStatus('Bar Released');
+      }
     }
 
     // Ctrl + Shift が押されたら video 要素を取得し直す (試験的機能)
