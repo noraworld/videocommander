@@ -70,6 +70,7 @@ $(function() {
         player = document.getElementsByTagName('video')[0];
         clearTimeout(getVideoTimeoutID);
         observeSpeed();
+        observePlayback();
         getPlaybackSpeed();
         createProgressBar();
         showAndHideProgressBar();
@@ -106,7 +107,8 @@ $(function() {
       clearTimeout(hideProgressBarTimeoutID);
     }
     catch (err) {
-      // do nothing.
+      // Comment out when debugging.
+      // console.warn('Failed to clear hideProgressBarTimeoutID. But continuing.');
     }
 
     showProgressBar();
@@ -122,7 +124,8 @@ $(function() {
       clearTimeout(showProgressBarTimeoutID);
     }
     catch (err) {
-      // do nothing.
+      // Comment out when debugging.
+      // console.warn('Failed to clear showProgressBarTimeoutID. But continuing.');
     }
 
     $('.videocommander-progress-bar-container').stop();
@@ -130,13 +133,34 @@ $(function() {
 
     $('.videocommander-progress-bar-container').css('width', player.parentNode.offsetWidth);
 
-    var progressRate = (player.currentTime / player.seekable.end(0)) * 100;
-    $('.videocommander-progress-bar').css('width', progressRate + '%');
+    try {
+      var progressRate = (player.currentTime / player.seekable.end(0)) * 100;
+      $('.videocommander-progress-bar').css('width', progressRate + '%');
+    }
+    catch (err) {
+      // This exception rises every time loading new video on YouTube.
+      // Comment out when debugging.
+      // console.warn('Failed to load progress rate. But continuing.');
+    }
 
-    var progressBufferedRate = (player.buffered.end(0) / player.seekable.end(0)) * 100;
-    $('.videocommander-progress-buffered-bar').css('width', progressBufferedRate + '%');
+    try {
+      var progressBufferedRate = (player.buffered.end(0) / player.seekable.end(0)) * 100;
+      $('.videocommander-progress-buffered-bar').css('width', progressBufferedRate + '%');
+    }
+    catch (err) {
+      // This exception rises every time loading new video on YouTube.
+      // Comment out when debugging.
+      // console.warn('Failed to load progress buffered rate. But continuing.');
+    }
 
-    $('.videocommander-progress-time').text(adjustProgressTime(player.currentTime) + ' / ' + adjustProgressTime(player.seekable.end(0)));
+    try {
+      $('.videocommander-progress-time').text(adjustProgressTime(player.currentTime) + ' / ' + adjustProgressTime(player.seekable.end(0)));
+    }
+    catch (err) {
+      // This exception rises every time loading new video on YouTube.
+      // Comment out when debugging.
+      // console.warn('Failed to load progress time. But continuing.');
+    }
 
     if (!player.paused || settings.alwaysShowProgressBarChecked) {
       showProgressBarTimeoutID = setTimeout(function() {
@@ -170,7 +194,8 @@ $(function() {
       clearTimeout(showProgressBarTimeoutID);
     }
     catch (err) {
-      // do nothing.
+      // Comment out when debugging.
+      // console.warn('Failed to clear showProgressBarTimeoutID. But continuing.');
     }
 
     if (player.paused) {
@@ -324,6 +349,15 @@ $(function() {
     };
   };
 
+  function observePlayback() {
+    player.onplay = function() {
+      showAndHideProgressBar();
+    }
+    player.onpause = function() {
+      showProgressBar();
+    }
+  }
+
   function getPlaybackSpeed() {
     if (settings.rememberPlaybackSpeedChecked === true) {
       player.playbackRate = floorFormat(settings.playbackSpeed, 1);
@@ -347,11 +381,9 @@ $(function() {
   function togglePlayAndPause() {
     if (player.paused) {
       player.play();
-      hideProgressBar();
     }
     else {
       player.pause();
-      showProgressBar();
     }
   };
 
