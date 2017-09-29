@@ -84,9 +84,11 @@ $(function() {
 
   function createProgressBar() {
     if (!($('div').hasClass('videocommander-progress-bar-container'))) {
+      var fakeVideoWrapper = '<div class="videocommander-fake-video-wrapper"></div>';
+      $(fakeVideoWrapper).appendTo('body');
+
       var progressBarContainer = '<div class="videocommander-progress-bar-container"></div>';
-      $(progressBarContainer).insertAfter(player);
-      $('.videocommander-progress-bar-container').css('width', player.parentNode.offsetWidth);
+      $(progressBarContainer).appendTo('.videocommander-fake-video-wrapper');
 
       var progressBar = '<div class="videocommander-progress-bar"></div>';
       $(progressBar).appendTo('.videocommander-progress-bar-container');
@@ -107,7 +109,7 @@ $(function() {
       clearTimeout(hideProgressBarTimeoutID);
     }
     catch (err) {
-      // Comment out when debugging.
+      // Uncomment when debugging.
       // console.warn('Failed to clear hideProgressBarTimeoutID. But continuing.');
     }
 
@@ -124,14 +126,14 @@ $(function() {
       clearTimeout(showProgressBarTimeoutID);
     }
     catch (err) {
-      // Comment out when debugging.
+      // Uncomment when debugging.
       // console.warn('Failed to clear showProgressBarTimeoutID. But continuing.');
     }
 
     $('.videocommander-progress-bar-container').stop();
     $('.videocommander-progress-bar-container').css('opacity', 1);
 
-    $('.videocommander-progress-bar-container').css('width', player.parentNode.offsetWidth);
+    $('.videocommander-fake-video-wrapper').css('width', $(player).width()).css('height', $(player).height()).css('left', $(player).offset().left).css('top', $(player).offset().top);
 
     try {
       var progressRate = (player.currentTime / player.seekable.end(0)) * 100;
@@ -139,7 +141,7 @@ $(function() {
     }
     catch (err) {
       // This exception rises every time loading new video on YouTube.
-      // Comment out when debugging.
+      // Uncomment when debugging.
       // console.warn('Failed to load progress rate. But continuing.');
     }
 
@@ -149,7 +151,7 @@ $(function() {
     }
     catch (err) {
       // This exception rises every time loading new video on YouTube.
-      // Comment out when debugging.
+      // Uncomment when debugging.
       // console.warn('Failed to load progress buffered rate. But continuing.');
     }
 
@@ -158,15 +160,20 @@ $(function() {
     }
     catch (err) {
       // This exception rises every time loading new video on YouTube.
-      // Comment out when debugging.
+      // Uncomment when debugging.
       // console.warn('Failed to load progress time. But continuing.');
     }
 
-    if (!player.paused || settings.alwaysShowProgressBarChecked) {
+    // Do not update progress (buffered) rate and progress time (Do not call this function)
+    // when video player pauses if uncomment.
+    // The reason why stops calling this function when video player pauses is because
+    // CPU utilization does not go up unnecessarily.
+    //
+    // if (!player.paused || settings.alwaysShowProgressBarChecked) {
       showProgressBarTimeoutID = setTimeout(function() {
         showProgressBar();
       }, 100);
-    }
+    // }
   }
 
   function adjustProgressTime(time) {
@@ -194,7 +201,7 @@ $(function() {
       clearTimeout(showProgressBarTimeoutID);
     }
     catch (err) {
-      // Comment out when debugging.
+      // Uncomment when debugging.
       // console.warn('Failed to clear showProgressBarTimeoutID. But continuing.');
     }
 
@@ -351,7 +358,7 @@ $(function() {
 
   function observePlayback() {
     player.onplay = function() {
-      showAndHideProgressBar();
+      hideProgressBar();
     }
     player.onpause = function() {
       showProgressBar();
@@ -539,7 +546,7 @@ $(function() {
       clearTimeout(removeStatusBoxTimeoutID);
     }
 
-    $(videoStatus).insertBefore('video');
+    $(videoStatus).appendTo('.videocommander-fake-video-wrapper');
 
     if ($('span').hasClass('video-status') && $('span').hasClass('video-status-keep-showing')) {
       $('.video-status-keep-showing').css('display', 'none');
@@ -561,7 +568,7 @@ $(function() {
   function showVideoDebuggingStatus(statusStr) {
     $('.video-debugging-status').remove();
     var videoDebuggingStatus = '<span class="video-debugging-status">' + statusStr + '</span>';
-    $(videoDebuggingStatus).insertBefore('video');
+    $(videoDebuggingStatus).appendTo('.videocommander-fake-video-wrapper');
     $('.video-debugging-status').fadeOut(1000, function() {
       $(this).remove();
     });
