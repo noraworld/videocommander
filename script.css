@@ -35,6 +35,24 @@
   pointer-events: none;
 }
 
+:-webkit-full-screen {
+  width: 100% !important;
+  height: 100% !important;
+  top: 0;
+  left: 0;
+  z-index: 100000;
+  background-color: black;
+}
+
+:-webkit-full-screen video {
+  width: 100% !important;
+  height: 100% !important;
+  top: 0;
+  left: 0;
+  z-index: 100000;
+  background-color: black;
+}
+
 .videocommander-progress-bar-container {
   position: absolute;
   bottom: 0;

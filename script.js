@@ -68,24 +68,25 @@ $(function() {
     if (document.getElementsByTagName('video')[0] !== undefined) {
       if (document.getElementsByTagName('video')[0].readyState === 4) {
         player = document.getElementsByTagName('video')[0];
+        createProgressBar();
         clearTimeout(getVideoTimeoutID);
         observeSpeed();
         observePlayback();
+        observePlayerSizeAndPosition();
         getPlaybackSpeed();
-        createProgressBar();
         showAndHideProgressBar();
         return false;
       }
     }
     getVideoTimeoutID = setTimeout(function() {
       getVideoElement();
-    }, 10);
+    }, 200);
   };
 
   function createProgressBar() {
     if (!($('div').hasClass('videocommander-progress-bar-container'))) {
       var fakeVideoWrapper = '<div class="videocommander-fake-video-wrapper"></div>';
-      $(fakeVideoWrapper).appendTo('body');
+      $(player).wrap(fakeVideoWrapper);
 
       var progressBarContainer = '<div class="videocommander-progress-bar-container"></div>';
       $(progressBarContainer).appendTo('.videocommander-fake-video-wrapper');
@@ -133,8 +134,6 @@ $(function() {
     $('.videocommander-progress-bar-container').stop();
     $('.videocommander-progress-bar-container').css('opacity', 1);
 
-    $('.videocommander-fake-video-wrapper').css('width', $(player).width()).css('height', $(player).height()).css('left', $(player).offset().left).css('top', $(player).offset().top);
-
     try {
       var progressRate = (player.currentTime / player.seekable.end(0)) * 100;
       $('.videocommander-progress-bar').css('width', progressRate + '%');
@@ -172,7 +171,7 @@ $(function() {
     // if (!player.paused || settings.alwaysShowProgressBarChecked) {
       showProgressBarTimeoutID = setTimeout(function() {
         showProgressBar();
-      }, 100);
+      }, 200);
     // }
   }
 
@@ -219,6 +218,14 @@ $(function() {
   window.addEventListener('keyup', function(event) {
     if (event.key == ',') {
       showAndHideProgressBar();
+    }
+  }, true);
+
+  window.addEventListener('webkitfullscreenchange', function(event) {
+    // Reset video size and position when exiting full screen mode.
+    if (!document.webkitFullscreenElement) {
+      $(player).css('width', 'auto').css('height', 'auto').css('top', 'auto').css('left', 'auto');
+      $('.videocommander-fake-video-wrapper').css('width', 'auto').css('height', 'auto').css('top', 'auto').css('left', 'auto');
     }
   }, true);
 
@@ -356,6 +363,7 @@ $(function() {
     };
   };
 
+  // 再生/停止の変化を監視する
   function observePlayback() {
     player.onplay = function() {
       hideProgressBar();
@@ -365,12 +373,50 @@ $(function() {
     }
   }
 
+  // 動画サイズと位置の変更を監視
+  function observePlayerSizeAndPosition() {
+    try {
+      clearTimeout(observePlayerSizeAndPositionTimeoutID);
+    }
+    catch (err) {
+      // Uncomment when debugging.
+      // console.warn('Failed to clear observePlayerSizeAndPositionTimeoutID. But continuing.');
+    }
+
+    if (!document.webkitFullscreenElement) {
+      $('.videocommander-fake-video-wrapper').css('width', $(player).width()).css('height', $(player).height());
+
+      if (player.style.top !== 'auto') {
+        $('.videocommander-fake-video-wrapper').css('top', $(player).css('top'));
+        $(player).css('top', 'auto');
+      }
+      if (player.style.left !== 'auto') {
+        $('.videocommander-fake-video-wrapper').css('left', $(player).css('left'));
+        $(player).css('left', 'auto');
+      }
+      if (player.style.transform !== 'none') {
+        $('.videocommander-fake-video-wrapper').css('transform', $(player).css('transform'));
+        $(player).css('transform', 'none');
+      }
+    }
+    else {
+      $('.videocommander-fake-video-wrapper').css('width', $(window).width()).css('height', $(window).height()).css('left', '0px').css('top', '0px');
+      $(player).css('width', $(window).width()).css('height', $(window).height()).css('left', '0px').css('top', '0px');
+    }
+
+    observePlayerSizeAndPositionTimeoutID = setTimeout(function() {
+      observePlayerSizeAndPosition()
+    }, 200);
+  }
+
+  // 前回の再生速度を取得する
   function getPlaybackSpeed() {
     if (settings.rememberPlaybackSpeedChecked === true) {
       player.playbackRate = floorFormat(settings.playbackSpeed, 1);
     }
   }
 
+  // 再生速度を保存する
   function setPlaybackSpeed() {
     if (settings.rememberPlaybackSpeedChecked === true) {
       chrome.storage.sync.set({
@@ -435,10 +481,10 @@ $(function() {
     }
     else {
       if (!document.webkitFullscreenElement) {
-        player.webkitEnterFullscreen();
+        document.querySelector('.videocommander-fake-video-wrapper').webkitRequestFullscreen();
       }
       else {
-        player.webkitExitFullscreen();
+        document.webkitExitFullscreen();
       }
     }
   }
