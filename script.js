@@ -176,16 +176,16 @@ $(function() {
   }
 
   function adjustProgressTime(time) {
-    time = parseFloat(time);
+    time = parseInt(time);
     var hours = parseInt(time / 3600);
     var minutes = parseInt((time % 3600) / 60);
     var seconds = parseInt(time % 60);
 
     if (hours === 0) {
-      time = ("0" + minutes).slice(-2) + ':' + ("0" + seconds).slice(-2);
+      time = ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2);
     }
     else {
-      time = ("0" + hours).slice(-2) + ':' + ("0" + minutes).slice(-2) + ':' + ("0" + seconds).slice(-2);
+      time = ('0' + hours).slice(-2) + ':' + ('0' + minutes).slice(-2) + ':' + ('0' + seconds).slice(-2);
     }
 
     return time;
