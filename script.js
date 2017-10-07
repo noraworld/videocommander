@@ -62,17 +62,22 @@ $(function() {
   var removeStatusBoxTimeoutID;
   var getVideoTimeoutID;
   var setPlaybackSpeedSuccessfullyOrSkipable = false;
+  var videoWidth;
+  var videoHeight;
+  var videoTop;
+  var videoLeft;
 
   // video要素を取得する
   function getVideoElement() {
     if (document.getElementsByTagName('video')[0] !== undefined) {
       if (document.getElementsByTagName('video')[0].readyState === 4) {
         player = document.getElementsByTagName('video')[0];
-        createProgressBar();
+        createFakeVideoWrapper();
+        wrapVideoElement();
+        enableNotFullscreenProgressBar();  // It should be not fullscreen mode when loading the page first.
         clearTimeout(getVideoTimeoutID);
         observeSpeed();
         observePlayback();
-        observePlayerSizeAndPosition();
         getPlaybackSpeed();
         showAndHideProgressBar();
         return false;
@@ -83,25 +88,49 @@ $(function() {
     }, 200);
   };
 
-  function createProgressBar() {
-    if (!($('div').hasClass('videocommander-progress-bar-container'))) {
-      var fakeVideoWrapper = '<div class="videocommander-fake-video-wrapper"></div>';
+  // Shown when FULLSCREEN
+  function wrapVideoElement() {
+    if (!($('div').hasClass('videocommander-progress-bar-container-fullscreen'))) {
+      var fakeVideoWrapper = '<div class="videocommander-fake-video-wrapper videocommander-fullscreen"></div>';
       $(player).wrap(fakeVideoWrapper);
 
-      var progressBarContainer = '<div class="videocommander-progress-bar-container"></div>';
-      $(progressBarContainer).appendTo('.videocommander-fake-video-wrapper');
+      var progressBarContainer = '<div class="videocommander-progress-bar-container videocommander-fullscreen videocommander-progress-bar-container-fullscreen"></div>';
+      $(progressBarContainer).appendTo('.videocommander-fake-video-wrapper.videocommander-fullscreen');
 
-      var progressBar = '<div class="videocommander-progress-bar"></div>';
-      $(progressBar).appendTo('.videocommander-progress-bar-container');
+      var progressBar = '<div class="videocommander-progress-bar videocommander-fullscreen"></div>';
+      $(progressBar).appendTo('.videocommander-progress-bar-container.videocommander-fullscreen');
 
-      var progressBufferedBar = '<div class="videocommander-progress-buffered-bar"></div>';
-      $(progressBufferedBar).appendTo('.videocommander-progress-bar-container');
+      var progressBufferedBar = '<div class="videocommander-progress-buffered-bar videocommander-fullscreen"></div>';
+      $(progressBufferedBar).appendTo('.videocommander-progress-bar-container.videocommander-fullscreen');
 
-      var progressTime = '<div class="videocommander-progress-time"></div>';
-      $(progressTime).appendTo('.videocommander-progress-bar-container');
+      var progressTime = '<div class="videocommander-progress-time videocommander-fullscreen"></div>';
+      $(progressTime).appendTo('.videocommander-progress-bar-container.videocommander-fullscreen');
 
-      var entireBar = '<div class="videocommander-entire-bar"></div>';
-      $(entireBar).appendTo('.videocommander-progress-bar-container');
+      var entireBar = '<div class="videocommander-entire-bar videocommander-fullscreen"></div>';
+      $(entireBar).appendTo('.videocommander-progress-bar-container.videocommander-fullscreen');
+    }
+  }
+
+  // Shown when NOT FULLSCREEN
+  function createFakeVideoWrapper() {
+    if (!($('div').hasClass('videocommander-progress-bar-container-not-fullscreen'))) {
+      var fakeVideoWrapper = '<div class="videocommander-fake-video-wrapper videocommander-not-fullscreen"></div>';
+      $('body').prepend(fakeVideoWrapper);
+
+      var progressBarContainer = '<div class="videocommander-progress-bar-container videocommander-progress-bar-container-not-fullscreen videocommander-not-fullscreen"></div>';
+      $(progressBarContainer).appendTo('.videocommander-fake-video-wrapper.videocommander-not-fullscreen');
+
+      var progressBar = '<div class="videocommander-progress-bar videocommander-not-fullscreen"></div>';
+      $(progressBar).appendTo('.videocommander-progress-bar-container.videocommander-not-fullscreen');
+
+      var progressBufferedBar = '<div class="videocommander-progress-buffered-bar videocommander-not-fullscreen"></div>';
+      $(progressBufferedBar).appendTo('.videocommander-progress-bar-container.videocommander-not-fullscreen');
+
+      var progressTime = '<div class="videocommander-progress-time videocommander-not-fullscreen"></div>';
+      $(progressTime).appendTo('.videocommander-progress-bar-container.videocommander-not-fullscreen');
+
+      var entireBar = '<div class="videocommander-entire-bar videocommander-not-fullscreen"></div>';
+      $(entireBar).appendTo('.videocommander-progress-bar-container.videocommander-not-fullscreen');
     }
   }
 
@@ -131,12 +160,24 @@ $(function() {
       // console.warn('Failed to clear showProgressBarTimeoutID. But continuing.');
     }
 
-    $('.videocommander-progress-bar-container').stop();
-    $('.videocommander-progress-bar-container').css('opacity', 1);
+    $('.videocommander-progress-bar-container.enabled').stop();
+    $('.videocommander-progress-bar-container.enabled').css('opacity', 1);
+
+    if (document.webkitFullscreenElement) {
+      $('.videocommander-fake-video-wrapper.videocommander-fullscreen').css('width', $(window).width()).css('height', $(window).height()).css('left', '0px').css('top', '0px');
+      $(player).css('width', '100%').css('height', '100%').css('left', '0px').css('top', '0px');
+    }
+    else {
+      videoWidth = $(player).css('width');
+      videoHeight = $(player).css('height');
+      videoTop = $(player).css('top');
+      videoLeft = $(player).css('left');
+      $('.videocommander-fake-video-wrapper.videocommander-not-fullscreen').css('width', $(player).width()).css('height', $(player).height()).css('left', $(player).offset().left).css('top', $(player).offset().top);
+    }
 
     try {
       var progressRate = (player.currentTime / player.seekable.end(0)) * 100;
-      $('.videocommander-progress-bar').css('width', progressRate + '%');
+      $('.videocommander-progress-bar.enabled').css('width', progressRate + '%');
     }
     catch (err) {
       // This exception rises every time loading new video on YouTube.
@@ -146,7 +187,7 @@ $(function() {
 
     try {
       var progressBufferedRate = (player.buffered.end(0) / player.seekable.end(0)) * 100;
-      $('.videocommander-progress-buffered-bar').css('width', progressBufferedRate + '%');
+      $('.videocommander-progress-buffered-bar.enabled').css('width', progressBufferedRate + '%');
     }
     catch (err) {
       // This exception rises every time loading new video on YouTube.
@@ -155,7 +196,7 @@ $(function() {
     }
 
     try {
-      $('.videocommander-progress-time').text(adjustProgressTime(player.currentTime) + ' / ' + adjustProgressTime(player.seekable.end(0)));
+      $('.videocommander-progress-time.enabled').text(adjustProgressTime(player.currentTime) + ' / ' + adjustProgressTime(player.seekable.end(0)));
     }
     catch (err) {
       // This exception rises every time loading new video on YouTube.
@@ -208,11 +249,37 @@ $(function() {
       return false;
     }
 
-    if ($('.videocommander-progress-bar-container').css('opacity') !== '0') {
-      $('.videocommander-progress-bar-container').animate({
+    if ($('.videocommander-progress-bar-container.enabled').css('opacity') !== '0') {
+      $('.videocommander-progress-bar-container.enabled').animate({
         opacity: 0
       }, 200);
     }
+  }
+
+  function enableFullscreenProgressBar() {
+    if ($('.videocommander-not-fullscreen').hasClass('enabled')) {
+      $('.videocommander-not-fullscreen').removeClass('enabled');
+    }
+    $('.videocommander-not-fullscreen').css('opacity', 0);
+    $('.videocommander-fullscreen').addClass('enabled');
+    $('.videocommander-fullscreen').css('opacity', 1);
+
+    // Both video wrapper is always shown
+    // to avoid video goes out of sight.
+    $('.videocommander-fake-video-wrapper').css('opacity', 1);
+  }
+
+  function enableNotFullscreenProgressBar() {
+    if ($('.videocommander-fullscreen').hasClass('enabled')) {
+      $('.videocommander-fullscreen').removeClass('enabled');
+    }
+    $('.videocommander-fullscreen').css('opacity', 0);
+    $('.videocommander-not-fullscreen').addClass('enabled');
+    $('.videocommander-not-fullscreen').css('opacity', 1);
+
+    // Both video wrapper is always shown
+    // to avoid video goes out of sight.
+    $('.videocommander-fake-video-wrapper').css('opacity', 1);
   }
 
   window.addEventListener('keyup', function(event) {
@@ -222,11 +289,20 @@ $(function() {
   }, true);
 
   window.addEventListener('webkitfullscreenchange', function(event) {
-    // Reset video size and position when exiting full screen mode.
-    if (!document.webkitFullscreenElement) {
-      $(player).css('width', 'auto').css('height', 'auto').css('top', 'auto').css('left', 'auto');
-      $('.videocommander-fake-video-wrapper').css('width', 'auto').css('height', 'auto').css('top', 'auto').css('left', 'auto');
+    if (document.webkitFullscreenElement) {
+      wrapVideoElement();
+      enableFullscreenProgressBar();
     }
+    else {
+      createFakeVideoWrapper();
+      enableNotFullscreenProgressBar();
+
+      if (videoWidth && videoHeight && videoTop && videoLeft) {
+        $(player).css('width', videoWidth).css('height', videoHeight).css('left', videoLeft).css('top', videoTop);
+      }
+    }
+
+    showAndHideProgressBar();
   }, true);
 
   // キーが押されたかどうかを判定
@@ -373,42 +449,6 @@ $(function() {
     }
   }
 
-  // 動画サイズと位置の変更を監視
-  function observePlayerSizeAndPosition() {
-    try {
-      clearTimeout(observePlayerSizeAndPositionTimeoutID);
-    }
-    catch (err) {
-      // Uncomment when debugging.
-      // console.warn('Failed to clear observePlayerSizeAndPositionTimeoutID. But continuing.');
-    }
-
-    if (!document.webkitFullscreenElement) {
-      $('.videocommander-fake-video-wrapper').css('width', $(player).width()).css('height', $(player).height());
-
-      if (player.style.top !== 'auto') {
-        $('.videocommander-fake-video-wrapper').css('top', $(player).css('top'));
-        $(player).css('top', 'auto');
-      }
-      if (player.style.left !== 'auto') {
-        $('.videocommander-fake-video-wrapper').css('left', $(player).css('left'));
-        $(player).css('left', 'auto');
-      }
-      if (player.style.transform !== 'none') {
-        $('.videocommander-fake-video-wrapper').css('transform', $(player).css('transform'));
-        $(player).css('transform', 'none');
-      }
-    }
-    else {
-      $('.videocommander-fake-video-wrapper').css('width', $(window).width()).css('height', $(window).height()).css('left', '0px').css('top', '0px');
-      $(player).css('width', $(window).width()).css('height', $(window).height()).css('left', '0px').css('top', '0px');
-    }
-
-    observePlayerSizeAndPositionTimeoutID = setTimeout(function() {
-      observePlayerSizeAndPosition()
-    }, 200);
-  }
-
   // 前回の再生速度を取得する
   function getPlaybackSpeed() {
     if (settings.rememberPlaybackSpeedChecked === true) {
@@ -476,12 +516,13 @@ $(function() {
 
     // YouTube は動画プレイヤーをうまくフルスクリーンにできないので
     // 元々 YouTube に実装されている機能を使用する
+    // Maybe it is a Chrome bug.
     if (domainName === 'youtube.com') {
       document.getElementsByClassName('ytp-fullscreen-button')[0].click();
     }
     else {
       if (!document.webkitFullscreenElement) {
-        document.querySelector('.videocommander-fake-video-wrapper').webkitRequestFullscreen();
+        document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen').webkitRequestFullscreen();
       }
       else {
         document.webkitExitFullscreen();
@@ -592,7 +633,7 @@ $(function() {
       clearTimeout(removeStatusBoxTimeoutID);
     }
 
-    $(videoStatus).appendTo('.videocommander-fake-video-wrapper');
+    $(videoStatus).appendTo('.videocommander-fake-video-wrapper.enabled');
 
     if ($('span').hasClass('video-status') && $('span').hasClass('video-status-keep-showing')) {
       $('.video-status-keep-showing').css('display', 'none');
@@ -614,7 +655,7 @@ $(function() {
   function showVideoDebuggingStatus(statusStr) {
     $('.video-debugging-status').remove();
     var videoDebuggingStatus = '<span class="video-debugging-status">' + statusStr + '</span>';
-    $(videoDebuggingStatus).appendTo('.videocommander-fake-video-wrapper');
+    $(videoDebuggingStatus).appendTo('.videocommander-fake-video-wrapper.enabled');
     $('.video-debugging-status').fadeOut(1000, function() {
       $(this).remove();
     });
