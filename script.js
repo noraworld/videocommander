@@ -80,6 +80,17 @@ $(function() {
         observePlayback();
         getPlaybackSpeed();
         showAndHideProgressBar();
+
+        // Originally in YouTube, video plays automatically when loading the watching page,
+        // but because of calling wrapVideoElement(), somehow video pauses.
+        // Maybe YouTube frontend JavaScript doesn't work correctly
+        // by wrapping video player (by changing HTML element structure).
+        // So plays video manually in YouTube when loading the page.
+        var domainName = location.href.match(/^(.*?:\/\/)(.*?)([a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})[\:[0-9]*]?([\/].*?)?$/i)[3];
+        if (domainName === 'youtube.com') {
+          player.play();
+        }
+
         return false;
       }
     }
