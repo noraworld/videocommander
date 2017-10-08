@@ -1,3 +1,7 @@
+## 0.4
+* Add a progress bar on the bottom of a video player.
+* Add an option that always shows a progress bar.
+
 ## 0.3
 * Add new feature to enter and exit full screen mode.
 * Ctrl-c to reset loop status is disabled when focusing the inputs or the textareas.
