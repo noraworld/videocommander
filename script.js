@@ -290,12 +290,6 @@ $(function() {
     $('.videocommander-fake-video-wrapper').css('opacity', 1);
   }
 
-  window.addEventListener('keyup', function(event) {
-    if (event.key == ',') {
-      showAndHideProgressBar();
-    }
-  }, true);
-
   window.addEventListener('webkitfullscreenchange', function(event) {
     if (document.webkitFullscreenElement) {
       wrapVideoElement();
@@ -381,25 +375,7 @@ $(function() {
       return false;
     }
 
-    // オプションのキーと固定のキーに関しては
-    // 元々サイトで実装されているイベントリスナーを
-    // 無効化してこちらの処理のみを実行する
-    Object.keys(settings).forEach(function(key) {
-      if (eventKey == settings[key]) {
-        event.stopPropagation();
-        if (settings.scrollToPlayerChecked === true) {
-          scrollToPlayer();
-        }
-      }
-    });
-    Object.keys(fixed).forEach(function(key) {
-      if (eventKey == fixed[key]) {
-        event.stopPropagation();
-        if (settings.scrollToPlayerChecked === true) {
-          scrollToPlayer();
-        }
-      }
-    });
+    stopOriginalListener(event, 'keydown');
 
     // ショートカットキーから関数を呼び出す
     switch (eventKey) {
@@ -438,6 +414,18 @@ $(function() {
       loopStatus++;
       partialLoop();
     }
+  }, true);
+
+  window.addEventListener('keyup', function(event) {
+    stopOriginalListener(event, 'keyup');
+
+    if (event.key == ',') {
+      showAndHideProgressBar();
+    }
+  }, true);
+
+  window.addEventListener('keypress', function(event) {
+    stopOriginalListener(event, 'keypress');
   }, true);
 
   // 再生スピードの変更を監視する
@@ -689,5 +677,30 @@ $(function() {
     }
     return speedStatus.toFixed(1);
   };
+
+  // オプションのキーと固定のキーに関しては
+  // 元々サイトで実装されているイベントリスナーを
+  // 無効化してこちらの処理のみを実行する
+  function stopOriginalListener(event, type) {
+    var eventKey = encodeYenSignToBackslash(event.key);
+
+    Object.keys(settings).forEach(function(key) {
+      if (eventKey == settings[key]) {
+        event.stopPropagation();
+        if (settings.scrollToPlayerChecked === true && type === 'keydown') {
+          scrollToPlayer();
+        }
+      }
+    });
+
+    Object.keys(fixed).forEach(function(key) {
+      if (eventKey == fixed[key]) {
+        event.stopPropagation();
+        if (settings.scrollToPlayerChecked === true && type === 'keydown') {
+          scrollToPlayer();
+        }
+      }
+    });
+  }
 
 });
