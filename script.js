@@ -67,6 +67,7 @@ $(function() {
   var videoTop;
   var videoLeft;
   var videoPos;
+  var domainName = location.href.match(/^(.*?:\/\/)(.*?)([a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})[\:[0-9]*]?([\/].*?)?$/i)[3];
 
   // video要素を取得する
   function getVideoElement() {
@@ -169,6 +170,11 @@ $(function() {
       // console.warn('Failed to clear showProgressBarTimeoutID. But continuing.');
     }
 
+    if (player.getAttribute('src') === null) {
+      hideProgressBar('force');
+      return false;
+    }
+
     $('.videocommander-progress-bar-container.enabled').stop();
     $('.videocommander-progress-bar-container.enabled').css('opacity', 1);
 
@@ -240,8 +246,9 @@ $(function() {
     return time;
   }
 
-  function hideProgressBar() {
-    if (settings.alwaysShowProgressBarChecked) {
+  // Set signal 'force' to force hiding progress bar
+  function hideProgressBar(signal) {
+    if (settings.alwaysShowProgressBarChecked && signal !== 'force') {
       return false;
     }
 
@@ -253,7 +260,7 @@ $(function() {
       // console.warn('Failed to clear showProgressBarTimeoutID. But continuing.');
     }
 
-    if (player.paused) {
+    if (player.paused && signal !== 'force') {
       return false;
     }
 
@@ -434,10 +441,16 @@ $(function() {
   // 再生/停止の変化を監視する
   function observePlayback() {
     player.onplay = function() {
+      showProgressBar();
       hideProgressBar();
     }
     player.onpause = function() {
-      showProgressBar();
+      if (domainName === 'youtube.com' && player.currentTime === player.seekable.end(0)) {
+        hideProgressBar('force');
+      }
+      else {
+        showProgressBar();
+      }
     }
   }
 
