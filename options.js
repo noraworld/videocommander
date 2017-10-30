@@ -11,7 +11,7 @@ var defaultKey = {
   partialLoopKeyCode:             'l',
   partialLoopPrecision:           100,
   skipTimeAmount:                   5,
-  scrollToPlayerChecked:         true,
+  scrollToPlayerChecked:        false,
   rememberPlaybackSpeedChecked:  true,
   alwaysShowProgressBarChecked: false,
 };
