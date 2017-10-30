@@ -186,7 +186,7 @@ function encodeYenSignToBackslash(key) {
 function checkValidate(inputID) {
   var inputID = '#' + inputID;
   $(inputID).parent().children('.invalid-value').remove();
-  if ($(inputID).val().match(/^[0-9a-zA-Z-^\\@\[\];:,./_=~|`{}+*<>?!"#$%&'()]{1}$/) === null) {
+  if ($(inputID).val().match(/^[0-9a-zA-Z-^\\@\[\];:,./_=~|`{}+*<>?!"#$%&'()]{1}$/) === null && $(inputID).val().match(/^Enter$/) === null) {
     // some input is wrong.
     $(inputID).css('border', '1px solid red');
     $(inputID).parent().append('<div class="invalid-value">Invalid value</div>');
