@@ -66,6 +66,7 @@ $(function() {
   var videoHeight;
   var videoTop;
   var videoLeft;
+  var videoPos;
 
   // video要素を取得する
   function getVideoElement() {
@@ -100,7 +101,7 @@ $(function() {
   function wrapVideoElement() {
     if (!($('div').hasClass('videocommander-progress-bar-container-fullscreen'))) {
       var fakeVideoWrapper = '<div class="videocommander-fake-video-wrapper videocommander-fullscreen"></div>';
-      $(player).wrap(fakeVideoWrapper);
+      $('body').prepend(fakeVideoWrapper);
 
       var progressBarContainer = '<div class="videocommander-progress-bar-container videocommander-fullscreen videocommander-progress-bar-container-fullscreen"></div>';
       $(progressBarContainer).appendTo('.videocommander-fake-video-wrapper.videocommander-fullscreen');
@@ -172,8 +173,7 @@ $(function() {
     $('.videocommander-progress-bar-container.enabled').css('opacity', 1);
 
     if (document.webkitFullscreenElement) {
-      $('.videocommander-fake-video-wrapper.videocommander-fullscreen').css('width', $(window).width()).css('height', $(window).height()).css('left', '0px').css('top', '0px');
-      $(player).css('width', '100%').css('height', '100%').css('left', '0px').css('top', '0px');
+      $(player).css('left', '0px').css('top', '0px');
     }
     else {
       videoWidth = $(player).css('width');
@@ -298,10 +298,6 @@ $(function() {
     else {
       createFakeVideoWrapper();
       enableNotFullscreenProgressBar();
-
-      if (videoWidth && videoHeight && videoTop && videoLeft) {
-        $(player).css('width', videoWidth).css('height', videoHeight).css('left', videoLeft).css('top', videoTop);
-      }
     }
 
     showAndHideProgressBar();
@@ -517,11 +513,24 @@ $(function() {
       document.getElementsByClassName('ytp-fullscreen-button')[0].click();
     }
     else {
+      var playing = false;
+      if (!player.paused) {
+        playing = true;
+      }
+
       if (!document.webkitFullscreenElement) {
-        document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen').webkitRequestFullscreen();
+        var videoWrapper = document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen');
+        videoWrapper.webkitRequestFullscreen();
+        videoPos = player.parentNode;
+        videoWrapper.insertBefore(player, videoWrapper.firstChild);
       }
       else {
         document.webkitExitFullscreen();
+        videoPos.insertBefore(player, videoPos.firstChild);
+      }
+
+      if (playing) {
+        player.play();
       }
     }
   }
