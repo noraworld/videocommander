@@ -420,6 +420,10 @@ $(function() {
   }, true);
 
   window.addEventListener('keyup', function(event) {
+    if (player === undefined) {
+      return false;
+    }
+
     stopOriginalListener(event, 'keyup');
 
     if (event.key == ',') {
@@ -428,6 +432,10 @@ $(function() {
   }, true);
 
   window.addEventListener('keypress', function(event) {
+    if (player === undefined) {
+      return false;
+    }
+
     stopOriginalListener(event, 'keypress');
   }, true);
 
