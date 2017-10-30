@@ -502,36 +502,32 @@ $(function() {
 
   // フルスクリーン表示 / 解除
   function toggleFullscreen() {
-    // FQDN ではなく、ドメイン名 (FQDN からホスト名を取り除いたもの) を取得する
-    // www.youtube.com ではなく youtube.com に対しては処理をスキップする
-    var domainName = location.href.match(/^(.*?:\/\/)(.*?)([a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})[\:[0-9]*]?([\/].*?)?$/i)[3];
+    // Video stops when video element moves to video wrapper for entering full screen mode.
+    // So remember that video is playing before video element moves and if video is playing,
+    // video plays manually after moving.
 
-    // YouTube は動画プレイヤーをうまくフルスクリーンにできないので
-    // 元々 YouTube に実装されている機能を使用する
-    // Maybe it is a Chrome bug.
-    if (domainName === 'youtube.com') {
-      document.getElementsByClassName('ytp-fullscreen-button')[0].click();
+    // Remember that video is playing
+    var playing = false;
+    if (!player.paused) {
+      playing = true;
     }
+
+    // Enter full screen mode and video element moves to video wrapper
+    if (!document.webkitFullscreenElement) {
+      var videoWrapper = document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen');
+      videoWrapper.webkitRequestFullscreen();
+      videoPos = player.parentNode;
+      videoWrapper.insertBefore(player, videoWrapper.firstChild);
+    }
+    // Exit full screen mode and video element moves to original position
     else {
-      var playing = false;
-      if (!player.paused) {
-        playing = true;
-      }
+      document.webkitExitFullscreen();
+      videoPos.insertBefore(player, videoPos.firstChild);
+    }
 
-      if (!document.webkitFullscreenElement) {
-        var videoWrapper = document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen');
-        videoWrapper.webkitRequestFullscreen();
-        videoPos = player.parentNode;
-        videoWrapper.insertBefore(player, videoWrapper.firstChild);
-      }
-      else {
-        document.webkitExitFullscreen();
-        videoPos.insertBefore(player, videoPos.firstChild);
-      }
-
-      if (playing) {
-        player.play();
-      }
+    // Video plays manually if video is playing before video element moves
+    if (playing) {
+      player.play();
     }
   }
 
