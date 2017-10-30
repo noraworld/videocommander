@@ -74,8 +74,8 @@ $(function() {
     if (document.getElementsByTagName('video')[0] !== undefined) {
       if (document.getElementsByTagName('video')[0].readyState === 4) {
         player = document.getElementsByTagName('video')[0];
-        createFakeVideoWrapper();
-        wrapVideoElement();
+        createNotFullscreenVideoWrapper();
+        createFullscreenVideoWrapper();
         enableNotFullscreenProgressBar();  // It should be not fullscreen mode when loading the page first.
         clearTimeout(getVideoTimeoutID);
         observeSpeed();
@@ -84,7 +84,7 @@ $(function() {
         showAndHideProgressBar();
 
         // Originally in YouTube, etc., video plays automatically when loading the watching page,
-        // but because of calling wrapVideoElement(), somehow video pauses.
+        // but because of calling createFullscreenVideoWrapper(), somehow video pauses.
         // I suspect the frontend JavaScript doesn't work correctly
         // by wrapping video player (by changing HTML element structure).
         // So it plays video manually when loading the page.
@@ -99,7 +99,7 @@ $(function() {
   };
 
   // Shown when FULLSCREEN
-  function wrapVideoElement() {
+  function createFullscreenVideoWrapper() {
     if (!($('div').hasClass('videocommander-progress-bar-container-fullscreen'))) {
       var fakeVideoWrapper = '<div class="videocommander-fake-video-wrapper videocommander-fullscreen"></div>';
       $('body').prepend(fakeVideoWrapper);
@@ -122,7 +122,7 @@ $(function() {
   }
 
   // Shown when NOT FULLSCREEN
-  function createFakeVideoWrapper() {
+  function createNotFullscreenVideoWrapper() {
     if (!($('div').hasClass('videocommander-progress-bar-container-not-fullscreen'))) {
       var fakeVideoWrapper = '<div class="videocommander-fake-video-wrapper videocommander-not-fullscreen"></div>';
       $('body').prepend(fakeVideoWrapper);
@@ -299,11 +299,11 @@ $(function() {
 
   window.addEventListener('webkitfullscreenchange', function(event) {
     if (document.webkitFullscreenElement) {
-      wrapVideoElement();
+      createFullscreenVideoWrapper();
       enableFullscreenProgressBar();
     }
     else {
-      createFakeVideoWrapper();
+      createNotFullscreenVideoWrapper();
       enableNotFullscreenProgressBar();
     }
 
