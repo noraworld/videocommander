@@ -46,7 +46,7 @@ $(function() {
     settings.rememberPlaybackSpeedChecked = Boolean(storage.rememberPlaybackSpeedChecked);
     settings.alwaysShowProgressBarChecked = Boolean(storage.alwaysShowProgressBarChecked);
     settings.playbackSpeed                = Number(storage.playbackSpeed);
-    getVideoElement();
+    getVideoElement('default');
   });
 
   // グローバル変数
@@ -72,29 +72,46 @@ $(function() {
   var domainName = location.href.match(/^(.*?:\/\/)(.*?)([a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})[\:[0-9]*]?([\/].*?)?$/i)[3];
 
   // video要素を取得する
-  function getVideoElement() {
+  function getVideoElement(signal) {
     if (document.getElementsByTagName('video')[0] !== undefined) {
       if (document.getElementsByTagName('video')[0].readyState === 4) {
         player = document.getElementsByTagName('video')[0];
         createNotFullscreenVideoWrapper();
         createFullscreenVideoWrapper();
-        enableNotFullscreenProgressBar();  // It should be not fullscreen mode when loading the page first.
-        clearTimeout(getVideoTimeoutID);
+
+        if (document.webkitFullscreenElement === document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen')) {
+          enableFullscreenProgressBar();
+        }
+        else {
+          enableNotFullscreenProgressBar();
+        }
+
+        try {
+          clearTimeout(getVideoTimeoutID);
+        }
+        catch (err) {
+          // Uncomment when debugging.
+          // console.warn('Failed to clear getVideoTimeoutID. But continuing.');
+        }
+
         observeSpeed();
         observePlayback();
-        getPlaybackSpeed();
         showAndHideProgressBar();
 
-        switch (settings.playOrPauseWhenLoadingSelect) {
-          case 'play':  player.play();  break;
-          case 'pause': player.pause(); break;
+        if (signal !== 'rehash') {
+          getPlaybackSpeed();
+
+          switch (settings.playOrPauseWhenLoadingSelect) {
+            case 'play':  player.play();  break;
+            case 'pause': player.pause(); break;
+          }
         }
 
         return false;
       }
     }
     getVideoTimeoutID = setTimeout(function() {
-      getVideoElement();
+      getVideoElement('recursion');
     }, 200);
   };
 
@@ -178,7 +195,7 @@ $(function() {
     $('.videocommander-progress-bar-container.enabled').stop();
     $('.videocommander-progress-bar-container.enabled').css('opacity', 1);
 
-    if (document.webkitFullscreenElement) {
+    if (document.webkitFullscreenElement === document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen')) {
       $(player).css('left', '0px').css('top', '0px');
     }
     else {
@@ -308,7 +325,7 @@ $(function() {
       playing = true;
     }
 
-    if (document.webkitFullscreenElement) {
+    if (document.webkitFullscreenElement === document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen')) {
       createFullscreenVideoWrapper();
       enableFullscreenProgressBar();
 
@@ -368,7 +385,7 @@ $(function() {
 
     // Ctrl + Shift が押されたら video 要素を取得し直す (試験的機能)
     if (event.ctrlKey && event.shiftKey) {
-      getVideoElement();
+      getVideoElement('rehash');
       showVideoDebuggingStatus('Rehash');
       console.info('Rehashed video element successfully.\n\nStill have problem? Report that from https://github.com/noraworld/videocommander/issues.\nThank you for cooperating with development!');
     }
