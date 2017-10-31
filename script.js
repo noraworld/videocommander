@@ -2,22 +2,23 @@ $(function() {
 
   var settings = {
     // オプションで変更可能なキーコード
-    togglePlayAndPauseKeyCode:      'p',
-    jumpToBeginningKeyCode:         'h',
-    jumpToEndKeyCode:               'e',
-    rewindTimeKeyCode:              'a',
-    advanceTimeKeyCode:             's',
-    speedDownKeyCode:               'd',
-    speedUpKeyCode:                 'u',
-    resetSpeedKeyCode:              'r',
-    toggleFullscreenKeyCode:        'f',
-    partialLoopKeyCode:             'l',
-    partialLoopPrecision:           100,
-    skipTimeAmount:                   5,
-    scrollToPlayerChecked:        false,
-    rememberPlaybackSpeedChecked:  true,
-    alwaysShowProgressBarChecked: false,
-    playbackSpeed:                  1.0,
+    togglePlayAndPauseKeyCode:          'p',
+    jumpToBeginningKeyCode:             'h',
+    jumpToEndKeyCode:                   'e',
+    rewindTimeKeyCode:                  'a',
+    advanceTimeKeyCode:                 's',
+    speedDownKeyCode:                   'd',
+    speedUpKeyCode:                     'u',
+    resetSpeedKeyCode:                  'r',
+    toggleFullscreenKeyCode:            'f',
+    partialLoopKeyCode:                 'l',
+    partialLoopPrecision:               100,
+    skipTimeAmount:                       5,
+    playOrPauseWhenLoadingSelect: 'default',
+    scrollToPlayerChecked:            false,
+    rememberPlaybackSpeedChecked:      true,
+    alwaysShowProgressBarChecked:     false,
+    playbackSpeed:                      1.0,
   };
   var fixed = {
     // 固定のキーコード
@@ -38,8 +39,9 @@ $(function() {
     settings.resetSpeedKeyCode            = storage.resetSpeedKeyCode;
     settings.toggleFullscreenKeyCode      = storage.toggleFullscreenKeyCode;
     settings.partialLoopKeyCode           = storage.partialLoopKeyCode;
-    settings.partialLoopPrecision         = storage.partialLoopPrecision;
+    settings.partialLoopPrecision         = Number(storage.partialLoopPrecision);
     settings.skipTimeAmount               = Number(storage.skipTimeAmount);
+    settings.playOrPauseWhenLoadingSelect = storage.playOrPauseWhenLoadingSelect;
     settings.scrollToPlayerChecked        = Boolean(storage.scrollToPlayerChecked);
     settings.rememberPlaybackSpeedChecked = Boolean(storage.rememberPlaybackSpeedChecked);
     settings.alwaysShowProgressBarChecked = Boolean(storage.alwaysShowProgressBarChecked);
@@ -83,12 +85,10 @@ $(function() {
         getPlaybackSpeed();
         showAndHideProgressBar();
 
-        // Originally in YouTube, etc., video plays automatically when loading the watching page,
-        // but because of calling createFullscreenVideoWrapper(), somehow video pauses.
-        // I suspect the frontend JavaScript doesn't work correctly
-        // by wrapping video player (by changing HTML element structure).
-        // So it plays video manually when loading the page.
-        player.play();
+        switch (settings.playOrPauseWhenLoadingSelect) {
+          case 'play':  player.play();  break;
+          case 'pause': player.pause(); break;
+        }
 
         return false;
       }

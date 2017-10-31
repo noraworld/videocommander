@@ -1,19 +1,20 @@
 var defaultKey = {
-  togglePlayAndPauseKeyCode:      'p',
-  jumpToBeginningKeyCode:         'h',
-  jumpToEndKeyCode:               'e',
-  rewindTimeKeyCode:              'a',
-  advanceTimeKeyCode:             's',
-  speedDownKeyCode:               'd',
-  speedUpKeyCode:                 'u',
-  resetSpeedKeyCode:              'r',
-  toggleFullscreenKeyCode:        'f',
-  partialLoopKeyCode:             'l',
-  partialLoopPrecision:           100,
-  skipTimeAmount:                   5,
-  scrollToPlayerChecked:        false,
-  rememberPlaybackSpeedChecked:  true,
-  alwaysShowProgressBarChecked: false,
+  togglePlayAndPauseKeyCode:          'p',
+  jumpToBeginningKeyCode:             'h',
+  jumpToEndKeyCode:                   'e',
+  rewindTimeKeyCode:                  'a',
+  advanceTimeKeyCode:                 's',
+  speedDownKeyCode:                   'd',
+  speedUpKeyCode:                     'u',
+  resetSpeedKeyCode:                  'r',
+  toggleFullscreenKeyCode:            'f',
+  partialLoopKeyCode:                 'l',
+  partialLoopPrecision:               100,
+  skipTimeAmount:                       5,
+  playOrPauseWhenLoadingSelect: 'default',
+  scrollToPlayerChecked:            false,
+  rememberPlaybackSpeedChecked:      true,
+  alwaysShowProgressBarChecked:     false,
 };
 
 $(function() {
@@ -39,6 +40,7 @@ $(function() {
 
 function loadOptions() {
   chrome.storage.sync.get(defaultKey, function(storage) {
+    // key
     updateInputText('toggle-play-and-pause', storage.togglePlayAndPauseKeyCode);
     updateInputText('jump-to-beginning',     storage.jumpToBeginningKeyCode);
     updateInputText('jump-to-end',           storage.jumpToEndKeyCode);
@@ -49,8 +51,15 @@ function loadOptions() {
     updateInputText('reset-speed',           storage.resetSpeedKeyCode);
     updateInputText('toggle-fullscreen',     storage.toggleFullscreenKeyCode);
     updateInputText('partial-loop',          storage.partialLoopKeyCode);
+
+    // numeric
     document.getElementById('partial-loop-precision').value = storage.partialLoopPrecision;
     document.getElementById('skip-time-amount').value = storage.skipTimeAmount;
+
+    // select menu
+    document.getElementById('play-or-pause-when-loading').value = storage.playOrPauseWhenLoadingSelect;
+
+    // check box
     document.getElementById('scroll-to-player').checked = storage.scrollToPlayerChecked;
     document.getElementById('remember-playback-speed').checked = storage.rememberPlaybackSpeedChecked;
     document.getElementById('always-show-progress-bar').checked = storage.alwaysShowProgressBarChecked;
@@ -75,6 +84,7 @@ function saveOptions() {
   var partialLoopKeyCode           = document.getElementById('partial-loop').value;
   var partialLoopPrecision         = document.getElementById('partial-loop-precision').value;
   var skipTimeAmount               = document.getElementById('skip-time-amount').value;
+  var playOrPauseWhenLoadingSelect = document.getElementById('play-or-pause-when-loading').value;
   var scrollToPlayerChecked        = document.getElementById('scroll-to-player').checked;
   var rememberPlaybackSpeedChecked = document.getElementById('remember-playback-speed').checked;
   var alwaysShowProgressBarChecked = document.getElementById('always-show-progress-bar').checked;
@@ -92,9 +102,10 @@ function saveOptions() {
   validateFlag[9]  = checkValidate('partial-loop');
   validateFlag[10] = checkValidateNumeric('partial-loop-precision');
   validateFlag[11] = checkValidateNumeric('skip-time-amount');
-  validateFlag[12] = checkValidateChecked('scroll-to-player');
-  validateFlag[13] = checkValidateChecked('remember-playback-speed');
-  validateFlag[14] = checkValidateChecked('always-show-progress-bar');
+  validateFlag[12] = checkValidateSelect('play-or-pause-when-loading', ['default', 'play', 'pause']);
+  validateFlag[13] = checkValidateChecked('scroll-to-player');
+  validateFlag[14] = checkValidateChecked('remember-playback-speed');
+  validateFlag[15] = checkValidateChecked('always-show-progress-bar');
 
   // when some input is wrong.
   for (var i = 0; i < validateFlag.length; i++) {
@@ -116,6 +127,7 @@ function saveOptions() {
     partialLoopKeyCode:           partialLoopKeyCode,
     partialLoopPrecision:         partialLoopPrecision,
     skipTimeAmount:               skipTimeAmount,
+    playOrPauseWhenLoadingSelect: playOrPauseWhenLoadingSelect,
     scrollToPlayerChecked:        scrollToPlayerChecked,
     rememberPlaybackSpeedChecked: rememberPlaybackSpeedChecked,
     alwaysShowProgressBarChecked: alwaysShowProgressBarChecked
@@ -233,5 +245,26 @@ function checkValidateChecked(inputID) {
     var errorFlag = true;
   } else {
     $(inputID).css('border', '1px solid #cccccc');
+  }
+
+  // return value: true -> save the options, false -> do not save.
+  if (errorFlag === true) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+function checkValidateSelect(inputID, menu) {
+  var inputID = '#' + inputID;
+  $(inputID).parent().children('.invalid-value').remove();
+  if (menu.includes($(inputID).val())) {
+    $(inputID).css('border', '1px solid #cccccc');
+    return true;
+  }
+  else {
+    $(inputID).css('border', '1px solid red');
+    $(inputID).parent().append('<div class="invalid-value">Invalid value</div>');
+    return false;
   }
 }
