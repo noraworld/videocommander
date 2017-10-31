@@ -298,13 +298,36 @@ $(function() {
   }
 
   window.addEventListener('webkitfullscreenchange', function(event) {
+    // Video stops when video element moves to video wrapper for entering full screen mode.
+    // So remember that video is playing before video element moves and if video is playing,
+    // video plays manually after moving.
+
+    // Remember that video is playing
+    var playing = false;
+    if (!player.paused) {
+      playing = true;
+    }
+
     if (document.webkitFullscreenElement) {
       createFullscreenVideoWrapper();
       enableFullscreenProgressBar();
+
+      // Video element moves to video wrapper
+      videoPos = player.parentNode;
+      var videoWrapper = document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen');
+      videoWrapper.insertBefore(player, videoWrapper.firstChild);
     }
     else {
       createNotFullscreenVideoWrapper();
       enableNotFullscreenProgressBar();
+
+      // Video element moves to original position
+      videoPos.insertBefore(player, videoPos.firstChild);
+    }
+
+    // Video plays manually if video is playing before video element moves
+    if (playing) {
+      player.play();
     }
 
     showAndHideProgressBar();
@@ -523,32 +546,11 @@ $(function() {
 
   // フルスクリーン表示 / 解除
   function toggleFullscreen() {
-    // Video stops when video element moves to video wrapper for entering full screen mode.
-    // So remember that video is playing before video element moves and if video is playing,
-    // video plays manually after moving.
-
-    // Remember that video is playing
-    var playing = false;
-    if (!player.paused) {
-      playing = true;
-    }
-
-    // Enter full screen mode and video element moves to video wrapper
     if (!document.webkitFullscreenElement) {
-      var videoWrapper = document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen');
-      videoWrapper.webkitRequestFullscreen();
-      videoPos = player.parentNode;
-      videoWrapper.insertBefore(player, videoWrapper.firstChild);
+      document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen').webkitRequestFullscreen();
     }
-    // Exit full screen mode and video element moves to original position
     else {
       document.webkitExitFullscreen();
-      videoPos.insertBefore(player, videoPos.firstChild);
-    }
-
-    // Video plays manually if video is playing before video element moves
-    if (playing) {
-      player.play();
     }
   }
 
