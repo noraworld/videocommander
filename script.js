@@ -161,7 +161,7 @@ $(function() {
     }
   }
 
-  function showAndHideProgressBar() {
+  function showAndHideProgressBar(signal) {
     try {
       clearTimeout(hideProgressBarTimeoutID);
     }
@@ -170,16 +170,16 @@ $(function() {
       // console.warn('Failed to clear hideProgressBarTimeoutID. But continuing.');
     }
 
-    showProgressBar();
+    showProgressBar(signal);
 
     hideProgressBarTimeoutID = setTimeout(function() {
-      hideProgressBar();
+      hideProgressBar(signal);
       clearTimeout(hideProgressBarTimeoutID);
     }, 3000);
   }
 
-  function showProgressBar() {
-    if (settings.showOrHideProgressBarSelect === 'hide') {
+  function showProgressBar(signal) {
+    if (settings.showOrHideProgressBarSelect === 'hide' && signal !== 'force') {
       return false;
     }
 
@@ -246,7 +246,7 @@ $(function() {
     //
     // if (!player.paused || settings.showOrHideProgressBarSelect === 'show') {
       showProgressBarTimeoutID = setTimeout(function() {
-        showProgressBar();
+        showProgressBar(signal);
       }, 200);
     // }
   }
@@ -367,7 +367,7 @@ $(function() {
     // 押している間、プログレスバーが表示される
     if (eventKey == ',') {
       event.stopPropagation();
-      showProgressBar();
+      showProgressBar('force');
     }
 
     // "Show or hide progress bar" オプションの設定/解除
@@ -478,7 +478,7 @@ $(function() {
     stopOriginalListener(event, 'keyup');
 
     if (event.key == ',') {
-      showAndHideProgressBar();
+      showAndHideProgressBar('force');
     }
   }, true);
 
