@@ -97,6 +97,7 @@ $(function() {
         observeSpeed();
         observePlayback();
         showAndHideProgressBar();
+        adjustVideoPosition();
 
         if (signal !== 'rehash') {
           getPlaybackSpeed();
@@ -199,16 +200,7 @@ $(function() {
     $('.videocommander-progress-bar-container.enabled').stop();
     $('.videocommander-progress-bar-container.enabled').css('opacity', 1);
 
-    if (document.webkitFullscreenElement === document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen')) {
-      $(player).css('left', '0px').css('top', '0px');
-    }
-    else {
-      videoWidth = $(player).css('width');
-      videoHeight = $(player).css('height');
-      videoTop = $(player).css('top');
-      videoLeft = $(player).css('left');
-      $('.videocommander-fake-video-wrapper.videocommander-not-fullscreen').css('width', $(player).width()).css('height', $(player).height()).css('left', $(player).offset().left).css('top', $(player).offset().top);
-    }
+    adjustVideoPositionJustOneTime();
 
     try {
       var progressRate = (player.currentTime / player.seekable.end(0)) * 100;
@@ -249,6 +241,44 @@ $(function() {
         showProgressBar(signal);
       }, 200);
     // }
+  }
+
+  function adjustVideoPosition() {
+    setAdjustVideoPosition();
+
+    adjustVideoPositionTImeoutID = setTimeout(function() {
+      clearTimeout(setAdjustVideoPositionTimeoutID);
+    }, 3000);
+  }
+
+  function setAdjustVideoPosition() {
+    if (document.webkitFullscreenElement === document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen')) {
+      $(player).css('left', '0px').css('top', '0px');
+    }
+    else {
+      videoWidth = $(player).css('width');
+      videoHeight = $(player).css('height');
+      videoTop = $(player).css('top');
+      videoLeft = $(player).css('left');
+      $('.videocommander-fake-video-wrapper.videocommander-not-fullscreen').css('width', $(player).width()).css('height', $(player).height()).css('left', $(player).offset().left).css('top', $(player).offset().top);
+    }
+
+    setAdjustVideoPositionTimeoutID = setTimeout(function() {
+      setAdjustVideoPosition();
+    }, 200);
+  }
+
+  function adjustVideoPositionJustOneTime() {
+    if (document.webkitFullscreenElement === document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen')) {
+      $(player).css('left', '0px').css('top', '0px');
+    }
+    else {
+      videoWidth = $(player).css('width');
+      videoHeight = $(player).css('height');
+      videoTop = $(player).css('top');
+      videoLeft = $(player).css('left');
+      $('.videocommander-fake-video-wrapper.videocommander-not-fullscreen').css('width', $(player).width()).css('height', $(player).height()).css('left', $(player).offset().left).css('top', $(player).offset().top);
+    }
   }
 
   function adjustProgressTime(time) {
@@ -351,7 +381,7 @@ $(function() {
       player.play();
     }
 
-    showAndHideProgressBar();
+    adjustVideoPosition();
   }, true);
 
   // キーが押されたかどうかを判定
