@@ -12,9 +12,9 @@ var defaultKey = {
   partialLoopPrecision:               100,
   skipTimeAmount:                       5,
   playOrPauseWhenLoadingSelect: 'default',
+  showOrHideProgressBarSelect:  'default',
   scrollToPlayerChecked:            false,
   rememberPlaybackSpeedChecked:      true,
-  alwaysShowProgressBarChecked:     false,
 };
 
 $(function() {
@@ -58,11 +58,11 @@ function loadOptions() {
 
     // select menu
     document.getElementById('play-or-pause-when-loading').value = storage.playOrPauseWhenLoadingSelect;
+    document.getElementById('show-or-hide-progress-bar').value = storage.showOrHideProgressBarSelect;
 
     // check box
     document.getElementById('scroll-to-player').checked = storage.scrollToPlayerChecked;
     document.getElementById('remember-playback-speed').checked = storage.rememberPlaybackSpeedChecked;
-    document.getElementById('always-show-progress-bar').checked = storage.alwaysShowProgressBarChecked;
   });
 }
 
@@ -85,9 +85,9 @@ function saveOptions() {
   var partialLoopPrecision         = document.getElementById('partial-loop-precision').value;
   var skipTimeAmount               = document.getElementById('skip-time-amount').value;
   var playOrPauseWhenLoadingSelect = document.getElementById('play-or-pause-when-loading').value;
+  var showOrHideProgressBarSelect  = document.getElementById('show-or-hide-progress-bar').value;
   var scrollToPlayerChecked        = document.getElementById('scroll-to-player').checked;
   var rememberPlaybackSpeedChecked = document.getElementById('remember-playback-speed').checked;
-  var alwaysShowProgressBarChecked = document.getElementById('always-show-progress-bar').checked;
 
   var validateFlag = [];
   validateFlag[0]  = checkValidate('toggle-play-and-pause');
@@ -103,9 +103,9 @@ function saveOptions() {
   validateFlag[10] = checkValidateNumeric('partial-loop-precision');
   validateFlag[11] = checkValidateNumeric('skip-time-amount');
   validateFlag[12] = checkValidateSelect('play-or-pause-when-loading', ['default', 'play', 'pause']);
-  validateFlag[13] = checkValidateChecked('scroll-to-player');
-  validateFlag[14] = checkValidateChecked('remember-playback-speed');
-  validateFlag[15] = checkValidateChecked('always-show-progress-bar');
+  validateFlag[13] = checkValidateSelect('show-or-hide-progress-bar',  ['default', 'show', 'hide']);
+  validateFlag[14] = checkValidateChecked('scroll-to-player');
+  validateFlag[15] = checkValidateChecked('remember-playback-speed');
 
   // when some input is wrong.
   for (var i = 0; i < validateFlag.length; i++) {
@@ -128,9 +128,9 @@ function saveOptions() {
     partialLoopPrecision:         partialLoopPrecision,
     skipTimeAmount:               skipTimeAmount,
     playOrPauseWhenLoadingSelect: playOrPauseWhenLoadingSelect,
+    showOrHideProgressBarSelect:  showOrHideProgressBarSelect,
     scrollToPlayerChecked:        scrollToPlayerChecked,
-    rememberPlaybackSpeedChecked: rememberPlaybackSpeedChecked,
-    alwaysShowProgressBarChecked: alwaysShowProgressBarChecked
+    rememberPlaybackSpeedChecked: rememberPlaybackSpeedChecked
   }, function() {
     var status = $('#status');
     status.text('Saved');

@@ -15,9 +15,9 @@ $(function() {
     partialLoopPrecision:               100,
     skipTimeAmount:                       5,
     playOrPauseWhenLoadingSelect: 'default',
+    showOrHideProgressBarSelect:  'default',
     scrollToPlayerChecked:            false,
     rememberPlaybackSpeedChecked:      true,
-    alwaysShowProgressBarChecked:     false,
     playbackSpeed:                      1.0,
   };
   var fixed = {
@@ -42,9 +42,9 @@ $(function() {
     settings.partialLoopPrecision         = Number(storage.partialLoopPrecision);
     settings.skipTimeAmount               = Number(storage.skipTimeAmount);
     settings.playOrPauseWhenLoadingSelect = storage.playOrPauseWhenLoadingSelect;
+    settings.showOrHideProgressBarSelect  = storage.showOrHideProgressBarSelect;
     settings.scrollToPlayerChecked        = Boolean(storage.scrollToPlayerChecked);
     settings.rememberPlaybackSpeedChecked = Boolean(storage.rememberPlaybackSpeedChecked);
-    settings.alwaysShowProgressBarChecked = Boolean(storage.alwaysShowProgressBarChecked);
     settings.playbackSpeed                = Number(storage.playbackSpeed);
     getVideoElement('default');
   });
@@ -179,6 +179,10 @@ $(function() {
   }
 
   function showProgressBar() {
+    if (settings.showOrHideProgressBarSelect === 'hide') {
+      return false;
+    }
+
     try {
       clearTimeout(showProgressBarTimeoutID);
     }
@@ -240,7 +244,7 @@ $(function() {
     // The reason why stops calling this function when video player pauses is because
     // CPU utilization does not go up unnecessarily.
     //
-    // if (!player.paused || settings.alwaysShowProgressBarChecked) {
+    // if (!player.paused || settings.showOrHideProgressBarSelect === 'show') {
       showProgressBarTimeoutID = setTimeout(function() {
         showProgressBar();
       }, 200);
@@ -265,7 +269,7 @@ $(function() {
 
   // Set signal 'force' to force hiding progress bar
   function hideProgressBar(signal) {
-    if (settings.alwaysShowProgressBarChecked && signal !== 'force') {
+    if (settings.showOrHideProgressBarSelect === 'show' && signal !== 'force') {
       return false;
     }
 
@@ -366,20 +370,27 @@ $(function() {
       showProgressBar();
     }
 
-    // "Always show progress bar" オプションの設定/解除
+    // "Show or hide progress bar" オプションの設定/解除
     // ここで設定/解除しても記録はされないので
     // 記録したい場合はオプションページで変更する
     // 一時的にプログレスバーの固定/解除したいときに使用する
     if (eventKey == '.') {
       event.stopPropagation();
-      settings.alwaysShowProgressBarChecked = !settings.alwaysShowProgressBarChecked;
-      if (settings.alwaysShowProgressBarChecked) {
-        showProgressBar();
-        showVideoDebuggingStatus('Bar Fixed');
+
+      // Rotate showOrHideProgressBarSelect value
+      // 'default' => 'show'
+      // 'show'    => 'hide'
+      // 'hide'    => 'default'
+      switch (settings.showOrHideProgressBarSelect) {
+        case 'default': settings.showOrHideProgressBarSelect = 'show';    break;
+        case 'show':    settings.showOrHideProgressBarSelect = 'hide';    break;
+        case 'hide':    settings.showOrHideProgressBarSelect = 'default'; break;
       }
-      else {
-        hideProgressBar();
-        showVideoDebuggingStatus('Bar Released');
+
+      switch (settings.showOrHideProgressBarSelect) {
+        case 'default': hideProgressBar(); showVideoDebuggingStatus('Bar Released'); break;
+        case 'show':    showProgressBar(); showVideoDebuggingStatus('Bar Shown');    break;
+        case 'hide':    hideProgressBar(); showVideoDebuggingStatus('Bar Hiden');    break;
       }
     }
 
