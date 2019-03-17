@@ -94,7 +94,6 @@ $(function() {
           // console.warn('Failed to clear getVideoTimeoutID. But continuing.');
         }
 
-        observeSpeed();
         observePlayback();
         showAndHideProgressBar();
         adjustVideoPosition();
@@ -520,13 +519,6 @@ $(function() {
     stopOriginalListener(event, 'keypress');
   }, true);
 
-  // 再生スピードの変更を監視する
-  function observeSpeed() {
-    player.onratechange = function() {
-      setSpeedRange(player.playbackRate);
-    };
-  };
-
   // 再生/停止の変化を監視する
   function observePlayback() {
     player.onplay = function() {
@@ -587,12 +579,14 @@ $(function() {
   // 再生スピードダウン
   function speedDown() {
     player.playbackRate = floorFormat((player.playbackRate - 0.09), 1);
+    setSpeedRange(player.playbackRate);
     setPlaybackSpeed();
   }
 
   // 再生スピードアップ
   function speedUp() {
     player.playbackRate = floorFormat((player.playbackRate + 0.11), 1);
+    setSpeedRange(player.playbackRate);
     setPlaybackSpeed();
   }
 
@@ -743,6 +737,16 @@ $(function() {
     });
   }
 
+  // This function must not be called from onratechange
+  // because some video websites keep putting playbackRate
+  // to being out of range.
+  //
+  // For example, U-NEXT keeps setting playbackRate as 0
+  // until the video loading is over in jumping to other
+  // playback position using a seek bar.
+  // Then this function is called infinitely and
+  // the browser tab gives no response.
+  //
   // 再生スピードの上限と下限を設定する
   function setSpeedRange(speedChecker) {
     if (speedChecker < 0.5) {
