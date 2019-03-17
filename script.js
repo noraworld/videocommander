@@ -436,10 +436,12 @@ $(function() {
     }
 
     // 入力フォームにフォーカスがあるときはショートカットを無効化
-    if ((document.activeElement.nodeName === 'INPUT'
-    || document.activeElement.nodeName === 'TEXTAREA'
-    || document.activeElement.getAttribute('type') === 'text')
-    || document.activeElement.isContentEditable === true) {
+    if ((document.activeElement.nodeName             === 'INPUT'
+    &&   document.activeElement.getAttribute('type') !== 'range')
+    ||   document.activeElement.nodeName             === 'TEXTAREA'
+    ||   document.activeElement.getAttribute('type') === 'text'
+    ||   document.activeElement.isContentEditable    === true)
+    {
       return false;
     }
     else {
