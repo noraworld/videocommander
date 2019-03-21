@@ -212,7 +212,7 @@ $(function() {
     }
 
     try {
-      var progressBufferedRate = (player.buffered.end(0) / player.seekable.end(0)) * 100;
+      var progressBufferedRate = (getBufferedPosition() / player.seekable.end(0)) * 100;
       $('.videocommander-progress-buffered-bar.enabled').css('width', progressBufferedRate + '%');
     }
     catch (err) {
@@ -769,6 +769,24 @@ $(function() {
     }
     return speedStatus.toFixed(1);
   };
+
+  // Get the correct buffered position
+  //
+  // player.buffered.end(0) is not always the correct buffered position
+  // because buffered positions are sometimes divided into pieces.
+  function getBufferedPosition() {
+    for (var i = 0; i < player.buffered.length; i++) {
+      if (player.currentTime > player.buffered.start(i) && player.currentTime < player.buffered.end(i)) {
+        return player.buffered.end(i);
+      }
+    }
+
+    // this must not be executed because
+    // this function must return the value
+    // during the above for loop.
+    // something went wrong if this is executed.
+    return 0;
+  }
 
   // オプションのキーと固定のキーに関しては
   // 元々サイトで実装されているイベントリスナーを
