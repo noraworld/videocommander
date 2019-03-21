@@ -51,7 +51,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.3);
   height: 39px;
   font-family: 'Open Sans';
   z-index: 100000;
@@ -85,6 +85,7 @@
   bottom: 9px;
   font-size: 15px;
   color: rgba(255, 255, 255, 1.0);
+  text-shadow: rgb(0, 0, 0) 0px 0px 50px;
 }
 
 .videocommander-entire-bar {
