@@ -8,6 +8,7 @@ var defaultKey = {
   speedUpKeyCode:                     'u',
   resetSpeedKeyCode:                  'r',
   toggleFullscreenKeyCode:            'f',
+  getNextVideoElementKeyCode:         'n',
   partialLoopKeyCode:                 'l',
   partialLoopPrecision:               100,
   skipTimeAmount:                       5,
@@ -32,6 +33,7 @@ $(function() {
   initShortcutInput('speed-up');
   initShortcutInput('reset-speed');
   initShortcutInput('toggle-fullscreen');
+  initShortcutInput('get-next-video-element');
   initShortcutInput('partial-loop');
 
   initNumericInput('partial-loop-precision');
@@ -41,16 +43,17 @@ $(function() {
 function loadOptions() {
   chrome.storage.sync.get(defaultKey, function(storage) {
     // key
-    updateInputText('toggle-play-and-pause', storage.togglePlayAndPauseKeyCode);
-    updateInputText('jump-to-beginning',     storage.jumpToBeginningKeyCode);
-    updateInputText('jump-to-end',           storage.jumpToEndKeyCode);
-    updateInputText('rewind-time',           storage.rewindTimeKeyCode);
-    updateInputText('advance-time',          storage.advanceTimeKeyCode);
-    updateInputText('speed-down',            storage.speedDownKeyCode);
-    updateInputText('speed-up',              storage.speedUpKeyCode);
-    updateInputText('reset-speed',           storage.resetSpeedKeyCode);
-    updateInputText('toggle-fullscreen',     storage.toggleFullscreenKeyCode);
-    updateInputText('partial-loop',          storage.partialLoopKeyCode);
+    updateInputText('toggle-play-and-pause',  storage.togglePlayAndPauseKeyCode);
+    updateInputText('jump-to-beginning',      storage.jumpToBeginningKeyCode);
+    updateInputText('jump-to-end',            storage.jumpToEndKeyCode);
+    updateInputText('rewind-time',            storage.rewindTimeKeyCode);
+    updateInputText('advance-time',           storage.advanceTimeKeyCode);
+    updateInputText('speed-down',             storage.speedDownKeyCode);
+    updateInputText('speed-up',               storage.speedUpKeyCode);
+    updateInputText('reset-speed',            storage.resetSpeedKeyCode);
+    updateInputText('toggle-fullscreen',      storage.toggleFullscreenKeyCode);
+    updateInputText('get-next-video-element', storage.getNextVideoElementKeyCode);
+    updateInputText('partial-loop',           storage.partialLoopKeyCode);
 
     // numeric
     document.getElementById('partial-loop-precision').value = storage.partialLoopPrecision;
@@ -81,6 +84,7 @@ function saveOptions() {
   var speedUpKeyCode               = document.getElementById('speed-up').value;
   var resetSpeedKeyCode            = document.getElementById('reset-speed').value;
   var toggleFullscreenKeyCode      = document.getElementById('toggle-fullscreen').value;
+  var getNextVideoElementKeyCode   = document.getElementById('get-next-video-element').value;
   var partialLoopKeyCode           = document.getElementById('partial-loop').value;
   var partialLoopPrecision         = document.getElementById('partial-loop-precision').value;
   var skipTimeAmount               = document.getElementById('skip-time-amount').value;
@@ -99,13 +103,14 @@ function saveOptions() {
   validateFlag[6]  = checkValidate('speed-up');
   validateFlag[7]  = checkValidate('reset-speed');
   validateFlag[8]  = checkValidate('toggle-fullscreen');
-  validateFlag[9]  = checkValidate('partial-loop');
-  validateFlag[10] = checkValidateNumeric('partial-loop-precision');
-  validateFlag[11] = checkValidateNumeric('skip-time-amount');
-  validateFlag[12] = checkValidateSelect('play-or-pause-when-loading', ['default', 'play', 'pause']);
-  validateFlag[13] = checkValidateSelect('show-or-hide-progress-bar',  ['default', 'show', 'hide']);
-  validateFlag[14] = checkValidateChecked('scroll-to-player');
-  validateFlag[15] = checkValidateChecked('remember-playback-speed');
+  validateFlag[9]  = checkValidate('get-next-video-element');
+  validateFlag[10] = checkValidate('partial-loop');
+  validateFlag[11] = checkValidateNumeric('partial-loop-precision');
+  validateFlag[12] = checkValidateNumeric('skip-time-amount');
+  validateFlag[13] = checkValidateSelect('play-or-pause-when-loading', ['default', 'play', 'pause']);
+  validateFlag[14] = checkValidateSelect('show-or-hide-progress-bar',  ['default', 'show', 'hide']);
+  validateFlag[15] = checkValidateChecked('scroll-to-player');
+  validateFlag[16] = checkValidateChecked('remember-playback-speed');
 
   // when some input is wrong.
   for (var i = 0; i < validateFlag.length; i++) {
@@ -124,6 +129,7 @@ function saveOptions() {
     speedUpKeyCode:               speedUpKeyCode,
     resetSpeedKeyCode:            resetSpeedKeyCode,
     toggleFullscreenKeyCode:      toggleFullscreenKeyCode,
+    getNextVideoElementKeyCode:   getNextVideoElementKeyCode,
     partialLoopKeyCode:           partialLoopKeyCode,
     partialLoopPrecision:         partialLoopPrecision,
     skipTimeAmount:               skipTimeAmount,

@@ -11,6 +11,7 @@ $(function() {
     speedUpKeyCode:                     'u',
     resetSpeedKeyCode:                  'r',
     toggleFullscreenKeyCode:            'f',
+    getNextVideoElementKeyCode:         'n',
     partialLoopKeyCode:                 'l',
     partialLoopPrecision:               100,
     skipTimeAmount:                       5,
@@ -38,6 +39,7 @@ $(function() {
     settings.speedUpKeyCode               = storage.speedUpKeyCode;
     settings.resetSpeedKeyCode            = storage.resetSpeedKeyCode;
     settings.toggleFullscreenKeyCode      = storage.toggleFullscreenKeyCode;
+    settings.getNextVideoElementKeyCode   = storage.getNextVideoElementKeyCode;
     settings.partialLoopKeyCode           = storage.partialLoopKeyCode;
     settings.partialLoopPrecision         = Number(storage.partialLoopPrecision);
     settings.skipTimeAmount               = Number(storage.skipTimeAmount);
@@ -70,12 +72,13 @@ $(function() {
   var videoLeft;
   var videoPos;
   var domainName = location.href.match(/^(.*?:\/\/)(.*?)([a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})[\:[0-9]*]?([\/].*?)?$/i)[3];
+  var videoOrder = 0;
 
   // video要素を取得する
   function getVideoElement(signal) {
-    if (document.getElementsByTagName('video')[0] !== undefined) {
-      if (document.getElementsByTagName('video')[0].readyState === 4) {
-        player = document.getElementsByTagName('video')[0];
+    if (document.getElementsByTagName('video')[videoOrder] !== undefined) {
+      if (document.getElementsByTagName('video')[videoOrder].readyState === 4) {
+        player = document.getElementsByTagName('video')[videoOrder];
         createNotFullscreenVideoWrapper();
         createFullscreenVideoWrapper();
 
@@ -465,15 +468,16 @@ $(function() {
     // ショートカットキーから関数を呼び出す
     switch (eventKey) {
       // オプションのキーコード
-      case settings.togglePlayAndPauseKeyCode: togglePlayAndPause();                           break;  // default: p
-      case settings.jumpToBeginningKeyCode:    jumpToBeginning();    showAndHideProgressBar(); break;  // default: h
-      case settings.jumpToEndKeyCode:          jumpToEnd();          showAndHideProgressBar(); break;  // default: e
-      case settings.rewindTimeKeyCode:         rewindTime();         showAndHideProgressBar(); break;  // default: a
-      case settings.advanceTimeKeyCode:        advanceTime();        showAndHideProgressBar(); break;  // default: s
-      case settings.speedDownKeyCode:          speedDown();                                    break;  // default: d
-      case settings.speedUpKeyCode:            speedUp();                                      break;  // default: u
-      case settings.resetSpeedKeyCode:         resetSpeed();                                   break;  // default: r
-      case settings.toggleFullscreenKeyCode:   toggleFullscreen();                             break;  // default: f
+      case settings.togglePlayAndPauseKeyCode:  togglePlayAndPause();                           break;  // default: p
+      case settings.jumpToBeginningKeyCode:     jumpToBeginning();    showAndHideProgressBar(); break;  // default: h
+      case settings.jumpToEndKeyCode:           jumpToEnd();          showAndHideProgressBar(); break;  // default: e
+      case settings.rewindTimeKeyCode:          rewindTime();         showAndHideProgressBar(); break;  // default: a
+      case settings.advanceTimeKeyCode:         advanceTime();        showAndHideProgressBar(); break;  // default: s
+      case settings.speedDownKeyCode:           speedDown();                                    break;  // default: d
+      case settings.speedUpKeyCode:             speedUp();                                      break;  // default: u
+      case settings.resetSpeedKeyCode:          resetSpeed();                                   break;  // default: r
+      case settings.toggleFullscreenKeyCode:    toggleFullscreen();                             break;  // default: f
+      case settings.getNextVideoElementKeyCode: getNextVideoElement();                          break;  // default: n
       // 固定のキーコード
       case fixed.togglePlayAndPauseKeyCode: event.preventDefault(); togglePlayAndPause();                           break;  // space
       case fixed.rewindTimeKeyCode:         event.preventDefault(); rewindTime();         showAndHideProgressBar(); break;  // left-arrow
@@ -606,6 +610,16 @@ $(function() {
     else {
       document.webkitExitFullscreen();
     }
+  }
+
+  function getNextVideoElement() {
+    videoOrder++;
+
+    if (videoOrder >= document.querySelectorAll('video').length) {
+      videoOrder = 0;
+    }
+
+    getVideoElement('next');
   }
 
   // 動画の最初の位置に移動する
