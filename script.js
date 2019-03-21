@@ -458,6 +458,11 @@ $(function() {
       resetLoopStatus();
     }
 
+    // default: N
+    if (event.shiftKey && eventKey === settings.getNextVideoElementKeyCode.toUpperCase()) {
+      getPrevVideoElement();
+    }
+
     // 修飾キーをエスケープ
     if (event.metaKey || event.ctrlKey || event.altKey) {
       return false;
@@ -620,6 +625,16 @@ $(function() {
     }
 
     getVideoElement('next');
+  }
+
+  function getPrevVideoElement() {
+    videoOrder--;
+
+    if (videoOrder < 0) {
+      videoOrder = document.querySelectorAll('video').length - 1;
+    }
+
+    getVideoElement('prev');
   }
 
   // 動画の最初の位置に移動する
