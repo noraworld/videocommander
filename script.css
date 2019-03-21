@@ -37,16 +37,7 @@
   height: 100%;
 }
 
-:-webkit-full-screen {
-  width: 100% !important;
-  height: 100% !important;
-  top: 0;
-  left: 0;
-  z-index: 100000;
-  background-color: black;
-}
-
-:-webkit-full-screen video {
+.videocommander-fake-video-wrapper video {
   width: 100% !important;
   height: 100% !important;
   top: 0;
