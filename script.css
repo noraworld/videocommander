@@ -97,3 +97,17 @@
   display: inline-block;
   z-index: 1;
 }
+
+.videocommander-fake-video-wrapper.videocommander-fullscreen {
+  top: -100%;
+  left: 0;
+  z-index: 100000;
+}
+
+.videocommander-fullscreen-body {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 100%;
+  left: 0;
+}

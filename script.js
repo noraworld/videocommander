@@ -82,7 +82,7 @@ $(function() {
         createNotFullscreenVideoWrapper();
         createFullscreenVideoWrapper();
 
-        if (document.webkitFullscreenElement === document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen')) {
+        if (document.webkitFullscreenElement === document.querySelector('html')) {
           enableFullscreenProgressBar();
         }
         else {
@@ -254,7 +254,7 @@ $(function() {
   }
 
   function setAdjustVideoPosition() {
-    if (document.webkitFullscreenElement === document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen')) {
+    if (document.webkitFullscreenElement === document.querySelector('html')) {
       $(player).css('left', '0px').css('top', '0px');
     }
     else {
@@ -271,7 +271,7 @@ $(function() {
   }
 
   function adjustVideoPositionJustOneTime() {
-    if (document.webkitFullscreenElement === document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen')) {
+    if (document.webkitFullscreenElement === document.querySelector('html')) {
       $(player).css('left', '0px').css('top', '0px');
     }
     else {
@@ -361,9 +361,13 @@ $(function() {
       playing = true;
     }
 
-    if (document.webkitFullscreenElement === document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen')) {
+    if (document.webkitFullscreenElement === document.querySelector('html')) {
       createFullscreenVideoWrapper();
       enableFullscreenProgressBar();
+
+      if (!$('body').hasClass('videocommander-fullscreen-body')) {
+        $('body').addClass('videocommander-fullscreen-body');
+      }
 
       // Video element moves to video wrapper
       videoPos = player.parentNode;
@@ -373,6 +377,10 @@ $(function() {
     else {
       createNotFullscreenVideoWrapper();
       enableNotFullscreenProgressBar();
+
+      if ($('body').hasClass('videocommander-fullscreen-body')) {
+        $('body').removeClass('videocommander-fullscreen-body');
+      }
 
       // Video element moves to original position
       videoPos.insertBefore(player, videoPos.firstChild);
@@ -610,7 +618,7 @@ $(function() {
   // フルスクリーン表示 / 解除
   function toggleFullscreen() {
     if (!document.webkitFullscreenElement) {
-      document.querySelector('.videocommander-fake-video-wrapper.videocommander-fullscreen').webkitRequestFullscreen();
+      document.querySelector('html').webkitRequestFullscreen();
     }
     else {
       document.webkitExitFullscreen();
