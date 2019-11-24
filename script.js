@@ -73,6 +73,7 @@ $(function() {
   var videoPos;
   var domainName = location.href.match(/^(.*?:\/\/)(.*?)([a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})[\:[0-9]*]?([\/].*?)?$/i)[3];
   var videoOrder = 0;
+  var isSpeedChangedFromThisExtension = false;
 
   // video要素を取得する
   function getVideoElement(signal) {
@@ -97,12 +98,18 @@ $(function() {
           // console.warn('Failed to clear getVideoTimeoutID. But continuing.');
         }
 
+        observeSpeed();
         observePlayback();
         showAndHideProgressBar();
         adjustVideoPosition();
 
         if (signal !== 'rehash') {
-          getPlaybackSpeed();
+          if (settings.rememberPlaybackSpeedChecked === true) {
+            getPlaybackSpeed();
+          }
+          else {
+            setPlaybackSpeed();
+          }
 
           switch (settings.playOrPauseWhenLoadingSelect) {
             case 'play':  player.play();  break;
@@ -530,6 +537,16 @@ $(function() {
     stopOriginalListener(event, 'keypress');
   }, true);
 
+  function observeSpeed() {
+    player.onratechange = function() {
+      if (isSpeedChangedFromThisExtension === false) {
+        getPlaybackSpeed();
+        statusBox('playbackRate', adjustSpeedStatus(player.playbackRate));
+      }
+      isSpeedChangedFromThisExtension = false;
+    };
+  };
+
   // 再生/停止の変化を監視する
   function observePlayback() {
     player.onplay = function() {
@@ -548,23 +565,18 @@ $(function() {
 
   // 前回の再生速度を取得する
   function getPlaybackSpeed() {
-    if (settings.rememberPlaybackSpeedChecked === true) {
-      player.playbackRate = floorFormat(settings.playbackSpeed, 1);
-    }
+    chrome.storage.sync.get(settings, function(storage) {
+      player.playbackRate = floorFormat(Number(storage.playbackSpeed), 1);
+    });
   }
 
   // 再生速度を保存する
   function setPlaybackSpeed() {
-    if (settings.rememberPlaybackSpeedChecked === true) {
-      chrome.storage.sync.set({
-        playbackSpeed: Number(floorFormat(player.playbackRate, 1))
-      }, function() {
-        statusBox('playbackRate', adjustSpeedStatus(player.playbackRate));
-      });
-    }
-    else {
+    chrome.storage.sync.set({
+      playbackSpeed: Number(floorFormat(player.playbackRate, 1))
+    }, function() {
       statusBox('playbackRate', adjustSpeedStatus(player.playbackRate));
-    }
+    });
   }
 
   // 再生 / 停止
@@ -592,6 +604,7 @@ $(function() {
     player.playbackRate = floorFormat((player.playbackRate - 0.09), 1);
     setSpeedRange(player.playbackRate);
     setPlaybackSpeed();
+    isSpeedChangedFromThisExtension = true;
   }
 
   // 再生スピードアップ
@@ -599,12 +612,14 @@ $(function() {
     player.playbackRate = floorFormat((player.playbackRate + 0.11), 1);
     setSpeedRange(player.playbackRate);
     setPlaybackSpeed();
+    isSpeedChangedFromThisExtension = true;
   }
 
   // 再生スピードリセット
   function resetSpeed() {
     player.playbackRate = 1.0;
     setPlaybackSpeed();
+    isSpeedChangedFromThisExtension = true;
   }
 
   // フルスクリーン表示 / 解除
