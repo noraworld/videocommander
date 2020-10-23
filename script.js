@@ -120,10 +120,18 @@ $(function() {
         return false;
       }
     }
-    getVideoTimeoutID = setTimeout(function() {
-      getVideoElement('recursion');
-    }, 200);
-  };
+
+    if (player === undefined) {
+      getVideoTimeoutID = setTimeout(function() {
+        // Some video sites has several video elements which are invisible
+        // and are never ready ("readyState" is always "0").
+        // If the first video element (0th element) on that page is never ready,
+        // it cannot take the actual video element (visible video’s element),
+        // so it searches all video elements in order until the actual video element are found.
+        getNextVideoElement();
+      }, 200);
+    }
+  }
 
   // Shown when FULLSCREEN
   function createFullscreenVideoWrapper() {
