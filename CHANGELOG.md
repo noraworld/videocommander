@@ -1,3 +1,8 @@
+## 0.5
+* Support Firefox
+* Able to focus on the other video element on the same page
+* Add option to auto-play a video when loading the page
+
 ## 0.4
 * Add a progress bar on the bottom of a video player.
 * Add an option that always shows a progress bar.
