@@ -4,7 +4,9 @@
 Video Commander はループ再生、倍速再生、巻き戻し、早送り、その他便利なショートカットを追加する拡張機能です。詳しい使い方は以下の[使い方](#使い方)の欄を見てください。
 
 ## ダウンロード
-[Video Commander - Chrome ウェブストア](https://chrome.google.com/webstore/detail/video-commander/eadjicgcnpgfmklebobjkhlippgepdii)
+この拡張機能は Google Chrome と Mozilla Firefox に対応しています。
+- [Video Commander - Chrome ウェブストア](https://chrome.google.com/webstore/detail/video-commander/eadjicgcnpgfmklebobjkhlippgepdii)
+- [Video Commander - Firefox アドオン](https://addons.mozilla.org/ja/firefox/addon/video-commander/)
 
 ## 使い方
 以下のショートカットが利用できます。
