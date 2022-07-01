@@ -599,7 +599,12 @@ $(function() {
 
   // 数秒巻き戻し
   function rewindTime() {
-    player.currentTime -= settings.skipTimeAmount;
+    if (window.location.hostname.match(/netflix.com$/)) {
+      injectOperationForNetflix(`player.seek(player.getCurrentTime() - ${settings.skipTimeAmount} * 1000)`)
+    }
+    else {
+      player.currentTime -= settings.skipTimeAmount;
+    }
   };
 
   // 数秒早送り
@@ -662,18 +667,34 @@ $(function() {
 
   // 動画の最初の位置に移動する
   function jumpToBeginning() {
-    player.currentTime = player.seekable.start(0);
+    if (window.location.hostname.match(/netflix.com$/)) {
+      injectOperationForNetflix('player.seek(0)')
+    }
+    else {
+      player.currentTime = player.seekable.start(0);
+    }
   };
 
   // 動画の最後の位置に移動する
   function jumpToEnd() {
-    player.currentTime = player.seekable.end(0);
+    if (window.location.hostname.match(/netflix.com$/)) {
+      injectOperationForNetflix(`player.seek(${player.seekable.end(0) * 1000})`)
+    }
+    else {
+      player.currentTime = player.seekable.end(0);
+    }
   };
 
   // 数字に対応する割合まで動画を移動する
   function jumpToTimerRatio(timerRatio) {
     timerRatio = Number(timerRatio) / 10;
-    player.currentTime = player.seekable.end(0) * timerRatio;
+
+    if (window.location.hostname.match(/netflix.com$/)) {
+      injectOperationForNetflix(`player.seek(${player.seekable.end(0) * timerRatio * 1000})`)
+    }
+    else {
+      player.currentTime = player.seekable.end(0) * timerRatio;
+    }
   };
 
   // 部分ループ再生
@@ -863,6 +884,24 @@ $(function() {
         }
       }
     });
+  }
+
+  // Inject the code to the page
+  //   https://github.com/laurens94/netflix-rewind-browser-extension/blob/d6f2eace176f290b2e090739ebeb289356ca3201/netflix-rewind-1-sec.js#L87-L92
+  function injectOperationForNetflix(operation) {
+    const script = document.createElement('script')
+    script.text = `(${scriptForNetflix.toString().replace('injectedOperation', operation)})();`
+    document.documentElement.appendChild(script)
+  }
+
+  // https://github.com/noraworld/scraps/issues/21
+  function scriptForNetflix() {
+    const videoPlayer = netflix.appContext.state.playerApp.getAPI().videoPlayer
+    const playerSessionId = videoPlayer.getAllPlayerSessionIds()[0]
+    // "player" is used inside "operation" below after injected
+    const player = videoPlayer.getVideoPlayerBySessionId(playerSessionId)
+
+    injectedOperation // This is replaced with some operation via "injectOperationForNetflix" function
   }
 
 });
