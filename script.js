@@ -599,7 +599,7 @@ $(function() {
 
   // 数秒巻き戻し
   function rewindTime() {
-    if (window.location.hostname.match(/netflix.com$/)) {
+    if (isNetflix()) {
       injectOperationForNetflix(`player.seek(player.getCurrentTime() - ${settings.skipTimeAmount} * 1000)`)
     }
     else {
@@ -667,7 +667,7 @@ $(function() {
 
   // 動画の最初の位置に移動する
   function jumpToBeginning() {
-    if (window.location.hostname.match(/netflix.com$/)) {
+    if (isNetflix()) {
       injectOperationForNetflix('player.seek(0)')
     }
     else {
@@ -677,7 +677,7 @@ $(function() {
 
   // 動画の最後の位置に移動する
   function jumpToEnd() {
-    if (window.location.hostname.match(/netflix.com$/)) {
+    if (isNetflix()) {
       injectOperationForNetflix(`player.seek(${player.seekable.end(0) * 1000})`)
     }
     else {
@@ -689,7 +689,7 @@ $(function() {
   function jumpToTimerRatio(timerRatio) {
     timerRatio = Number(timerRatio) / 10;
 
-    if (window.location.hostname.match(/netflix.com$/)) {
+    if (isNetflix()) {
       injectOperationForNetflix(`player.seek(${player.seekable.end(0) * timerRatio * 1000})`)
     }
     else {
@@ -884,6 +884,10 @@ $(function() {
         }
       }
     });
+  }
+
+  function isNetflix() {
+    return !!window.location.hostname.match(/netflix.com$/)
   }
 
   // Inject the code to the page
