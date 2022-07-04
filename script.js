@@ -890,7 +890,7 @@ $(function() {
   //   https://github.com/laurens94/netflix-rewind-browser-extension/blob/d6f2eace176f290b2e090739ebeb289356ca3201/netflix-rewind-1-sec.js#L87-L92
   function injectOperationForNetflix(operation) {
     const script = document.createElement('script')
-    script.text = `(${scriptForNetflix.toString().replace('injectedOperation', operation)})();`
+    script.text = `(${scriptForNetflix.toString().replaceAll('injectedOperation', operation)})();`
     document.documentElement.appendChild(script)
   }
 
@@ -898,7 +898,7 @@ $(function() {
   function scriptForNetflix() {
     const videoPlayer = netflix.appContext.state.playerApp.getAPI().videoPlayer
     const playerSessionId = videoPlayer.getAllPlayerSessionIds()[0]
-    // "player" is used inside "operation" below after injected
+    // "player" is used inside "injectedOperation" below after injected
     const player = videoPlayer.getVideoPlayerBySessionId(playerSessionId)
 
     injectedOperation // This is replaced with some operation via "injectOperationForNetflix" function
