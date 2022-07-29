@@ -23,10 +23,11 @@ $(function() {
   };
   var fixed = {
     // 固定のキーコード
-    togglePlayAndPauseKeyCode: ' ',           // space
-    rewindTimeKeyCode:         'ArrowLeft',   // left-arrow
-    advanceTimeKeyCode:        'ArrowRight',  // right-arrow
-    isEscape:                  'Escape',      // esc
+    togglePlayAndPauseKeyCode:  ' ',          // space
+    togglePlayAndPauseKeyCode2: 'Enter',      // enter
+    rewindTimeKeyCode:          'ArrowLeft',  // left-arrow
+    advanceTimeKeyCode:         'ArrowRight', // right-arrow
+    isEscape:                   'Escape',     // esc
   };
 
   chrome.storage.sync.get(settings, function(storage) {
@@ -499,10 +500,11 @@ $(function() {
       case settings.toggleFullscreenKeyCode:    toggleFullscreen();                             break;  // default: f
       case settings.getNextVideoElementKeyCode: getNextVideoElement();                          break;  // default: n
       // 固定のキーコード
-      case fixed.togglePlayAndPauseKeyCode: event.preventDefault(); togglePlayAndPause();                           break;  // space
-      case fixed.rewindTimeKeyCode:         event.preventDefault(); rewindTime();         showAndHideProgressBar(); break;  // left-arrow
-      case fixed.advanceTimeKeyCode:        event.preventDefault(); advanceTime();        showAndHideProgressBar(); break;  // right-arrow
-      case fixed.isEscape:                                          resetLoopStatus();                              break;  // esc
+      case fixed.togglePlayAndPauseKeyCode:  event.preventDefault(); togglePlayAndPause();                           break;  // space
+      case fixed.togglePlayAndPauseKeyCode2: event.preventDefault(); togglePlayAndPause();                           break;  // enter
+      case fixed.rewindTimeKeyCode:          event.preventDefault(); rewindTime();         showAndHideProgressBar(); break;  // left-arrow
+      case fixed.advanceTimeKeyCode:         event.preventDefault(); advanceTime();        showAndHideProgressBar(); break;  // right-arrow
+      case fixed.isEscape:                                           resetLoopStatus();                              break;  // esc
     }
 
     // 数字のキーを押すとその数字に対応する割合まで動画を移動する
