@@ -20,29 +20,29 @@ This extension supports Google Chrome and Mozilla Firefox.
 ## Usage
 The following shortcuts are available for video sites.
 
-| Key     | Alternative Key | Description                   |
-| ------- | --------------- | ----------------------------- |
-| **P**   | **space**       | Toggle play and pause         |
-| **H**   | **0**           | Jump to beginning             |
-| **E**   |                 | Jump to end                   |
-| **A**   | **left arrow**  | Rewind time                   |
-| **S**   | **right arrow** | Advance time                  |
-| **D**   |                 | Speed down                    |
-| **U**   |                 | Speed up                      |
-| **R**   |                 | Reset speed                   |
-| **F**   |                 | Toggle full screen            |
-| **L**   |                 | Partial loop                  |
-| **1**   |                 | Jump to 10% playback position |
-| **2**   |                 | Jump to 20% playback position |
-| **3**   |                 | Jump to 30% playback position |
-| **4**   |                 | Jump to 40% playback position |
-| **5**   |                 | Jump to 50% playback position |
-| **6**   |                 | Jump to 60% playback position |
-| **7**   |                 | Jump to 70% playback position |
-| **8**   |                 | Jump to 80% playback position |
-| **9**   |                 | Jump to 90% playback position |
-| **esc** | **Ctrl-c**      | Reset loop status             |
-| **esc** |                 | Unfocus any elements          |
+| Key 1 | Key 2       | Key 3 | Description                   |
+| :---: | :---------: | :---: | ----------------------------- |
+| P     | Space       | Enter | Toggle play and pause         |
+| H     | 0           |       | Jump to beginning             |
+| E     |             |       | Jump to end                   |
+| A     | Left Arrow  |       | Rewind time                   |
+| S     | Right Arrow |       | Advance time                  |
+| D     |             |       | Speed down                    |
+| U     |             |       | Speed up                      |
+| R     |             |       | Reset speed                   |
+| F     |             |       | Toggle full screen            |
+| L     |             |       | Partial loop                  |
+| 1     |             |       | Jump to 10% playback position |
+| 2     |             |       | Jump to 20% playback position |
+| 3     |             |       | Jump to 30% playback position |
+| 4     |             |       | Jump to 40% playback position |
+| 5     |             |       | Jump to 50% playback position |
+| 6     |             |       | Jump to 60% playback position |
+| 7     |             |       | Jump to 70% playback position |
+| 8     |             |       | Jump to 80% playback position |
+| 9     |             |       | Jump to 90% playback position |
+| Esc   | Ctrl-C      |       | Reset loop status             |
+| Esc   |             |       | Unfocus any elements          |
 
 These shortcut keys are modifiable on the options page. You can also change skip time amount(s) and whether scroll to player automatically or not.
 
