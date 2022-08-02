@@ -1,13 +1,21 @@
 # Video Commander
-![videocommander](src/images/videocommander_screenshot.png)
+
+| **English** | [日本語](/README/ja.md) |
+| ----------- | ---------------------- |
+
+![videocommander](/src/images/videocommander_screenshot.png)
 
 Video Commander is a browser extension that provides keyboard shortcuts to loop, speed up, speed down, rewind time, advance time and other handy actions. Would you like to know other actions? - see [Usage](#usage).
+
+
 
 ## Installation
 This extension supports Google Chrome and Mozilla Firefox.
 
 - [Video Commander - Chrome Web Store](https://chrome.google.com/webstore/detail/video-commander/eadjicgcnpgfmklebobjkhlippgepdii)
 - [Video Commander - Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/video-commander/)
+
+
 
 ## Usage
 These shortcuts are available on video site.
@@ -36,12 +44,13 @@ These shortcuts are available on video site.
 
 These shortcut keys are modifiable on options page. You can also change skip time amount(s) and whether scroll to player automatically or not.
 
+
+
 ## Change Log
 See [CHANGELOG.md](https://github.com/noraworld/videocommander/blob/master/CHANGELOG.md).
+
+
 
 ## FAQ
 ### Q: No action works on some video sites
 A: This extension only works [HTML5 video player](http://www.w3schools.com/html/html5_video.asp) (e.g. YouTube.com). It means this extension does not work on the video sites using Adobe Flash Player or other unique video player. Sorry about that.
-
-## Language
-* [日本語](https://github.com/noraworld/videocommander/blob/master/README_jp.md)

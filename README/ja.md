@@ -1,5 +1,9 @@
 # Video Commander
-![videocommander](src/images/videocommander_screenshot.png)
+
+| [English](/README/en.md) | **日本語** |
+| ------------------------ | --------- |
+
+![videocommander](/src/images/videocommander_screenshot.png)
 
 Video Commander はループ再生、倍速再生、巻き戻し、早送り、その他便利なショートカットを追加する拡張機能です。詳しい使い方は以下の[使い方](#使い方)の欄を見てください。
 
