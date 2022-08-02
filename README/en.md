@@ -48,6 +48,8 @@ The following shortcuts are available for video sites.
 
 These shortcut keys are modifiable on the options page. You can also change skip time amount(s) and whether scroll to player automatically or not.
 
+Video Commander supports not only a video site but also an audio site.
+
 
 
 ## Change Log
