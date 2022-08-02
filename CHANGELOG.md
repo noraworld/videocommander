@@ -1,3 +1,6 @@
+## 0.6
+* Support audio resources
+
 ## 0.5
 * Support Firefox
 * Able to focus on the other video element on the same page

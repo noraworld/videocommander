@@ -73,14 +73,15 @@ $(function() {
   var videoLeft;
   var videoPos;
   var domainName = location.href.match(/^(.*?:\/\/)(.*?)([a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})[\:[0-9]*]?([\/].*?)?$/i)[3];
-  var videoOrder = 0;
+  var playerType = 'video'
+  var playerOrder = 0;
   var isSpeedChangedFromThisExtension = false;
 
   // video要素を取得する
   function getVideoElement(signal) {
-    if (document.getElementsByTagName('video')[videoOrder] !== undefined) {
-      if (document.getElementsByTagName('video')[videoOrder].readyState === 4) {
-        player = document.getElementsByTagName('video')[videoOrder];
+    if (document.getElementsByTagName(playerType)[playerOrder] !== undefined) {
+      if (document.getElementsByTagName(playerType)[playerOrder].readyState === 4) {
+        player = document.getElementsByTagName(playerType)[playerOrder];
         createNotFullscreenVideoWrapper();
         createFullscreenVideoWrapper();
 
@@ -648,20 +649,34 @@ $(function() {
   }
 
   function getNextVideoElement() {
-    videoOrder++;
+    playerOrder++
 
-    if (videoOrder >= document.querySelectorAll('video').length) {
-      videoOrder = 0;
+    if (playerOrder >= document.querySelectorAll(playerType).length) {
+      playerOrder = 0
+
+      if (playerType === 'video' && document.querySelectorAll('audio').length !== 0) {
+        playerType = 'audio'
+      }
+      else if (playerType === 'audio' && document.querySelectorAll('video').length !== 0) {
+        playerType = 'video'
+      }
     }
 
     getVideoElement('next');
   }
 
   function getPrevVideoElement() {
-    videoOrder--;
+    playerOrder--
 
-    if (videoOrder < 0) {
-      videoOrder = document.querySelectorAll('video').length - 1;
+    if (playerOrder < 0) {
+      if (playerType === 'video' && document.querySelectorAll('audio').length !== 0) {
+        playerType = 'audio'
+      }
+      else if (playerType === 'audio' && document.querySelectorAll('video').length !== 0) {
+        playerType = 'video'
+      }
+
+      playerOrder = document.querySelectorAll(playerType).length - 1
     }
 
     getVideoElement('prev');
