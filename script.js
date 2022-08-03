@@ -841,21 +841,21 @@ $(function() {
   //
   // 再生スピードの上限と下限を設定する
   function setSpeedRange(speedChecker) {
-    if (speedChecker < 0.5) {
-      player.playbackRate = 0.5;
+    if (speedChecker < 0.1) {
+      player.playbackRate = 0.1
     }
-    else if (speedChecker > 4.0) {
-      player.playbackRate = 4.0;
+    else if (speedChecker > 16.0) {
+      player.playbackRate = 16.0
     }
   };
 
   // 表示される再生スピードを調整する
   function adjustSpeedStatus(speedStatus) {
-    if (speedStatus < 0.5) {
-      speedStatus = 0.5;
+    if (speedStatus < 0.1) {
+      speedStatus = 0.1
     }
-    else if (speedStatus > 4.0) {
-      speedStatus = 4.0;
+    else if (speedStatus > 16.0) {
+      speedStatus = 16.0
     }
     return speedStatus.toFixed(1);
   };
