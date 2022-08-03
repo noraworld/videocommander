@@ -1,4 +1,5 @@
 ## Untagged
+* Fix Netflix error
 * Support audio resources
 
 ## 0.5
