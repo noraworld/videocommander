@@ -728,7 +728,12 @@ $(function() {
       }
       loopTimeoutID = setTimeout(function() {
         if (player.currentTime >= loopEnd || player.currentTime < loopStart) {
-          player.currentTime = loopStart;
+          if (isNetflix()) {
+            injectOperationForNetflix(`player.seek(${loopStart} * 1000)`)
+          }
+          else {
+            player.currentTime = loopStart;
+          }
         }
         if (loopStatus === 3) {
           clearTimeout(loopTimeoutID);
