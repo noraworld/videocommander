@@ -65,6 +65,7 @@ $(function() {
   var loopFlag = false;
   var loopTimeoutID;
   var removeStatusBoxTimeoutID;
+  var getVideoTimeoutID;
   var setPlaybackSpeedSuccessfullyOrSkipable = false;
   var videoWidth;
   var videoHeight;
@@ -77,7 +78,7 @@ $(function() {
   var isSpeedChangedFromThisExtension = false;
 
   // video要素を取得する
-  function getVideoElement(signal = '') {
+  function getVideoElement(signal) {
     if (document.getElementsByTagName(playerType)[playerOrder] !== undefined) {
       if (document.getElementsByTagName(playerType)[playerOrder].readyState === 4) {
         player = document.getElementsByTagName(playerType)[playerOrder];
@@ -89,6 +90,14 @@ $(function() {
         }
         else {
           enableNotFullscreenProgressBar();
+        }
+
+        try {
+          clearTimeout(getVideoTimeoutID);
+        }
+        catch (err) {
+          // Uncomment when debugging.
+          // console.warn('Failed to clear getVideoTimeoutID. But continuing.');
         }
 
         observeSpeed();
@@ -114,9 +123,16 @@ $(function() {
       }
     }
 
-    setTimeout(function() {
-      getVideoElement()
-    }, 1000)
+    if (player === undefined) {
+      getVideoTimeoutID = setTimeout(function() {
+        // Some video sites has several video elements which are invisible
+        // and are never ready ("readyState" is always "0").
+        // If the first video element (0th element) on that page is never ready,
+        // it cannot take the actual video element (visible video’s element),
+        // so it searches all video elements in order until the actual video element are found.
+        getNextVideoElement();
+      }, 200);
+    }
   }
 
   // Shown when FULLSCREEN
