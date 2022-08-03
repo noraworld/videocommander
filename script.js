@@ -50,6 +50,7 @@ $(function() {
     settings.rememberPlaybackSpeedChecked = Boolean(storage.rememberPlaybackSpeedChecked);
     settings.playbackSpeed                = Number(storage.playbackSpeed);
     getVideoElement('default');
+    observeReadyState()
   });
 
   // グローバル変数
@@ -547,6 +548,17 @@ $(function() {
 
     stopOriginalListener(event, 'keypress');
   }, true);
+
+  // Originally "onreadystatechange" should be used, but it does not work for some reason
+  function observeReadyState() {
+    setTimeout(() => {
+      if (player === undefined || player.readyState !== 4) {
+        getNextVideoElement()
+      }
+
+      observeReadyState()
+    }, 5000)
+  }
 
   function observeSpeed() {
     player.onratechange = function() {
