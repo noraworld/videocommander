@@ -50,7 +50,7 @@ $(function() {
     settings.rememberPlaybackSpeedChecked = Boolean(storage.rememberPlaybackSpeedChecked);
     settings.playbackSpeed                = Number(storage.playbackSpeed);
     getVideoElement('default');
-    observeReadyState()
+    // observeReadyState()
   });
 
   // グローバル変数
