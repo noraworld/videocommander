@@ -940,10 +940,6 @@ $(function() {
     const player = videoPlayer.getVideoPlayerBySessionId(playerSessionId)
 
     injectedOperation // This is replaced with some operation via "injectOperationForNetflix" function
-
-    // Keep video paused if operated while video is paused
-    // I'm not sure why I don't have to check whether a video is paused 🤔
-    player.pause()
   }
 
 });
