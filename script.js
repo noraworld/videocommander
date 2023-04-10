@@ -78,8 +78,9 @@ $(function() {
   var playerType = 'video'
   var playerOrder = 0;
   var isSpeedChangedFromThisExtension = false;
+  // 5000 (ms) * 36 (times) = 3 (min)
   const ABANDON_INTERVAL = 5000;
-  const ABANDON_THRESHOLD = 3;
+  const ABANDON_THRESHOLD = 36;
   let abandonElement = null;
   let abandonCount = 0;
 
@@ -949,15 +950,12 @@ $(function() {
 
   // Pause a current video when the video resources fail to load for a while.
   function abandon() {
-    console.log(`abandonCount = ${abandonCount}`)
-
     if (document.getElementsByTagName(playerType)[playerOrder].readyState <= 2) {
       if (abandonElement === document.getElementsByTagName(playerType)[playerOrder]) {
         abandonCount++
       }
 
       if (abandonCount >= ABANDON_THRESHOLD) {
-        console.log('stop!')
         document.getElementsByTagName(playerType)[playerOrder].pause()
         abandonCount = 0
       }
