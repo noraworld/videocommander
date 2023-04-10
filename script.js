@@ -78,9 +78,9 @@ $(function() {
   var playerType = 'video'
   var playerOrder = 0;
   var isSpeedChangedFromThisExtension = false;
-  // 5000 (ms) * 36 (times) = 3 (min)
+  // 5000 (ms) * 60 (times) = 5 (min)
   const ABANDON_INTERVAL = 5000;
-  const ABANDON_THRESHOLD = 36;
+  const ABANDON_THRESHOLD = 60;
   let abandonElement = null;
   let abandonCount = 0;
 
