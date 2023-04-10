@@ -50,6 +50,7 @@ $(function() {
     settings.rememberPlaybackSpeedChecked = Boolean(storage.rememberPlaybackSpeedChecked);
     settings.playbackSpeed                = Number(storage.playbackSpeed);
     getVideoElement('default');
+    abandon();
     // observeReadyState()
   });
 
@@ -77,6 +78,10 @@ $(function() {
   var playerType = 'video'
   var playerOrder = 0;
   var isSpeedChangedFromThisExtension = false;
+  const ABANDON_INTERVAL = 5000;
+  const ABANDON_THRESHOLD = 3;
+  let abandonElement = null;
+  let abandonCount = 0;
 
   // video要素を取得する
   function getVideoElement(signal) {
@@ -940,6 +945,30 @@ $(function() {
     const player = videoPlayer.getVideoPlayerBySessionId(playerSessionId)
 
     injectedOperation // This is replaced with some operation via "injectOperationForNetflix" function
+  }
+
+  // Pause a current video when the video resources fail to load for a while.
+  function abandon() {
+    console.log(`abandonCount = ${abandonCount}`)
+
+    if (document.getElementsByTagName(playerType)[playerOrder].readyState <= 2) {
+      if (abandonElement === document.getElementsByTagName(playerType)[playerOrder]) {
+        abandonCount++
+      }
+
+      if (abandonCount >= ABANDON_THRESHOLD) {
+        console.log('stop!')
+        document.getElementsByTagName(playerType)[playerOrder].pause()
+        abandonCount = 0
+      }
+
+      abandonElement = document.getElementsByTagName(playerType)[playerOrder]
+    }
+    else {
+      abandonCount = 0
+    }
+
+    setTimeout(abandon, ABANDON_INTERVAL)
   }
 
 });
