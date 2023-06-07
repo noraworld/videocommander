@@ -630,7 +630,12 @@ $(function() {
 
   // 数秒早送り
   function advanceTime() {
-    player.currentTime += settings.skipTimeAmount;
+    if (isNetflix()) {
+      injectOperationForNetflix(`player.seek(player.getCurrentTime() + ${settings.skipTimeAmount} * 1000)`)
+    }
+    else {
+      player.currentTime += settings.skipTimeAmount;
+    }
   };
 
   // 再生スピードダウン
