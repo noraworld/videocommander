@@ -77,7 +77,7 @@ $(function() {
   var domainName = location.href.match(/^(.*?:\/\/)(.*?)([a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})[\:[0-9]*]?([\/].*?)?$/i)[3];
   var playerType = 'video'
   var playerOrder = 0;
-  var isSpeedChangedFromThisExtension = false;
+  // var isSpeedChangedFromThisExtension = false;
   // 5000 (ms) * 60 (times) = 5 (min)
   const ABANDON_INTERVAL = 5000;
   const ABANDON_THRESHOLD = 60;
@@ -568,11 +568,11 @@ $(function() {
 
   function observeSpeed() {
     player.onratechange = function() {
-      if (isSpeedChangedFromThisExtension === false) {
+      // if (isSpeedChangedFromThisExtension === false) {
         getPlaybackSpeed();
         statusBox('playbackRate', adjustSpeedStatus(player.playbackRate));
-      }
-      isSpeedChangedFromThisExtension = false;
+      // }
+      // isSpeedChangedFromThisExtension = false;
     };
   };
 
@@ -641,24 +641,24 @@ $(function() {
   // 再生スピードダウン
   function speedDown() {
     player.playbackRate = floorFormat((player.playbackRate - 0.09), 1);
-    setSpeedRange(player.playbackRate);
+    // setSpeedRange(player.playbackRate);
     setPlaybackSpeed();
-    isSpeedChangedFromThisExtension = true;
+    // isSpeedChangedFromThisExtension = true;
   }
 
   // 再生スピードアップ
   function speedUp() {
     player.playbackRate = floorFormat((player.playbackRate + 0.11), 1);
-    setSpeedRange(player.playbackRate);
+    // setSpeedRange(player.playbackRate);
     setPlaybackSpeed();
-    isSpeedChangedFromThisExtension = true;
+    // isSpeedChangedFromThisExtension = true;
   }
 
   // 再生スピードリセット
   function resetSpeed() {
     player.playbackRate = 1.0;
     setPlaybackSpeed();
-    isSpeedChangedFromThisExtension = true;
+    // isSpeedChangedFromThisExtension = true;
   }
 
   // フルスクリーン表示 / 解除
@@ -868,23 +868,23 @@ $(function() {
   // the browser tab gives no response.
   //
   // 再生スピードの上限と下限を設定する
-  function setSpeedRange(speedChecker) {
-    if (speedChecker < 0.1) {
-      player.playbackRate = 0.1
-    }
-    else if (speedChecker > 16.0) {
-      player.playbackRate = 16.0
-    }
-  };
+  // function setSpeedRange(speedChecker) {
+  //   if (speedChecker < 0.1) {
+  //     player.playbackRate = 0.1
+  //   }
+  //   else if (speedChecker > 16.0) {
+  //     player.playbackRate = 16.0
+  //   }
+  // };
 
   // 表示される再生スピードを調整する
   function adjustSpeedStatus(speedStatus) {
-    if (speedStatus < 0.1) {
-      speedStatus = 0.1
-    }
-    else if (speedStatus > 16.0) {
-      speedStatus = 16.0
-    }
+    // if (speedStatus < 0.1) {
+    //   speedStatus = 0.1
+    // }
+    // else if (speedStatus > 16.0) {
+    //   speedStatus = 16.0
+    // }
     return speedStatus.toFixed(1);
   };
 
