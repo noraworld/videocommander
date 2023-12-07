@@ -411,7 +411,7 @@ $(function() {
   }, true);
 
   // キーが押されたかどうかを判定
-  window.addEventListener('keydown', function(event) {
+  window.addEventListener('keypress', function(event) {
     // 円マークをバックスラッシュに変換
     var eventKey = encodeYenSignToBackslash(event.key);
 
@@ -492,7 +492,7 @@ $(function() {
       return false;
     }
 
-    stopOriginalListener(event, 'keydown');
+    stopOriginalListener(event, 'keypress');
 
     // ショートカットキーから関数を呼び出す
     switch (eventKey) {
@@ -915,7 +915,7 @@ $(function() {
     Object.keys(settings).forEach(function(key) {
       if (eventKey == settings[key]) {
         event.stopPropagation();
-        if (settings.scrollToPlayerChecked === true && type === 'keydown') {
+        if (settings.scrollToPlayerChecked === true && type === 'keypress') {
           scrollToPlayer();
         }
       }
@@ -924,7 +924,7 @@ $(function() {
     Object.keys(fixed).forEach(function(key) {
       if (eventKey == fixed[key]) {
         event.stopPropagation();
-        if (settings.scrollToPlayerChecked === true && type === 'keydown') {
+        if (settings.scrollToPlayerChecked === true && type === 'keypress') {
           scrollToPlayer();
         }
       }
