@@ -411,7 +411,7 @@ $(function() {
   }, true);
 
   // キーが押されたかどうかを判定
-  window.addEventListener('keypress', function(event) {
+  window.addEventListener('keydown', function(event) {
     // 円マークをバックスラッシュに変換
     var eventKey = encodeYenSignToBackslash(event.key);
 
@@ -492,8 +492,6 @@ $(function() {
       return false;
     }
 
-    stopOriginalListener(event, 'keypress');
-
     // ショートカットキーから関数を呼び出す
     switch (eventKey) {
       // オプションのキーコード
@@ -533,27 +531,19 @@ $(function() {
       loopStatus++;
       partialLoop();
     }
-  }, true);
-
-  window.addEventListener('keyup', function(event) {
-    if (player === undefined) {
-      return false;
-    }
-
-    stopOriginalListener(event, 'keyup');
-
-    if (event.key === ',') {
-      showAndHideProgressBar('force');
-    }
-  }, true);
-
-  window.addEventListener('keypress', function(event) {
-    if (player === undefined) {
-      return false;
-    }
 
     stopOriginalListener(event, 'keypress');
   }, true);
+
+  ['keydown', 'keyup', 'keypress'].forEach((keyEvent) => {
+    window.addEventListener(keyEvent, function(event) {
+      if (player === undefined) {
+        return false;
+      }
+
+      stopOriginalListener(event, keyEvent);
+    }, true);
+  });
 
   // Originally "onreadystatechange" should be used, but it does not work for some reason
   function observeReadyState() {
@@ -915,6 +905,8 @@ $(function() {
     Object.keys(settings).forEach(function(key) {
       if (eventKey === settings[key]) {
         event.stopPropagation();
+        event.preventDefault();
+
         if (settings.scrollToPlayerChecked === true && type === 'keypress') {
           scrollToPlayer();
         }
@@ -924,6 +916,8 @@ $(function() {
     Object.keys(fixed).forEach(function(key) {
       if (eventKey === fixed[key]) {
         event.stopPropagation();
+        event.preventDefault();
+
         if (settings.scrollToPlayerChecked === true && type === 'keypress') {
           scrollToPlayer();
         }
