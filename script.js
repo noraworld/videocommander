@@ -542,7 +542,7 @@ $(function() {
 
     stopOriginalListener(event, 'keyup');
 
-    if (event.key == ',') {
+    if (event.key === ',') {
       showAndHideProgressBar('force');
     }
   }, true);
@@ -913,7 +913,7 @@ $(function() {
     var eventKey = encodeYenSignToBackslash(event.key);
 
     Object.keys(settings).forEach(function(key) {
-      if (eventKey == settings[key]) {
+      if (eventKey === settings[key]) {
         event.stopPropagation();
         if (settings.scrollToPlayerChecked === true && type === 'keypress') {
           scrollToPlayer();
@@ -922,7 +922,7 @@ $(function() {
     });
 
     Object.keys(fixed).forEach(function(key) {
-      if (eventKey == fixed[key]) {
+      if (eventKey === fixed[key]) {
         event.stopPropagation();
         if (settings.scrollToPlayerChecked === true && type === 'keypress') {
           scrollToPlayer();
