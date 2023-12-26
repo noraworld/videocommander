@@ -462,18 +462,7 @@ $(function() {
       return false;
     }
 
-    // 入力フォームにフォーカスがあるときはショートカットを無効化
-    if ((document.activeElement.nodeName             === 'INPUT'
-    &&   document.activeElement.getAttribute('type') !== 'range')
-    ||   document.activeElement.nodeName             === 'TEXTAREA'
-    ||   document.activeElement.getAttribute('type') === 'text'
-    ||   document.activeElement.isContentEditable    === true)
-    {
-      return false;
-    }
-    else {
-      activeBlur();
-    }
+    if (isFocusedOnInputElement()) return false
 
     // Ctrl + c が押されたらループステータスをリセットする
     // Esc だと、リセットより全画面の解除が優先されてしまうため
@@ -531,15 +520,12 @@ $(function() {
       loopStatus++;
       partialLoop();
     }
-
-    stopOriginalListener(event, 'keypress');
   }, true);
 
   ['keydown', 'keyup', 'keypress'].forEach((keyEvent) => {
     window.addEventListener(keyEvent, function(event) {
-      if (player === undefined) {
-        return false;
-      }
+      if (ignoreInputElement()) return false
+      if (player === undefined) return false
 
       stopOriginalListener(event, keyEvent);
     }, true);
@@ -923,6 +909,21 @@ $(function() {
         }
       }
     });
+  }
+
+  function isFocusedOnInputElement() {
+    if ((document.activeElement.nodeName             === 'INPUT'
+    &&   document.activeElement.getAttribute('type') !== 'range')
+    ||   document.activeElement.nodeName             === 'TEXTAREA'
+    ||   document.activeElement.getAttribute('type') === 'text'
+    ||   document.activeElement.isContentEditable    === true)
+    {
+      return true
+    }
+    else {
+      activeBlur()
+      return false
+    }
   }
 
   function isNetflix() {
