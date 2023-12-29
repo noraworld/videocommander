@@ -524,7 +524,7 @@ $(function() {
 
   ['keydown', 'keyup', 'keypress'].forEach((keyEvent) => {
     window.addEventListener(keyEvent, function(event) {
-      if (ignoreInputElement()) return false
+      if (isFocusedOnInputElement()) return false
       if (player === undefined) return false
 
       stopOriginalListener(event, keyEvent);
