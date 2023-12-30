@@ -887,6 +887,7 @@ $(function() {
   // 無効化してこちらの処理のみを実行する
   function stopOriginalListener(event, type) {
     var eventKey = encodeYenSignToBackslash(event.key);
+    if (event.metaKey || event.ctrlKey || event.altKey) return false
 
     Object.keys(settings).forEach(function(key) {
       if (eventKey === settings[key]) {
