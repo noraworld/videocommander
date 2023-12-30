@@ -910,6 +910,10 @@ $(function() {
         }
       }
     });
+
+    if (eventKey === 'ArrowUp' || eventKey === 'ArrowDown') {
+      event.stopPropagation()
+    }
   }
 
   function isFocusedOnInputElement() {
