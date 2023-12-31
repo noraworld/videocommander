@@ -610,7 +610,11 @@ $(function() {
       injectOperationForNetflix(`player.seek(player.getCurrentTime() + ${settings.skipTimeAmount} * 1000)`)
     }
     else {
-      player.currentTime += settings.skipTimeAmount;
+      // To prevent replaying the video from the beginning again if this function is called
+      // after the video has been played to the end on YouTube.
+      if ((player.currentTime + settings.skipTimeAmount) <= player.seekable.end(0)) {
+        player.currentTime += settings.skipTimeAmount
+      }
     }
   };
 
@@ -697,7 +701,9 @@ $(function() {
       injectOperationForNetflix(`player.seek(${player.seekable.end(0) * 1000})`)
     }
     else {
-      player.currentTime = player.seekable.end(0);
+      if (player.currentTime < player.seekable.end(0)) {
+        player.currentTime = player.seekable.end(0)
+      }
     }
   };
 
